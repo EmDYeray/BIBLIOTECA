@@ -41,8 +41,16 @@ jobs:
           cmake -S . -B build-ipad -G Xcode -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_OSX_SYSROOT=iphoneos -DCMAKE_OSX_ARCHITECTURES=arm64 -DCMAKE_OSX_DEPLOYMENT_TARGET=27.0 -DCMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED=NO
           cmake --build build-ipad --config Release --target Biblioteca
 
+      - name: Guardar app compilada
+        uses: actions/upload-artifact@v4
+        with:
+          name: Biblioteca-app-sin-firma
+          path: build-ipad/Release-iphoneos/Biblioteca.app
+          if-no-files-found: error
+
       - name: Empaquetar IPA sin firma
         run: |
+          set -x
           app="$(find build-ipad -type d -name Biblioteca.app -print -quit)"
           test -n "$app"
           test -x "$app/Biblioteca"
