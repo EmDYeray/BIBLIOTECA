@@ -55,7 +55,7 @@ jobs:
           ditto "$app" "$RUNNER_TEMP/biblioteca-ipa/Payload/Biblioteca.app"
           ditto -c -k --keepParent "$RUNNER_TEMP/biblioteca-ipa/Payload" dist/Biblioteca-iPadOS27-sin-firma.ipa
           ditto -x -k dist/Biblioteca-iPadOS27-sin-firma.ipa "$RUNNER_TEMP/ipa-check"
-test -x "$RUNNER_TEMP/ipa-check/Payload/Biblioteca.app/Biblioteca"
+          test -x "$RUNNER_TEMP/ipa-check/Payload/Biblioteca.app/Biblioteca"
 
       - uses: actions/upload-artifact@v4
         with:
