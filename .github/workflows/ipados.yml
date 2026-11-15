@@ -55,7 +55,9 @@ jobs:
           test -s "$app/assets/fonts/Barlow-Regular.ttf"
           mkdir -p "$RUNNER_TEMP/biblioteca-ipa/Payload" dist
           ditto "$app" "$RUNNER_TEMP/biblioteca-ipa/Payload/Biblioteca.app"
-          ditto -c -k --keepParent "$RUNNER_TEMP/biblioteca-ipa/Payload" dist/Biblioteca-iPadOS27-sin-firma.ipa
+          cd "$RUNNER_TEMP/biblioteca-ipa"
+          zip -qry "$GITHUB_WORKSPACE/dist/Biblioteca-iPadOS27-sin-firma.ipa" Payload
+          test -s "$GITHUB_WORKSPACE/dist/Biblioteca-iPadOS27-sin-firma.ipa"
 
       - uses: actions/upload-artifact@v4
         with:
