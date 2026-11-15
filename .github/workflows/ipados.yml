@@ -57,7 +57,7 @@ jobs:
           ditto "$app" "$RUNNER_TEMP/biblioteca-ipa/Payload/Biblioteca.app"
           test -d "$RUNNER_TEMP/biblioteca-ipa/Payload/Biblioteca.app"
           mkdir -p "$GITHUB_WORKSPACE/dist"
-          ( cd "$RUNNER_TEMP/biblioteca-ipa" && /usr/bin/zip -r -y -X "$GITHUB_WORKSPACE/dist/Biblioteca-iPadOS27-sin-firma.ipa" Payload || test -s "$GITHUB_WORKSPACE/dist/Biblioteca-iPadOS27-sin-firma.ipa" )
+          ditto -c -k --norsrc --noextattr --noqtn --keepParent "$RUNNER_TEMP/biblioteca-ipa/Payload" "$GITHUB_WORKSPACE/dist/Biblioteca-iPadOS27-sin-firma.ipa"
           test -s "$GITHUB_WORKSPACE/dist/Biblioteca-iPadOS27-sin-firma.ipa"
 
       - uses: actions/upload-artifact@v4
