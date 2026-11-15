@@ -28,6 +28,7 @@ add_executable(Biblioteca MACOSX_BUNDLE ios/main.cpp ${BOOK_SOURCES})
 target_include_directories(Biblioteca PRIVATE src)
 target_compile_features(Biblioteca PRIVATE cxx_std_20)
 target_compile_definitions(Biblioteca PRIVATE BIBLIOTECA_IPAD=1)
+target_link_directories(Biblioteca PRIVATE ${CAIRO_LIBRARY_DIRS})
 target_link_libraries(Biblioteca PRIVATE SDL2::SDL2main SDL2::SDL2-static
     PkgConfig::CAIRO ${OPENGLES_FRAMEWORK} ${COREGRAPHICS_FRAMEWORK} ${CORETEXT_FRAMEWORK})
 
