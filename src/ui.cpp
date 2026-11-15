@@ -1,0 +1,537 @@
+#include "ui.hpp"
+#include "references.hpp"
+#include <cctype>
+#include <cstdint>
+
+namespace biblioteca {
+namespace {
+const auto paper=color("#f6f1e7"),hudFill=color("#171b1c",.90);
+const auto catalogInk=color("#142c31"),catalogSubtle=color("#345b5f"),catalogRule=color("#668080");
+constexpr int rows=7, rowHeight=33;
+
+std::string normalize(std::string_view text){
+    constexpr std::array<std::string_view,23> accents{"á","à","ä","é","è","ë","í","ì","ï","ó","ò","ö",
+        "ú","ù","ü","ñ","Á","É","Í","Ó","Ú","Ü","Ñ"};
+    constexpr std::string_view replacements="aaaeeeiiiooouuunAEIOUUN";
+    std::string clean;
+    for(size_t i=0;i<text.size();){
+        bool folded=false;
+        for(size_t j=0;j<accents.size();++j)if(text.substr(i).starts_with(accents[j])){
+            clean+=char(std::tolower(static_cast<unsigned char>(replacements[j])));
+            i+=accents[j].size();folded=true;break;
+        }
+        if(!folded)clean+=char(std::tolower(static_cast<unsigned char>(text[i++])));
+    }
+    return clean;
+}
+int movementKey(int k){
+    if(k=='w' || k==sdl::upKey)return 0;
+    if(k=='s' || k==sdl::downKey)return 1;
+    if(k=='a')return 2;
+    if(k=='d')return 3;
+    return -1;
+}
+double distance(Point a,Point b){return std::abs(a.x-b.x)+std::abs(a.y-b.y);}
+void trimChar(std::string& x){
+    if(x.empty())return;
+    auto end=x.size()-1;
+    while(end && (static_cast<unsigned char>(x[end])&0xc0)==0x80)--end;
+    x.erase(end);
+}
+std::string fitLabel(const Paint& p,std::string_view label,double limit){
+    if(p.width(label)<=limit)return std::string(label);
+    std::string head(label);
+    do{trimChar(head);}while(!head.empty() && p.width(head+"…")>limit);
+    return head+"…";
+}
+void button(Paint& p,Rect r,std::string_view text,bool enabled,bool hot,bool onPaper,bool focused,bool pressed){
+    const auto fill=onPaper?color(pressed?"#d2dccd":hot?"#e1e9de":"#ecefe7"):
+                            pressed?color("#4a4c46",.98):hot?color("#333732",.96):hudFill;
+    const auto ink=onPaper?catalogInk:enabled?paper:color("#aaa9a0");
+    p.round(r,6,fill,color("#23616a",focused?1.:0.));
+    const double x=r.x+r.w/2,y=r.y+r.h/2;
+    if(text=="‹" || text=="›"){
+        const double sign=text=="‹"?-1:1;
+        p.line(x-sign*3,y-5,x+sign*3,y,ink,1.65);
+        p.line(x+sign*3,y,x-sign*3,y+5,ink,1.65);
+        return;
+    }
+    p.font(15,false,true);
+    p.middle(x,y+5,fitLabel(p,text,r.w-21),ink);
+}
+}
+
+Interface::Interface(Size size):size_(size){syncCatalog();}
+std::vector<Interface::Button> Interface::buttons() const {
+    const double x=size_.w/2.,h=size_.h,w=size_.w;
+#ifdef BIBLIOTECA_IPAD
+    constexpr double topY=20,topH=48,topGap=12;
+#else
+    constexpr double topY=25,topH=38,topGap=11;
+#endif
+    if(catalog_){
+        const auto d=dialog();
+        return {{{d.x+d.w-112,d.y+16,87,topH},Action::Close,"Cerrar",true},
+                {{d.x+d.w-194,d.y+76,169,topH},Action::Genre,genres_[filter_]+"  ▾",true}};
+    }
+    if(hideControls_)return {};
+    if(lib.selected()<0){
+        const bool child=lib.section()==Section::Children;
+        std::vector<Button> list{{{w-151,topY,119,topH},Action::Catalog,"Catálogo",true},
+                                 {{w-258-topGap,topY,96,topH},Action::Sources,"Atril",true},
+                                 {{31,topY,191,topH},Action::Section,
+                                  std::string(sectionName(child?Section::Adult:Section::Children)),true}};
+        if(child){
+            list.push_back({{x-55,h-64,45,43},Action::Left,"‹",lib.wing()>0});
+            list.push_back({{x+10,h-64,45,43},Action::Right,"›",lib.wing()<1});
+        }
+#ifdef BIBLIOTECA_IPAD
+        // Held buttons keep walking continuous, just like WASD, without
+        // making a touch player repeatedly tap to cross the room.
+        constexpr double touch=56,edge=19,gap=5;
+        const double base=h-edge-touch;
+        list.push_back({{edge+touch+gap,base-touch-gap,touch,touch},Action::Forward,"↑",true});
+        list.push_back({{edge+touch+gap,base+touch+gap,touch,touch},Action::Back,"↓",true});
+        list.push_back({{edge,base,touch,touch},Action::StrafeLeft,"←",true});
+        list.push_back({{edge+2*(touch+gap),base,touch,touch},Action::StrafeRight,"→",true});
+#endif
+        return list;
+    }
+    const auto stage=lib.stage();
+    std::vector<Button> list{
+        {{w-151,topY,119,topH},Action::Close,"Cerrar",stage!=Stage::Closing && stage!=Stage::Returning}};
+    if(stage==Stage::Reading){
+        const bool settled=lib.turning()==1;
+#ifdef BIBLIOTECA_IPAD
+        constexpr double pager=56;
+        list.push_back({{x-pager-11,h-77,pager,pager},Action::Left,"‹",settled && lib.spread()>0});
+        list.push_back({{x+11,h-77,pager,pager},Action::Right,"›",settled && lib.spread()<spreadCount(lib.selected())-1});
+#else
+        list.push_back({{x-93,h-64,43,43},Action::Left,"‹",settled && lib.spread()>0});
+        list.push_back({{x+50,h-64,43,43},Action::Right,"›",settled && lib.spread()<spreadCount(lib.selected())-1});
+#endif
+        if(lib.selected()!=referenceBookId)
+            list.push_back({{31,topY,103,topH},Action::Motion,motion_?"Pausar":"Reanudar",true});
+#ifdef BIBLIOTECA_IPAD
+        // SDL pinch delivery differs between iPadOS releases. These two
+        // reachable controls make the reader zoom dependable everywhere.
+        if(lib.selected()!=referenceBookId){
+            list.push_back({{w-151,h-77,55,56},Action::ZoomOut,"−",true});
+            list.push_back({{w-86,h-77,55,56},Action::ZoomIn,"+",true});
+        }
+#endif
+    }
+    return list;
+}
+Interface::Action Interface::actionAt(Point p,bool includeDisabled) const {
+    for(const auto& b:buttons())if((b.enabled || includeDisabled) && b.rect.has(p))return b.action;
+    return Action::None;
+}
+Rect Interface::dialog() const {
+    const double w=std::min(620,size_.w-52),h=std::min(425,size_.h-30);
+    return {(size_.w-w)/2,(size_.h-h)/2,w,h};
+}
+const char* Interface::sourceAt(Point p) const {
+    const auto page=lib.referencePage(p,size_);
+    if(!page)return nullptr;
+    const int side=int(page->x);
+    const float x=page->x-side;
+    if(x<.078f || x>.923f)return nullptr;
+    for(int row=0;row<2;++row){
+        const auto y=referenceLinkY(row);
+        if(page->y>=y-.070f && page->y<=y+.016f)
+            return references[lib.spread()][side*2+row].url;
+    }
+    return nullptr;
+}
+std::optional<int> Interface::itemAt(Point p) const {
+    const auto d=dialog();
+    for(int i=0;i<rows && scroll_+i<int(results_.size());++i)
+        if(Rect{d.x+25,d.y+132+i*rowHeight,d.w-50,rowHeight}.has(p))return scroll_+i;
+    return {};
+}
+void Interface::refreshCatalog(){
+    results_.clear();
+    const auto q=normalize(search_);
+    for(int i=0;i<bookCount;++i){
+        if(bookSection(i)!=catalogRoom_)continue;
+        const auto& b=books()[i];
+        if(filter_>0 && b.genre!=genres_[filter_])continue;
+        if(normalize(b.title+" "+b.genre).find(q)!=std::string::npos)results_.push_back(i);
+    }
+    cursor_=scroll_=0;dirty=true;
+}
+void Interface::syncCatalog(){
+    catalogRoom_=lib.section();
+    genres_.resize(1);
+    for(int i=0;i<bookCount;++i){
+        if(bookSection(i)!=catalogRoom_)continue;
+        const auto& genre=books()[i].genre;
+        if(std::find(genres_.begin(),genres_.end(),genre)==genres_.end())genres_.push_back(genre);
+    }
+    std::sort(genres_.begin()+1,genres_.end());
+    search_.clear();filter_=0;refreshCatalog();
+}
+void Interface::stopWalking(){
+    motionKeys_.fill(false);sprintKeys_.fill(false);stride_={};wheelTravel_=0;touchDrive_=Action::None;
+}
+bool Interface::touchDriveAction(Action a) const {
+    return a==Action::Forward || a==Action::Back || a==Action::StrafeLeft || a==Action::StrafeRight;
+}
+void Interface::setTouchDrive(Action a,bool down){
+    int key=-1;
+    if(a==Action::Forward)key=0;
+    else if(a==Action::Back)key=1;
+    else if(a==Action::StrafeLeft)key=2;
+    else if(a==Action::StrafeRight)key=3;
+    if(key>=0)motionKeys_[key]=down;
+}
+void Interface::showCatalog(bool show){
+    catalog_=show;lib.hover(-1);dirty=true;
+    if(show){lib.close();stopWalking();lookDrag_=false;}
+    if(show && mouseLook_){mouseLook_=false;sdl::relativeMouse(false);}
+    if(show){refreshCatalog();focusCatalog(0);}else SDL_StopTextInput();
+}
+void Interface::openLectern(){
+    if(!lib.openReferences())return;
+    stopWalking();
+    if(mouseLook_)sdl::relativeMouse(false);
+    mouseLook_=lookDrag_=drag_=false;
+    dirty=true;
+}
+void Interface::focusCatalog(int field){
+    catalogFocus_=field;
+    if(field==0)SDL_StartTextInput();else SDL_StopTextInput();
+    dirty=true;
+}
+float Interface::sceneTime(float dt){
+    if(motion_)sceneSeconds_+=dt;
+    return sceneSeconds_;
+}
+void Interface::choose(int index){
+    if(index<0 || index>=int(results_.size()))return;
+    const int id=results_[index];
+    showCatalog(false);lib.visit(id);
+}
+void Interface::act(Action a){
+    switch(a){
+        case Action::None:return;
+        case Action::Catalog:showCatalog(true);break;
+        case Action::Close:
+            if(catalog_)showCatalog(false);
+            else lib.close();
+            break;
+        case Action::Sources:openLectern();break;
+        case Action::Genre:filter_=(filter_+1)%int(genres_.size());refreshCatalog();break;
+        case Action::Motion:motion_=!motion_;break;
+        case Action::Section:
+            stopWalking();
+            lib.enter(lib.section()==Section::Children?Section::Adult:Section::Children);
+            break;
+        case Action::Left:case Action::Right:
+            if(lib.selected()<0){stopWalking();lib.wingTo(a==Action::Right?1:0);}
+            else lib.turn(a==Action::Right?1:-1);
+            break;
+        case Action::ZoomOut:lib.zoom(-1.55f);break;
+        case Action::ZoomIn:lib.zoom(1.55f);break;
+        case Action::Forward:case Action::Back:case Action::StrafeLeft:case Action::StrafeRight:
+            return;
+    }
+    dirty=true;
+}
+void Interface::resize(Size size){size_=size;dirty=true;}
+bool Interface::walking() const {
+    return !catalog_ && lib.selected()<0 &&
+        (motionKeys_[0]!=motionKeys_[1] || motionKeys_[2]!=motionKeys_[3] ||
+         dot(stride_,stride_)>.0016f || std::abs(wheelTravel_)>.006f);
+}
+void Interface::step(float dt){
+    const bool active=lib.animating();
+    if(walking()){
+        const float f=float(motionKeys_[0])-float(motionKeys_[1]),s=float(motionKeys_[3])-float(motionKeys_[2]);
+        const float dtUsed=std::min(dt,.1f);
+        const float speed=sprintKeys_[0] || sprintKeys_[1]?7.7f:4.55f;
+        const Vec target=Vec{s,0,f}*(speed/std::max(1.f,std::hypot(s,f)));
+        const float blend=1-std::exp(-dtUsed*(s!=0 || f!=0?13.f:19.f));
+        stride_=stride_+(target-stride_)*blend;
+        if(dot(stride_,stride_)<.0016f)stride_={};
+        const float rolled=wheelTravel_*(1-std::exp(-dtUsed*16.f));
+        wheelTravel_-=rolled;
+        if(std::abs(wheelTravel_)<.006f)wheelTravel_=0;
+        lib.walk(stride_.z*dtUsed+rolled,stride_.x*dtUsed);
+        dirty=true;
+    }
+    lib.setMotionEnabled(motion_);
+    lib.update(dt);
+    if(catalogRoom_!=lib.section())syncCatalog();
+    const Point target=mouseLook_?Point{size_.w*.5f,size_.h*.5f}:pos_;
+    const int hit=(!catalog_ && !lookDrag_ && (mouseLook_ || actionAt(pos_)==Action::None))
+        ?lib.pick(target,size_):-1;
+    if(hit!=lib.hovered()){lib.hover(hit);dirty=true;}
+    dirty=dirty || active;
+}
+int Interface::pointerKind() const {
+    if(drag_ || lookDrag_ || mouseLook_)return sdl::grabCursor;
+    const bool clickable=actionAt(pos_)!=Action::None || lib.hovered()>=0 ||
+        (catalog_ && itemAt(pos_)) || sourceAt(pos_) || (!catalog_ && lib.pickReferences(pos_,size_));
+    const bool movableBook=lib.selected()!=referenceBookId && lib.onReader(pos_,size_);
+    return clickable || movableBook?sdl::handCursor:sdl::arrowCursor;
+}
+void Interface::event(const SDL_Event& e,SDL_Window* window){
+    switch(e.type){
+    case sdl::quit:quit=true;break;
+    case sdl::window:
+        if(e.window.event==11)pos_={-100,-100};
+        if(e.window.event==13){
+            drag_=lookDrag_=catalogDrag_=touchSwipe_=false;pressed_=Action::None;stopWalking();
+            if(mouseLook_){mouseLook_=false;sdl::relativeMouse(false);}
+        }
+        dirty=true;break;
+    case sdl::keyUp:
+        if(const int key=movementKey(e.key.keysym.sym);key>=0)motionKeys_[key]=false;
+        if(e.key.keysym.sym==sdl::leftShift)sprintKeys_[0]=false;
+        if(e.key.keysym.sym==sdl::rightShift)sprintKeys_[1]=false;
+        break;
+    case sdl::keyDown:{
+        const int k=e.key.keysym.sym;
+        if(k==9 && !catalog_ && lib.selected()<0 && !e.key.repeat){
+            const bool request=!mouseLook_;
+            if(!window || sdl::relativeMouse(request)==0)mouseLook_=request;
+            lookDrag_=false;dirty=true;break;
+        }
+        if(k==sdl::f2){hideControls_=!hideControls_;dirty=true;break;}
+        if(k==sdl::f11 && window){full_=!full_;SDL_SetWindowFullscreen(window,full_?sdl::fullDesktop:0);break;}
+        if(catalog_){
+            if(k==27)showCatalog(false);
+            else if(k==9 && !e.key.repeat)focusCatalog((catalogFocus_+((e.key.keysym.mod&3)?2:1))%3);
+            else if(k==8 && catalogFocus_==0){trimChar(search_);refreshCatalog();}
+            else if(k==13 && catalogFocus_==0)choose(cursor_);
+            else if((k==13 || k==' ') && catalogFocus_!=0){
+                act(catalogFocus_==1?Action::Genre:Action::Close);
+            }else if(catalogFocus_==0 && !results_.empty() && (k==sdl::upKey || k==sdl::downKey)){
+                cursor_=std::clamp(cursor_+(k==sdl::upKey?-1:1),0,int(results_.size())-1);
+                scroll_=std::clamp(scroll_,std::max(0,cursor_-rows+1),cursor_);dirty=true;
+            }
+        }else{
+            if(k==27){if(mouseLook_){mouseLook_=false;sdl::relativeMouse(false);}
+                else if(lib.selected()>=0 || lib.stage()==Stage::Traveling)lib.close();
+                else if(full_ && window){full_=false;SDL_SetWindowFullscreen(window,0);}}
+            else if(k==sdl::left)act(Action::Left);
+            else if(k==sdl::right)act(Action::Right);
+            else if(k=='m' && !e.key.repeat)act(Action::Motion);
+            else if((k=='/' || k=='k') && lib.selected()<0 && !e.key.repeat)showCatalog(true);
+            else if(k=='f' && lib.selected()<0 && !e.key.repeat)openLectern();
+            else if(k=='g' && lib.selected()<0 && !e.key.repeat)act(Action::Section);
+            else if(k==sdl::leftShift || k==sdl::rightShift)sprintKeys_[k==sdl::rightShift]=true;
+            else if((k==13 || k=='e') && !catalog_ && lib.pickReferences(
+                    mouseLook_?Point{size_.w*.5f,size_.h*.5f}:pos_,size_))openLectern();
+            else if((k==13 || k=='e') && lib.hovered()>=0){
+                if(lib.open(lib.hovered())){
+                    stopWalking();
+                    if(mouseLook_){mouseLook_=false;sdl::relativeMouse(false);}
+                }
+            }else if(const int key=movementKey(k);key>=0 && lib.selected()<0)motionKeys_[key]=true;
+        }
+        dirty=true;break;
+    }
+    case sdl::text:
+        if(catalog_ && catalogFocus_==0 && search_.size()<96 && std::string_view(e.text.text)!="/"){
+            search_+=e.text.text;refreshCatalog();
+        }
+        break;
+    case sdl::motion:{
+        pos_={float(e.motion.x),float(e.motion.y)};
+#ifdef BIBLIOTECA_IPAD
+        if(e.motion.which==SDL_TOUCH_MOUSEID && (e.motion.state&SDL_BUTTON_LMASK)){
+            if(catalog_ && catalogDrag_){
+                const float dy=pos_.y-last_.y;
+                if(std::abs(dy)>14){
+                    const int moved=int(std::copysign(std::max(1.f,std::round(std::abs(dy)/27.f)),dy));
+                    scroll_=std::clamp(scroll_-moved,0,std::max(0,int(results_.size())-rows));
+                    cursor_=std::clamp(cursor_,scroll_,std::min(int(results_.size())-1,scroll_+rows-1));
+                    last_=pos_;moved_=true;dirty=true;
+                }
+                break;
+            }
+            if(!catalog_ && lib.selected()<0 && pressed_==Action::None){
+                if(moved_ || distance(pos_,start_)>5){
+                    lib.look(pos_.x-last_.x,pos_.y-last_.y);
+                    last_=pos_;moved_=true;dirty=true;
+                }
+                break;
+            }
+            if(drag_ && lib.stage()==Stage::Reading && lib.selected()!=referenceBookId){
+                const float dx=pos_.x-start_.x,dy=pos_.y-start_.y;
+                if(std::abs(dx)>48 && std::abs(dx)>std::abs(dy)*1.15f){
+                    touchSwipe_=true;moved_=true;last_=pos_;dirty=true;break;
+                }
+            }
+        }
+#endif
+        if((lookDrag_ || mouseLook_) && !catalog_ && lib.selected()<0){
+            const float dx=mouseLook_ || e.motion.xrel!=0?float(e.motion.xrel):pos_.x-last_.x;
+            const float dy=mouseLook_ || e.motion.yrel!=0?float(e.motion.yrel):pos_.y-last_.y;
+            lib.look(dx,dy);last_=pos_;moved_=true;dirty=true;
+        }else if(drag_){
+            if(distance(pos_,start_)>5)moved_=true;
+            if(moved_)lib.orbit(pos_.x-last_.x,pos_.y-last_.y);
+            last_=pos_;
+        }
+        break;
+    }
+    case sdl::down:
+        if(e.button.button==3 && !catalog_ && lib.selected()<0){
+            lookDrag_=true;last_={float(e.button.x),float(e.button.y)};dirty=true;
+        }else if(e.button.button==1){
+            start_=last_=pos_={float(e.button.x),float(e.button.y)};
+            pressed_=mouseLook_?Action::None:actionAt(pos_,true);
+            moved_=false;
+#ifdef BIBLIOTECA_IPAD
+            touchSwipe_=false;
+            if(touchDriveAction(pressed_)){
+                touchDrive_=pressed_;setTouchDrive(touchDrive_,true);dirty=true;break;
+            }
+            const auto d=dialog();
+            catalogDrag_=catalog_ && pressed_==Action::None &&
+                Rect{d.x+25,d.y+132,d.w-50,rows*rowHeight}.has(pos_);
+#endif
+            drag_=!catalog_ && pressed_==Action::None && lib.selected()!=referenceBookId && lib.onReader(pos_,size_);
+            dirty=true;
+        }
+        break;
+    case sdl::up:
+        if(e.button.button==3){lookDrag_=false;dirty=true;}
+        else if(e.button.button==1 && mouseLook_){
+            const Point center{size_.w*.5f,size_.h*.5f};
+            if(lib.pickReferences(center,size_))openLectern();
+            else if(const int id=lib.pick(center,size_);id>=0 && lib.open(id)){
+                stopWalking();mouseLook_=false;sdl::relativeMouse(false);dirty=true;
+            }
+        }else if(e.button.button==1){
+            pos_={float(e.button.x),float(e.button.y)};
+#ifdef BIBLIOTECA_IPAD
+            if(touchDrive_!=Action::None){
+                setTouchDrive(touchDrive_,false);touchDrive_=Action::None;pressed_=Action::None;dirty=true;break;
+            }
+            if(touchSwipe_){
+                if(lib.stage()==Stage::Reading)lib.turn(pos_.x<start_.x?1:-1);
+                drag_=catalogDrag_=touchSwipe_=false;pressed_=Action::None;dirty=true;break;
+            }
+#endif
+            const auto a=actionAt(pos_);
+            if(!moved_ && distance(pos_,start_)<=5){
+                if(a!=Action::None && pressed_==a)act(a);
+                else if(a==Action::None && pressed_==Action::None && actionAt(pos_,true)==Action::None){
+                    if(const auto url=sourceAt(pos_))SDL_OpenURL(url);
+                    else if(catalog_){
+                        const auto d=dialog();
+                        if(auto i=itemAt(pos_))choose(*i);
+                        else if(Rect{d.x+25,d.y+76,d.w-222,39}.has(pos_))focusCatalog(0);
+                        else if(!d.has(pos_))showCatalog(false);
+                    }
+                    else if(lib.pickReferences(pos_,size_))openLectern();
+                    else if(int id=lib.pick(pos_,size_);id>=0){if(lib.open(id))stopWalking();}
+                    else if(lib.stage()==Stage::Reading && !lib.onReader(pos_,size_))lib.close();
+                }
+            }
+            drag_=catalogDrag_=false;pressed_=Action::None;dirty=true;
+        }
+        break;
+    case sdl::wheel:{
+        const float wheel=e.wheel.preciseY!=0?e.wheel.preciseY:float(e.wheel.y);
+        const float y=e.wheel.direction==1?-wheel:wheel;
+        if(catalog_){
+            const int move=y==0?0:int(std::copysign(std::max(1.f,std::round(std::abs(y))),y));
+            scroll_=std::clamp(scroll_-move,0,std::max(0,int(results_.size())-rows));
+            dirty=true;
+        }else if(lib.selected()<0){
+            wheelTravel_=std::clamp(wheelTravel_+y*.82f,-3.3f,3.3f);
+            dirty=true;
+        }
+        else lib.zoom(y);
+        break;
+    }
+    default:break;
+    }
+}
+std::string Interface::signature() const {
+    return std::to_string(int(lib.section()))+":"+std::to_string(lib.selected())+":"+std::to_string(lib.wing())+":"+std::to_string(lib.hovered())+
+        ":"+std::to_string(lib.spread())+":"+std::to_string(int(lib.stage()))+":"+std::to_string(lib.turning()==1)+
+        ":"+std::to_string(int(actionAt(pos_)))+":"+std::to_string(catalog_)+":"+std::to_string(cursor_)+
+        ":"+std::to_string(itemAt(pos_).value_or(-1))+":"+std::to_string(filter_)+":"+std::to_string(scroll_)+
+        ":"+search_+":"+std::to_string(mouseLook_)+":"+std::to_string(hideControls_)+":"+std::to_string(size_.w)+":"+std::to_string(size_.h)+
+        ":"+std::to_string(motion_)+":"+std::to_string(catalogFocus_)+":"+std::to_string(int(pressed_));
+}
+void Interface::paint(Paint& p) const {
+    if(hideControls_ && !catalog_)return;
+    const double w=size_.w,h=size_.h,cx=w/2;
+    const bool reading=lib.selected()>=0;
+    if(!reading && !catalog_){
+        if(mouseLook_){
+            p.line(cx-4,h*.5,cx+4,h*.5,paper,1);
+            p.line(cx,h*.5-4,cx,h*.5+4,paper,1);
+        }
+        if(const int id=lib.hovered();id>=0){
+            const auto& slot=positions()[id];
+            const auto at=lib.project(slot.spine()+Vec{0,slot.height()/2,0},size_);
+            p.font(16,false,true);
+            const auto title=fitLabel(p,books()[id].title,254);
+            const auto width=p.width(title)+24;
+            const double x=std::clamp(double(at.x)-width/2,16.,w-width-16.),y=std::max(72.,double(at.y)-47.);
+            p.round({x,y,width,30},6,hudFill,color("#171b1c",0));
+            p.text(x+12,y+20,title,paper);
+        }
+    }else if(reading && lib.stage()==Stage::Reading){
+        const int first=lib.spread()*2+1;
+        const auto pages=std::to_string(first)+"–"+std::to_string(first+1)+" / "+
+                         std::to_string(spreadCount(lib.selected())*2);
+        p.round({cx-44,h-64,88,43},6,hudFill,color("#171b1c",0));
+        p.font(15,false,true);p.middle(cx,h-37,pages,paper);
+    }
+    if(catalog_){
+        p.fill({0,0,w,h},color("#0e2129",.70));
+        const auto d=dialog();
+        p.round(d,6,color("#f5ebd3"),catalogRule);
+        p.display(39);p.text(d.x+25,d.y+44,"Catálogo",catalogInk);
+        p.font(15,false,true);p.text(d.x+161,d.y+41,sectionName(catalogRoom_),catalogSubtle);
+        const Rect field{d.x+25,d.y+76,d.w-222,39};
+        p.round(field,3,color("#fff8e7"),catalogFocus_==0?color("#185e64"):catalogRule);
+        if(catalogFocus_==0)p.round({field.x-3,field.y-3,field.w+6,field.h+6},5,color("#185e64",0),color("#185e64"));
+        p.font(15);
+        if(search_.empty())p.text(d.x+37,d.y+101,"Buscar en esta sala",catalogSubtle);
+        else{
+            std::string display=search_;
+            while(display.size()>2 && p.width(display)>d.w-242){
+                size_t length=1;
+                while(length<display.size() && (static_cast<unsigned char>(display[length])&0xc0)==0x80)++length;
+                display.erase(0,length);
+            }
+            p.text(d.x+37,d.y+101,display,catalogInk);
+        }
+        if(results_.empty()){
+            p.font(18);p.middle(cx,d.y+183,"Prueba otro título o cambia el género.",catalogSubtle);
+        }
+        for(int i=0;i<rows && scroll_+i<int(results_.size());++i){
+            const auto id=results_[scroll_+i];const auto& b=books()[id];const auto y=d.y+132+i*rowHeight;
+            const auto item=itemAt(pos_);
+            if(scroll_+i==cursor_ || item==scroll_+i)
+                p.round({d.x+25,y,d.w-50,rowHeight-1},2,color("#d5e6db"),
+                        scroll_+i==cursor_ && catalogFocus_==0?color("#185e64"):catalogRule);
+            else p.line(d.x+26,y+rowHeight,d.x+d.w-26,y+rowHeight,color("#a2ada2",.65));
+            p.fill({d.x+37,y+11,5,11},color(b.cover));
+            p.font(13,false,true);p.text(d.x+50,y+22,b.number(id),catalogSubtle);
+            p.font(16,false,true);p.text(d.x+91,y+22,fitLabel(p,b.title,d.w-127),catalogInk);
+        }
+        p.line(d.x+25,d.y+d.h-49,d.x+d.w-25,d.y+d.h-49,catalogRule);
+        const int available=catalogRoom_==Section::Children?childrenCount:adultCount;
+        p.font(13);p.text(d.x+25,d.y+d.h-25,std::to_string(results_.size())+" de "+std::to_string(available)+" ejemplares",catalogSubtle);
+    }
+    for(const auto& b:buttons()){
+        if(!reading && !b.enabled)continue;
+        const bool focused=catalog_ && ((b.action==Action::Genre && catalogFocus_==1) ||
+                                       (b.action==Action::Close && catalogFocus_==2));
+        const bool hot=b.enabled && b.rect.has(pos_);
+        button(p,b.rect,b.text,b.enabled,hot,catalog_,focused,hot && pressed_==b.action);
+    }
+}
+}

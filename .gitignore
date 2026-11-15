@@ -1,0 +1,5 @@
+/.build/
+/biblioteca
+/build-ipad/
+/dist/
+__pycache__/

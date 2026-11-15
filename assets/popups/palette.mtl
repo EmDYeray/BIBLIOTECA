@@ -1,0 +1,990 @@
+newmtl 1F2B38_metal
+Kd 0.12157 0.16863 0.21961
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 22456B_planet
+Kd 0.13333 0.27059 0.41961
+Ks 0.130 0.130 0.130
+Ns 9
+illum 2
+
+newmtl 234760_solar
+Kd 0.13725 0.27843 0.37647
+Ks 0.320 0.320 0.320
+Ns 44
+illum 2
+
+newmtl 244761_metal
+Kd 0.14118 0.27843 0.38039
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 28323C_metal
+Kd 0.15686 0.19608 0.23529
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 285A7B_solar
+Kd 0.15686 0.35294 0.48235
+Ks 0.320 0.320 0.320
+Ns 44
+illum 2
+
+newmtl 2F5263_metal
+Kd 0.18431 0.32157 0.38824
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 2d6e84_solar
+Kd 0.17647 0.43137 0.51765
+Ks 0.320 0.320 0.320
+Ns 44
+illum 2
+
+newmtl 303747_rubber
+Kd 0.18824 0.21569 0.27843
+Ks 0.030 0.030 0.030
+Ns 4
+illum 2
+
+newmtl 335271_solar
+Kd 0.20000 0.32157 0.44314
+Ks 0.320 0.320 0.320
+Ns 44
+illum 2
+
+newmtl 354A61_metal
+Kd 0.20784 0.29020 0.38039
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 375975_metal
+Kd 0.21569 0.34902 0.45882
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 3C7E9C_solar
+Kd 0.23529 0.49412 0.61176
+Ks 0.320 0.320 0.320
+Ns 44
+illum 2
+
+newmtl 414B60_rubber
+Kd 0.25490 0.29412 0.37647
+Ks 0.030 0.030 0.030
+Ns 4
+illum 2
+
+newmtl 455A66_metal
+Kd 0.27059 0.35294 0.40000
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 465363_metal
+Kd 0.27451 0.32549 0.38824
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 465B74_metal
+Kd 0.27451 0.35686 0.45490
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 474B60_metal
+Kd 0.27843 0.29412 0.37647
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 477e9b_solar
+Kd 0.27843 0.49412 0.60784
+Ks 0.320 0.320 0.320
+Ns 44
+illum 2
+
+newmtl 485A79_planet
+Kd 0.28235 0.35294 0.47451
+Ks 0.130 0.130 0.130
+Ns 9
+illum 2
+
+newmtl 486D82_metal
+Kd 0.28235 0.42745 0.50980
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 49656B
+Kd 0.28627 0.39608 0.41961
+Ks 0.130 0.130 0.130
+Ns 9
+illum 2
+
+newmtl 4B6790_planet
+Kd 0.29412 0.40392 0.56471
+Ks 0.130 0.130 0.130
+Ns 9
+illum 2
+
+newmtl 4BBBC5_solar
+Kd 0.29412 0.73333 0.77255
+Ks 0.320 0.320 0.320
+Ns 44
+illum 2
+
+newmtl 4D555D_metal
+Kd 0.30196 0.33333 0.36471
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 4E596C_metal
+Kd 0.30588 0.34902 0.42353
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 526f76
+Kd 0.32157 0.43529 0.46275
+Ks 0.130 0.130 0.130
+Ns 9
+illum 2
+
+newmtl 534751_planet
+Kd 0.32549 0.27843 0.31765
+Ks 0.130 0.130 0.130
+Ns 9
+illum 2
+
+newmtl 546982_metal
+Kd 0.32941 0.41176 0.50980
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 5F6271_metal
+Kd 0.37255 0.38431 0.44314
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 61576B_metal
+Kd 0.38039 0.34118 0.41961
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 61C5D0_lamp
+Kd 0.38039 0.77255 0.81569
+Ks 0.200 0.200 0.200
+Ns 24
+illum 2
+
+newmtl 624C3A_metal
+Kd 0.38431 0.29804 0.22745
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 626B83_metal
+Kd 0.38431 0.41961 0.51373
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 63CBD1_lamp
+Kd 0.38824 0.79608 0.81961
+Ks 0.200 0.200 0.200
+Ns 24
+illum 2
+
+newmtl 646F81_metal
+Kd 0.39216 0.43529 0.50588
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 667785_metal
+Kd 0.40000 0.46667 0.52157
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 66BCC9_lamp
+Kd 0.40000 0.73725 0.78824
+Ks 0.200 0.200 0.200
+Ns 24
+illum 2
+
+newmtl 67658D_planet
+Kd 0.40392 0.39608 0.55294
+Ks 0.130 0.130 0.130
+Ns 9
+illum 2
+
+newmtl 687AAA_planet
+Kd 0.40784 0.47843 0.66667
+Ks 0.130 0.130 0.130
+Ns 9
+illum 2
+
+newmtl 68BDAD_lamp
+Kd 0.40784 0.74118 0.67843
+Ks 0.200 0.200 0.200
+Ns 24
+illum 2
+
+newmtl 6A7E8B_metal
+Kd 0.41569 0.49412 0.54510
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 6D5639_metal
+Kd 0.42745 0.33725 0.22353
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 6D7284_metal
+Kd 0.42745 0.44706 0.51765
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 6E786E_metal
+Kd 0.43137 0.47059 0.43137
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 728999_metal
+Kd 0.44706 0.53725 0.60000
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 755A64_metal
+Kd 0.45882 0.35294 0.39216
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 755F43_metal
+Kd 0.45882 0.37255 0.26275
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 757386_planet
+Kd 0.45882 0.45098 0.52549
+Ks 0.130 0.130 0.130
+Ns 9
+illum 2
+
+newmtl 758B99_metal
+Kd 0.45882 0.54510 0.60000
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 767688_metal
+Kd 0.46275 0.46275 0.53333
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 79D0B8_lamp
+Kd 0.47451 0.81569 0.72157
+Ks 0.200 0.200 0.200
+Ns 24
+illum 2
+
+newmtl 7A98B6_planet
+Kd 0.47843 0.59608 0.71373
+Ks 0.130 0.130 0.130
+Ns 9
+illum 2
+
+newmtl 7CC3CA_solar
+Kd 0.48627 0.76471 0.79216
+Ks 0.320 0.320 0.320
+Ns 44
+illum 2
+
+newmtl 7E8793_metal
+Kd 0.49412 0.52941 0.57647
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 809BB6_metal
+Kd 0.50196 0.60784 0.71373
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 815450_metal
+Kd 0.50588 0.32941 0.31373
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 829AA9_solar
+Kd 0.50980 0.60392 0.66275
+Ks 0.320 0.320 0.320
+Ns 44
+illum 2
+
+newmtl 829EA0_metal
+Kd 0.50980 0.61961 0.62745
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 859AB0_metal
+Kd 0.52157 0.60392 0.69020
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 87463C_planet
+Kd 0.52941 0.27451 0.23529
+Ks 0.130 0.130 0.130
+Ns 9
+illum 2
+
+newmtl 876D6C_metal
+Kd 0.52941 0.42745 0.42353
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 876E4A_metal
+Kd 0.52941 0.43137 0.29020
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 87A6B1_metal
+Kd 0.52941 0.65098 0.69412
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 8994AA_metal
+Kd 0.53725 0.58039 0.66667
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 8B8F9A_metal
+Kd 0.54510 0.56078 0.60392
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 8B96AB_metal
+Kd 0.54510 0.58824 0.67059
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 8B9EA8_metal
+Kd 0.54510 0.61961 0.65882
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 8BAEB8
+Kd 0.54510 0.68235 0.72157
+Ks 0.130 0.130 0.130
+Ns 9
+illum 2
+
+newmtl 8BE8D8_lamp
+Kd 0.54510 0.90980 0.84706
+Ks 0.200 0.200 0.200
+Ns 24
+illum 2
+
+newmtl 8C6A3E_metal
+Kd 0.54902 0.41569 0.24314
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 8E9CAD_metal
+Kd 0.55686 0.61176 0.67843
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 8F493B_planet
+Kd 0.56078 0.28627 0.23137
+Ks 0.130 0.130 0.130
+Ns 9
+illum 2
+
+newmtl 8F6554_metal
+Kd 0.56078 0.39608 0.32941
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 909698_metal
+Kd 0.56471 0.58824 0.59608
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 96A5A6_metal
+Kd 0.58824 0.64706 0.65098
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 987D62_metal
+Kd 0.59608 0.49020 0.38431
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 9A9A88_metal
+Kd 0.60392 0.60392 0.53333
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 9D8F77_metal
+Kd 0.61569 0.56078 0.46667
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 9ECEDE_planet
+Kd 0.61961 0.80784 0.87059
+Ks 0.130 0.130 0.130
+Ns 9
+illum 2
+
+newmtl 9F9387_metal
+Kd 0.62353 0.57647 0.52941
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl 9FACB5_metal
+Kd 0.62353 0.67451 0.70980
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl A0A7A9_metal
+Kd 0.62745 0.65490 0.66275
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl A0ABB2_metal
+Kd 0.62745 0.67059 0.69804
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl A35F4E_planet
+Kd 0.63922 0.37255 0.30588
+Ks 0.130 0.130 0.130
+Ns 9
+illum 2
+
+newmtl A39172_metal
+Kd 0.63922 0.56863 0.44706
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl A4B6C8_metal
+Kd 0.64314 0.71373 0.78431
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl A6B0C4_metal
+Kd 0.65098 0.69020 0.76863
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl A84C37_planet
+Kd 0.65882 0.29804 0.21569
+Ks 0.130 0.130 0.130
+Ns 9
+illum 2
+
+newmtl A8B3B5_metal
+Kd 0.65882 0.70196 0.70980
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl A8B9B1_metal
+Kd 0.65882 0.72549 0.69412
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl A99067_metal
+Kd 0.66275 0.56471 0.40392
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl A9997B_metal
+Kd 0.66275 0.60000 0.48235
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl AAB1C1_metal
+Kd 0.66667 0.69412 0.75686
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl AB7F61_metal
+Kd 0.67059 0.49804 0.38039
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl AE8F79_planet
+Kd 0.68235 0.56078 0.47451
+Ks 0.130 0.130 0.130
+Ns 9
+illum 2
+
+newmtl AF6B4F_planet
+Kd 0.68627 0.41961 0.30980
+Ks 0.130 0.130 0.130
+Ns 9
+illum 2
+
+newmtl AF8370_planet
+Kd 0.68627 0.51373 0.43922
+Ks 0.130 0.130 0.130
+Ns 9
+illum 2
+
+newmtl B1A08E_metal
+Kd 0.69412 0.62745 0.55686
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl B25E45_metal
+Kd 0.69804 0.36863 0.27059
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl B47158_metal
+Kd 0.70588 0.44314 0.34510
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl B4B8AB_metal
+Kd 0.70588 0.72157 0.67059
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl B69D85_metal
+Kd 0.71373 0.61569 0.52157
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl B6B9BD_metal
+Kd 0.71373 0.72549 0.74118
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl B99565
+Kd 0.72549 0.58431 0.39608
+Ks 0.130 0.130 0.130
+Ns 9
+illum 2
+
+newmtl B9A28C_metal
+Kd 0.72549 0.63529 0.54902
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl B9B4AE_metal
+Kd 0.72549 0.70588 0.68235
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl BB9273_metal
+Kd 0.73333 0.57255 0.45098
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl BB9779
+Kd 0.73333 0.59216 0.47451
+Ks 0.130 0.130 0.130
+Ns 9
+illum 2
+
+newmtl BBA688_metal
+Kd 0.73333 0.65098 0.53333
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl BE8A5E_metal
+Kd 0.74510 0.54118 0.36863
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl C1AC7E_metal
+Kd 0.75686 0.67451 0.49412
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl C39A5A_metal
+Kd 0.76471 0.60392 0.35294
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl C3B7A9_metal
+Kd 0.76471 0.71765 0.66275
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl C4A575_metal
+Kd 0.76863 0.64706 0.45882
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl C4B8AA_metal
+Kd 0.76863 0.72157 0.66667
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl C4D6CF
+Kd 0.76863 0.83922 0.81176
+Ks 0.130 0.130 0.130
+Ns 9
+illum 2
+
+newmtl C68654_planet
+Kd 0.77647 0.52549 0.32941
+Ks 0.130 0.130 0.130
+Ns 9
+illum 2
+
+newmtl C6A36F_metal
+Kd 0.77647 0.63922 0.43529
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl C7D7DB_metal
+Kd 0.78039 0.84314 0.85882
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl C89B5D_metal
+Kd 0.78431 0.60784 0.36471
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl C9C6B8_metal
+Kd 0.78824 0.77647 0.72157
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl CBD7D9_metal
+Kd 0.79608 0.84314 0.85098
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl CDAF69_metal
+Kd 0.80392 0.68627 0.41176
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl D1AB88_planet
+Kd 0.81961 0.67059 0.53333
+Ks 0.130 0.130 0.130
+Ns 9
+illum 2
+
+newmtl D1EDEF_planet
+Kd 0.81961 0.92941 0.93725
+Ks 0.130 0.130 0.130
+Ns 9
+illum 2
+
+newmtl D2C9B4_metal
+Kd 0.82353 0.78824 0.70588
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl D3B279_metal
+Kd 0.82745 0.69804 0.47451
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl D4613C_planet
+Kd 0.83137 0.38039 0.23529
+Ks 0.130 0.130 0.130
+Ns 9
+illum 2
+
+newmtl D4A078_metal
+Kd 0.83137 0.62745 0.47059
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl D5AA70
+Kd 0.83529 0.66667 0.43922
+Ks 0.130 0.130 0.130
+Ns 9
+illum 2
+
+newmtl D5AE70_metal
+Kd 0.83529 0.68235 0.43922
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl D69C67
+Kd 0.83922 0.61176 0.40392
+Ks 0.130 0.130 0.130
+Ns 9
+illum 2
+
+newmtl D6AD74_metal
+Kd 0.83922 0.67843 0.45490
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl D75D3B_metal
+Kd 0.84314 0.36471 0.23137
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl D7AE60_metal
+Kd 0.84314 0.68235 0.37647
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl D7AE6F_metal
+Kd 0.84314 0.68235 0.43529
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl D8B477_metal
+Kd 0.84706 0.70588 0.46667
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl DADBD8_planet
+Kd 0.85490 0.85882 0.84706
+Ks 0.130 0.130 0.130
+Ns 9
+illum 2
+
+newmtl DDB268_metal
+Kd 0.86667 0.69804 0.40784
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl DEC295_planet
+Kd 0.87059 0.76078 0.58431
+Ks 0.130 0.130 0.130
+Ns 9
+illum 2
+
+newmtl DF9854_lamp
+Kd 0.87451 0.59608 0.32941
+Ks 0.200 0.200 0.200
+Ns 24
+illum 2
+
+newmtl DFCFB1_metal
+Kd 0.87451 0.81176 0.69412
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl E0A260_planet
+Kd 0.87843 0.63529 0.37647
+Ks 0.130 0.130 0.130
+Ns 9
+illum 2
+
+newmtl E3B276_lamp
+Kd 0.89020 0.69804 0.46275
+Ks 0.200 0.200 0.200
+Ns 24
+illum 2
+
+newmtl E5A85D_lamp
+Kd 0.89804 0.65882 0.36471
+Ks 0.200 0.200 0.200
+Ns 24
+illum 2
+
+newmtl E68A58
+Kd 0.90196 0.54118 0.34510
+Ks 0.130 0.130 0.130
+Ns 9
+illum 2
+
+newmtl E69358_planet
+Kd 0.90196 0.57647 0.34510
+Ks 0.130 0.130 0.130
+Ns 9
+illum 2
+
+newmtl E6E0D2_metal
+Kd 0.90196 0.87843 0.82353
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl E8AA5D_metal
+Kd 0.90980 0.66667 0.36471
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl EAD397_lamp
+Kd 0.91765 0.82745 0.59216
+Ks 0.200 0.200 0.200
+Ns 24
+illum 2
+
+newmtl EBCC96_metal
+Kd 0.92157 0.80000 0.58824
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl EBE0C6
+Kd 0.92157 0.87843 0.77647
+Ks 0.130 0.130 0.130
+Ns 9
+illum 2
+
+newmtl EEA95F_lamp
+Kd 0.93333 0.66275 0.37255
+Ks 0.200 0.200 0.200
+Ns 24
+illum 2
+
+newmtl F0BE6F_lamp
+Kd 0.94118 0.74510 0.43529
+Ks 0.200 0.200 0.200
+Ns 24
+illum 2
+
+newmtl F1DAB3_planet
+Kd 0.94510 0.85490 0.70196
+Ks 0.130 0.130 0.130
+Ns 9
+illum 2
+
+newmtl F5B85E_lamp
+Kd 0.96078 0.72157 0.36863
+Ks 0.200 0.200 0.200
+Ns 24
+illum 2
+
+newmtl F7BD73_planet
+Kd 0.96863 0.74118 0.45098
+Ks 0.130 0.130 0.130
+Ns 9
+illum 2
+
+newmtl F7EBD9
+Kd 0.96863 0.92157 0.85098
+Ks 0.130 0.130 0.130
+Ns 9
+illum 2
+
+newmtl F9BF58_lamp
+Kd 0.97647 0.74902 0.34510
+Ks 0.200 0.200 0.200
+Ns 24
+illum 2
+
+newmtl FDC26B_lamp
+Kd 0.99216 0.76078 0.41961
+Ks 0.200 0.200 0.200
+Ns 24
+illum 2
+
+newmtl FFFFFF
+Kd 1.00000 1.00000 1.00000
+Ks 0.130 0.130 0.130
+Ns 9
+illum 2
+
+newmtl FFFFFF_lamp
+Kd 1.00000 1.00000 1.00000
+Ks 0.200 0.200 0.200
+Ns 24
+illum 2
+
+newmtl FFFFFF_metal
+Kd 1.00000 1.00000 1.00000
+Ks 0.640 0.640 0.640
+Ns 60
+illum 2
+
+newmtl FFFFFF_planet
+Kd 1.00000 1.00000 1.00000
+Ks 0.130 0.130 0.130
+Ns 9
+illum 2
+
