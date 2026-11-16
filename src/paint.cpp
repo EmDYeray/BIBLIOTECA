@@ -40,7 +40,11 @@ Paint::Paint(Size size):
 #ifdef BIBLIOTECA_IPAD
     image(cairo_image_surface_create(CAIRO_FORMAT_ARGB32,size.w,size.h)),
 #else
+    #ifdef _WIN32
+    image(cairo_image_surface_create(CAIRO_FORMAT_ARGB32,size.w,size.h)),
+#else
     image(cairo_image_surface_create(0,size.w,size.h)),
+#endif
 #endif
     ctx(cairo_create(image)),size(size){}
 Paint::~Paint(){cairo_destroy(ctx);cairo_surface_destroy(image);}
@@ -88,7 +92,13 @@ void Paint::font(double px,bool serif,bool bold){
     cairo_set_font_face(ctx,(bold?strong:regular).cairoFace);
     cairo_set_font_size(ctx,px);
 #else
-    cairo_select_font_face(ctx,serif?"Liberation Serif":"Barlow",0,bold?1:0);cairo_set_font_size(ctx,px);
+    #ifdef _WIN32
+    cairo_select_font_face(ctx,serif?"Liberation Serif":"Barlow",CAIRO_FONT_SLANT_NORMAL,
+                           bold?CAIRO_FONT_WEIGHT_BOLD:CAIRO_FONT_WEIGHT_NORMAL);
+#else
+    cairo_select_font_face(ctx,serif?"Liberation Serif":"Barlow",0,bold?1:0);
+#endif
+    cairo_set_font_size(ctx,px);
 #endif
 }
 void Paint::display(double px){
@@ -96,7 +106,11 @@ void Paint::display(double px){
     static const BundleFont condensed("BarlowCondensed-Bold.ttf");
     cairo_set_font_face(ctx,condensed.cairoFace);
 #else
+    #ifdef _WIN32
+    cairo_select_font_face(ctx,"Barlow Condensed",CAIRO_FONT_SLANT_NORMAL,CAIRO_FONT_WEIGHT_BOLD);
+#else
     cairo_select_font_face(ctx,"Barlow Condensed",0,1);
+#endif
 #endif
     cairo_set_font_size(ctx,px);
 }
