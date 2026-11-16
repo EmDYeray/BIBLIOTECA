@@ -70,7 +70,7 @@ std::vector<Interface::Button> Interface::buttons() const {
         const auto d=dialog();
         return {{{d.x+25,d.y+16,98,topH},Action::Language,isEnglish()?"EN / ES":"ES / EN",true},
                 {{d.x+d.w-112,d.y+16,87,topH},Action::Close,isEnglish()?"Close":"Cerrar",true},
-                {{d.x+d.w-194,d.y+76,169,topH},Action::Genre,genres_[filter_]+"  ▾",true}};
+                {{d.x+d.w-194,d.y+76,169,topH},Action::Genre,genres_[filter_]+"  v",true}};
     }
     if(hideControls_)return {};
     if(lib.selected()<0){
