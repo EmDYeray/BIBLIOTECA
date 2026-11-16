@@ -6,7 +6,7 @@
 #include "technical_notes.hpp"
 
 namespace biblioteca {
-inline bool englishLanguage=false;
+inline bool englishLanguage=true;
 inline bool isEnglish(){return englishLanguage;}
 inline void setEnglish(bool enabled){englishLanguage=enabled;}
 const Chapter& chapterEnglish(int book,int spread);

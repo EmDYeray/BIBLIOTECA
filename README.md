@@ -1,4 +1,4 @@
-# Starry Library
+# Biblioteca 3D
 
 An interactive desktop library built with C++20, SDL2, OpenGL 3.3 and Cairo.
 
@@ -58,7 +58,7 @@ GitHub Actions compile and smoke tests do not prove that the full 3D interface r
 
 ## Languages
 
-The library supports **Spanish (Español)** and **English** in the same native executable. Spanish is the default.
+The library supports **Spanish (Español)** and **English** in the same native executable. English is the default, with Spanish available using the language selector.
 
 - Click the **ES / EN** language control at the top of the application to switch languages immediately.
 - Press **F9** to switch languages from the keyboard, including while reading or browsing the catalog.
