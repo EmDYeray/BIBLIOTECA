@@ -1,60 +1,108 @@
-name: Biblioteca para Windows
+name: Windows native build and verification
 
 on:
   workflow_dispatch:
   push:
     branches: [windows-build]
+  pull_request:
+    paths:
+      - ".github/workflows/windows.yml"
+      - "src/**"
+      - "assets/**"
+      - "Makefile.windows"
+      - "packaging/**"
 
 permissions:
   contents: read
 
 jobs:
   windows:
-    runs-on: windows-latest
-    timeout-minutes: 35
+    runs-on: windows-2022
+    timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v4
-      - uses: msys2/setup-msys2@v2
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Install UCRT64 C++ dependencies
+        uses: msys2/setup-msys2@v2
         with:
           msystem: UCRT64
           update: true
           install: >-
-            mingw-w64-ucrt-x86_64-toolchain
+            make
+            mingw-w64-ucrt-x86_64-gcc
             mingw-w64-ucrt-x86_64-pkgconf
             mingw-w64-ucrt-x86_64-SDL2
             mingw-w64-ucrt-x86_64-cairo
             mingw-w64-ucrt-x86_64-fontconfig
             mingw-w64-ucrt-x86_64-glew
             mingw-w64-ucrt-x86_64-nsis
+            zip
 
-      - name: Compilar y probar
+      - name: Compile and run headless geometry tests
         shell: msys2 {0}
         run: |
+          set -euo pipefail
           make -f Makefile.windows -j2
           make -f Makefile.windows test
+          ./biblioteca.exe --help
 
-      - name: Preparar ejecutable y dependencias
+      - name: Assemble portable application
         shell: msys2 {0}
         run: |
           set -euo pipefail
           mkdir -p windows-stage
           cp biblioteca.exe windows-stage/
           cp -R assets windows-stage/
-          ldd biblioteca.exe | awk '$3 ~ /^\/ucrt64\/bin\// {print $3}' | sort -u | while IFS= read -r dll; do cp "$dll" windows-stage/; done
+          # Copy the complete recursive UCRT64 dependency closure, not only direct DLL imports.
+          ldd biblioteca.exe | awk '$3 ~ /^\/ucrt64\/bin\// { print $3 }' | sort -u | while IFS= read -r dll; do
+            cp "$dll" windows-stage/
+          done
+          test -s windows-stage/biblioteca.exe
           test -s windows-stage/assets/shaders/scene.vert
+          test -s windows-stage/assets/shaders/scene.frag
           test -s windows-stage/assets/fonts/Barlow-Regular.ttf
+          test -s windows-stage/assets/popups/cohete.obj
           test -f windows-stage/SDL2.dll
           test -f windows-stage/libcairo-2.dll
+          # Keep Fontconfig configuration in the portable build.
+          if [ -d /ucrt64/etc/fonts ]; then
+            mkdir -p windows-stage/etc
+            cp -R /ucrt64/etc/fonts windows-stage/etc/
+          fi
 
-      - name: Empaquetar en un solo EXE
+      - name: Test executable with native Windows command shell
+        shell: cmd
+        run: |
+          windows-stage\biblioteca.exe --self-test
+          if errorlevel 1 exit /b 1
+          windows-stage\biblioteca.exe --help
+          if errorlevel 1 exit /b 1
+
+      - name: Create Windows portable ZIP
         shell: msys2 {0}
         run: |
+          set -euo pipefail
           mkdir -p dist
+          cd windows-stage
+          zip -q -r ../dist/Biblioteca-3D-Windows-x64.zip .
+          cd ..
+          unzip -t dist/Biblioteca-3D-Windows-x64.zip
+          test -s dist/Biblioteca-3D-Windows-x64.zip
+
+      - name: Build optional single-file launcher
+        shell: msys2 {0}
+        run: |
+          set -euo pipefail
           makensis packaging/windows-portable.nsi
           test -s dist/Biblioteca-Windows.exe
 
-      - uses: actions/upload-artifact@v4
+      - name: Publish test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
-          name: Biblioteca-Windows
-          path: dist/Biblioteca-Windows.exe
-          if-no-files-found: error
+          name: Biblioteca-Windows-test-build
+          path: |
+            dist/Biblioteca-3D-Windows-x64.zip
+            dist/Biblioteca-Windows.exe
+          if-no-files-found: warn
