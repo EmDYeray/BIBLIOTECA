@@ -38,6 +38,7 @@ jobs:
             mingw-w64-ucrt-x86_64-glew
             mingw-w64-ucrt-x86_64-nsis
             zip
+            unzip
 
       - name: Compile and run headless geometry tests
         shell: msys2 {0}
@@ -79,6 +80,12 @@ jobs:
           windows-stage\biblioteca.exe --help
           if errorlevel 1 exit /b 1
 
+      - name: Attempt native graphical render (depends on runner OpenGL support)
+        shell: cmd
+        continue-on-error: true
+        run: |
+          windows-stage\\biblioteca.exe --desktop-check windows-render
+
       - name: Create Windows portable ZIP
         shell: msys2 {0}
         run: |
@@ -89,8 +96,10 @@ jobs:
           cd ..
           unzip -t dist/Biblioteca-3D-Windows-x64.zip
           test -s dist/Biblioteca-3D-Windows-x64.zip
+          sha256sum dist/Biblioteca-3D-Windows-x64.zip > dist/SHA256SUMS.txt
 
       - name: Build optional single-file launcher
+        continue-on-error: true
         shell: msys2 {0}
         run: |
           set -euo pipefail
@@ -105,4 +114,13 @@ jobs:
           path: |
             dist/Biblioteca-3D-Windows-x64.zip
             dist/Biblioteca-Windows.exe
+            dist/SHA256SUMS.txt
+          if-no-files-found: warn
+
+      - name: Upload native Windows render frames
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Biblioteca-Windows-render-diagnostics
+          path: windows-render/*.png
           if-no-files-found: warn
