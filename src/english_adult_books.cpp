@@ -4,7 +4,7 @@
 namespace biblioteca {
 const std::array<AdultBook,originalAdultCount>& adultBooks(){
     static constexpr std::array<AdultBook,originalAdultCount> collection{{
-        {"The turn of the sign","Fiction","An observer should decide if a sign deserves another listening night.","#62383b",{{
+        {"The Signal Shift","Fiction","An observer should decide if a sign deserves another listening night.","#62383b",{{
             {"The anomaly",
              "At two and seventeen, the radio telescope graph drew a line that did not belong to the interference inventory. Elena stopped playback and expanded the last few seconds. At the observatory's shed only the equipment's fan and a branch's pounding were heard against the wall. The line was narrow, oblique and fleeting. He had been shown up at the time his antenna was passing through an empty area of his program.\nHe put his hour on paper. The automatic alerts retained the record but wrote it forced her to look at the clock twice.",
              "Before we notify his supervisor, Elena asked herself a more modest question. Can I have a look again if I look again? He requested a second pass and also noted his antenna's position. The search engine found no matching at the week's file. That's what she told her. The file was made up of incomplete nights, different equipment and shifts where someone had lowered the threshold to recover weak data.\nElena added a column to the notebook and entitled it \"conditions.\" Below was the gain, temperature and status of the network. If I had to remember the night after, those details would matter as much as the line."},

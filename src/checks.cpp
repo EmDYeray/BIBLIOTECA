@@ -751,7 +751,7 @@ int renderTest(const std::filesystem::path& dir,bool desktopMode){
     key(ui,'g');until(ui,Stage::Idle);
     key(ui,'k');expect(ui.resultCount()==adultCount,"Room return kept the previous room's filter");
     snap("19-catalogo-adulto");snapCompact("19a-catalogo-ventana-minima");
-    type(ui,"EL TURNO");expect(ui.resultCount()==1,"Cannot find a title in the adult room");
+    type(ui,"signal shift");expect(ui.resultCount()==1,"Cannot find a title in the adult room");
     key(ui,13);until(ui,Stage::Reading);
     expect(ui.lib.selected()==originalCount,"Adult catalog opened the wrong book");
     for(int id=0;id<bookCount;++id){
