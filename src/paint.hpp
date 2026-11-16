@@ -12,9 +12,6 @@ struct Rect {
 };
 class Paint {
     cairo_surface_t* image;
-#ifdef BIBLIOTECA_IPAD
-    mutable std::vector<unsigned char> rgba_;
-#endif
 public:
     cairo_t* ctx;
     const Size size;

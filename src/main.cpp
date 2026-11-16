@@ -23,9 +23,9 @@ int main(int argc,char** argv){
             return biblioteca::renderTest(argv[2],option=="--desktop-check");
         std::ostream& out=option=="--help"?std::cout:std::cerr;
         out << "Biblioteca\n"
-               "  biblioteca                       Abrir la biblioteca\n"
-               "  biblioteca --self-test           Probar geometría y navegación\n"
-               "  biblioteca --render-check RUTA   Guardar cuadros y probar eventos SDL\n";
+               "  biblioteca                       Open the library\n"
+               "  biblioteca --self-test           Run geometry and navigation checks\n"
+               "  biblioteca --render-check RUTA   Save frames and test SDL events\n";
         return option=="--help"?0:2;
     }catch(const std::exception& error){
         std::cerr<<"Biblioteca: "<<error.what()<<'\n';return 1;

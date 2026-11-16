@@ -108,7 +108,7 @@ std::string pageText(int id,int page) {
         excerpt=excerpt.substr(0,excerptLimit);
         if(const auto cut=excerpt.rfind(' ');cut>36)excerpt=excerpt.substr(0,cut);
     }
-    return std::string(base)+"\n\nRegistro de misión: "+std::string(excerpt);
+    return std::string(base)+"\n\nMission log: "+std::string(excerpt);
 }
 float wingX(int wing) { return wing==0?-5.1f:5.1f; }
 float ease(float x) { x=std::clamp(x,0.f,1.f);return x*x*x*(10+x*(-15+6*x)); }
