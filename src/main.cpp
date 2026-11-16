@@ -12,8 +12,14 @@ int main(int argc,char** argv){
         if(auto* config=FcConfigGetCurrent()){
             for(const auto* face:{"Barlow-Regular.ttf","Barlow-Bold.ttf","BarlowCondensed-Bold.ttf"}){
                 const auto file=fonts/face;
-                if(std::filesystem::is_regular_file(file))
+                if(std::filesystem::is_regular_file(file)){
+#ifdef _WIN32
+                    const auto utf8=file.u8string();
+                    FcConfigAppFontAddFile(config,reinterpret_cast<const FcChar8*>(utf8.c_str()));
+#else
                     FcConfigAppFontAddFile(config,reinterpret_cast<const FcChar8*>(file.c_str()));
+#endif
+                }
             }
         }
         if(argc==1)return biblioteca::interactive();
@@ -24,8 +30,8 @@ int main(int argc,char** argv){
         std::ostream& out=option=="--help"?std::cout:std::cerr;
         out << "Biblioteca\n"
                "  biblioteca                       Open the library\n"
-               "  biblioteca --self-test           Run geometry and navigation checks\n"
-               "  biblioteca --render-check RUTA   Save frames and test SDL events\n";
+               "  biblioteca --self-test           Test geometry and navigation\n"
+               "  biblioteca --render-check RUTA   Capture frames and test SDL events\n";
         return option=="--help"?0:2;
     }catch(const std::exception& error){
         std::cerr<<"Biblioteca: "<<error.what()<<'\n';return 1;

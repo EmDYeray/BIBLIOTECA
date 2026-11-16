@@ -1,0 +1,132 @@
+name: Windows native build and verification
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, windows-build]
+  pull_request:
+    paths:
+      - ".github/workflows/windows.yml"
+      - "src/**"
+      - "assets/**"
+      - "Makefile.windows"
+      - "packaging/**"
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    runs-on: windows-2022
+    timeout-minutes: 45
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Install UCRT64 C++ dependencies
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          install: >-
+            make
+            mingw-w64-ucrt-x86_64-gcc
+            mingw-w64-ucrt-x86_64-pkgconf
+            mingw-w64-ucrt-x86_64-SDL2
+            mingw-w64-ucrt-x86_64-cairo
+            mingw-w64-ucrt-x86_64-fontconfig
+            mingw-w64-ucrt-x86_64-glew
+            mingw-w64-ucrt-x86_64-nsis
+            zip
+            unzip
+
+      - name: Compile and run headless geometry tests
+        shell: msys2 {0}
+        run: |
+          set -euo pipefail
+          make -f Makefile.windows -j2
+          make -f Makefile.windows test
+          ./biblioteca.exe --help
+
+      - name: Assemble portable application
+        shell: msys2 {0}
+        run: |
+          set -euo pipefail
+          mkdir -p windows-stage
+          cp biblioteca.exe windows-stage/
+          cp -R assets windows-stage/
+          # Copy the complete recursive UCRT64 dependency closure, not only direct DLL imports.
+          ldd biblioteca.exe | awk '$3 ~ /^\/ucrt64\/bin\// { print $3 }' | sort -u | while IFS= read -r dll; do
+            cp "$dll" windows-stage/
+          done
+          test -s windows-stage/biblioteca.exe
+          test -s windows-stage/assets/shaders/scene.vert
+          test -s windows-stage/assets/shaders/scene.frag
+          test -s windows-stage/assets/fonts/Barlow-Regular.ttf
+          test -s windows-stage/assets/popups/cohete.obj
+          test -f windows-stage/SDL2.dll
+          test -f windows-stage/libcairo-2.dll
+          # Keep Fontconfig configuration in the portable build.
+          if [ -d /ucrt64/etc/fonts ]; then
+            mkdir -p windows-stage/etc
+            cp -R /ucrt64/etc/fonts windows-stage/etc/
+          fi
+
+      - name: Run packaged executable with system-only Windows PATH
+        shell: cmd
+        run: |
+          set "PATH=%SystemRoot%\System32;%SystemRoot%;%SystemRoot%\System32\Wbem"
+          start "" /wait "%CD%\windows-stage\biblioteca.exe" --self-test
+          if errorlevel 1 exit /b 1
+          start "" /wait "%CD%\windows-stage\biblioteca.exe" --help
+          if errorlevel 1 exit /b 1
+
+      - name: Attempt native graphical rendering and require proof frames
+        shell: cmd
+        timeout-minutes: 8
+        continue-on-error: true
+        run: |
+          set "PATH=%SystemRoot%\System32;%SystemRoot%;%SystemRoot%\System32\Wbem"
+          start "" /wait "%CD%\windows-stage\biblioteca.exe" --desktop-check windows-render
+          if errorlevel 1 exit /b 1
+          if not exist windows-render\*.png exit /b 2
+          echo Render succeeded and generated PNG proof frames
+
+      - name: Create Windows portable ZIP
+        shell: msys2 {0}
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          cd windows-stage
+          zip -q -r ../dist/Biblioteca-3D-Windows-x64.zip .
+          cd ..
+          unzip -t dist/Biblioteca-3D-Windows-x64.zip
+          test -s dist/Biblioteca-3D-Windows-x64.zip
+          sha256sum dist/Biblioteca-3D-Windows-x64.zip > dist/SHA256SUMS.txt
+
+      - name: Build optional single-file launcher
+        continue-on-error: true
+        shell: msys2 {0}
+        run: |
+          set -euo pipefail
+          makensis packaging/windows-portable.nsi
+          test -s dist/Biblioteca-Windows.exe
+
+      - name: Publish test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Biblioteca-Windows-test-build
+          path: |
+            dist/Biblioteca-3D-Windows-x64.zip
+            dist/Biblioteca-Windows.exe
+            dist/SHA256SUMS.txt
+          if-no-files-found: warn
+
+      - name: Upload native Windows render frames
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Biblioteca-Windows-render-diagnostics
+          path: windows-render/*.png
+          if-no-files-found: warn

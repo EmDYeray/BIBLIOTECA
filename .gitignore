@@ -2,3 +2,8 @@
 /biblioteca
 /dist/
 __pycache__/
+
+/.build-windows/
+/biblioteca.exe
+/windows-stage/
+/windows-render/

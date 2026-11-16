@@ -11,6 +11,7 @@ Color color(std::string_view hex,double alpha) {
 }
 Paint::Paint(Size size):
     image(cairo_image_surface_create(0,size.w,size.h)),
+#endif
     ctx(cairo_create(image)),size(size){}
 Paint::~Paint(){cairo_destroy(ctx);cairo_surface_destroy(image);}
 unsigned char* Paint::pixels(){cairo_surface_flush(image);return cairo_image_surface_get_data(image);}
@@ -45,10 +46,13 @@ void Paint::gradient(Rect r,double x1,double y1,double x2,double y2,Color a,Colo
     cairo_set_source(ctx,pat);cairo_rectangle(ctx,r.x,r.y,r.w,r.h);cairo_fill(ctx);cairo_pattern_destroy(pat);
 }
 void Paint::font(double px,bool serif,bool bold){
-    cairo_select_font_face(ctx,serif?"Liberation Serif":"Barlow",0,bold?1:0);cairo_set_font_size(ctx,px);
+    cairo_select_font_face(ctx,serif?"Liberation Serif":"Barlow",0,bold?1:0);
+    cairo_set_font_size(ctx,px);
+#endif
 }
 void Paint::display(double px){
     cairo_select_font_face(ctx,"Barlow Condensed",0,1);
+#endif
     cairo_set_font_size(ctx,px);
 }
 double Paint::width(std::string_view t) const {

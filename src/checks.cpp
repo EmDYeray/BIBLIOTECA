@@ -348,8 +348,17 @@ void saveFrame(Size s,const std::filesystem::path& path){
     const size_t stride=size_t(s.w)*4;
     for(int i=0;i<s.h/2;++i)
         std::swap_ranges(data.begin()+i*stride,data.begin()+(i+1)*stride,data.begin()+(s.h-1-i)*stride);
+    #ifdef _WIN32
+    auto* image=cairo_image_surface_create_for_data(data.data(),CAIRO_FORMAT_RGB24,s.w,s.h,int(stride));
+#else
     auto* image=cairo_image_surface_create_for_data(data.data(),1,s.w,s.h,int(stride));
+#endif
+    #ifdef _WIN32
+    const auto utf8=path.u8string();
+    const int result=cairo_surface_write_to_png(image,reinterpret_cast<const char*>(utf8.c_str()));
+#else
     const int result=cairo_surface_write_to_png(image,path.c_str());
+#endif
     cairo_surface_destroy(image);
     expect(result==0,"Failed to save render frame");
 }
@@ -372,7 +381,11 @@ void mouse(Interface& ui,Point p,bool pressed){
 } // namespace
 
 int renderTest(const std::filesystem::path& dir,bool desktopMode){
+    #ifdef _WIN32
+    if(!desktopMode)_putenv_s("SDL_VIDEODRIVER","offscreen");
+#else
     if(!desktopMode)setenv("SDL_VIDEODRIVER","offscreen",1);
+#endif
     std::filesystem::create_directories(dir);
     Desktop desktop(proofSize,!desktopMode);
     Renderer renderer;

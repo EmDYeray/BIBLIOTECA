@@ -2,7 +2,7 @@
 
 An interactive desktop library built with C++20, SDL2, OpenGL 3.3 and Cairo.
 
-**Platform status:** Linux x86-64 is the primary supported target. A native Windows x64 port is being developed and validated on the `windows-build` branch. Windows packages are experimental until they pass standalone tests on real Windows computers.
+**Platform status:** Linux x86-64 is the primary supported target. The repository also builds a native Windows x64 executable using GitHub Actions. Windows builds are experimental until tested with a real graphics driver.
 
 ## Experience
 
@@ -50,7 +50,7 @@ For render regression frames:
 
 ## Windows x64
 
-The `windows-build` branch contains an MSYS2 UCRT64 build of the same desktop application, plus a GitHub Actions workflow that builds and tests a portable ZIP on a real Windows runner. This is a native Win32 program, **not** a UWP application and not a Wine executable.
+The repository contains an MSYS2 UCRT64 build of the same desktop application, plus a GitHub Actions workflow that packages and tests a portable ZIP on a Windows runner. This is a native Win32 program, **not** a UWP application and not a Wine executable.
 
 When a build artifact is available, extract the entire portable ZIP and run `biblioteca.exe` from the extracted directory. Keep the DLL files and `assets/` directory beside the executable. An OpenGL 3.3-capable graphics driver is required.
 
