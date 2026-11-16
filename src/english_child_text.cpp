@@ -37,7 +37,7 @@ const AdultSpread& childSpread(int book,int spread){
             {"A beep in time","Vera turned the radio on as the sun came up. Aurora's beep came at his hour.","He put it away to remember how a piece so small could change the whole journey."}
         }},
         Story{{
-            {"First Tracks","Nadia looked at the robot's prints with tires. The sun was painting the stones of orange.","The robot stopped by a crack. Nadia would look for a more flat place to get through."},
+            {"First Tracks","Nadia studied the rover's tire tracks. Sunlight painted the stones orange.","The rover stopped beside a crack. Nadia searched for a flatter route across."},
             {"Turn around","A photo from above shown rock steps that the robot couldn't see.","Nadia drew a ride up a firmer ground."},
             {"A Slipping Wheel","On his way up, a wheel slipped and put up powder. Below was a dark stone.","Nadia put the robot back. In his second attempt, he surrounded the stone."},
             {"Photos by Radio","A ship passed onto the robot. I could send photos to Earth for a few minutes.","Nadia received a photo with clear stripes on the rock. He wanted to see her closely."},
