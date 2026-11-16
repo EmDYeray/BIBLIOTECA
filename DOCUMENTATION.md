@@ -69,18 +69,18 @@ The Makefile uses C++20. The executable resolves `assets/` relative to its own l
 
 ### Windows x64
 
-`Biblioteca-3D-Windows-x64.zip` is the portable 64-bit build (30.5 MiB). It requires a graphics driver that supports OpenGL 3.3.
+The GitHub Actions workflow produces `Biblioteca-3D-Windows-x64.zip`, a portable 64-bit build. Download it from a successful workflow run. The ZIP's size depends on the build, and an OpenGL 3.3-compatible graphics driver is required.
 
 1. Extract the entire ZIP.
-2. Open the inner `Biblioteca-Windows-x64` folder.
+2. Open the extracted directory.
 3. Run `biblioteca.exe`.
 
-To move the application, copy the entire `Biblioteca-Windows-x64` folder so the DLLs, `assets/`, and `etc/` stay beside the executable.
+To move the application, copy the entire extracted directory; keep the required DLLs, `assets/`, and `etc/` beside `biblioteca.exe`.
 
 | Path | Contents |
 | --- | --- |
 | `biblioteca.exe` | Windows x86-64 graphical executable. |
-| `*.dll` | 21 libraries, including SDL2, Cairo, FreeType, GLEW, Fontconfig, and the C++ runtime. |
+| `*.dll` | Required Windows libraries, including SDL2, Cairo, GLEW, Fontconfig, and the C++ runtime. |
 | `assets/covers/` | 22 PNG covers. |
 | `assets/popups/` and `assets/open_models/` | 67 OBJ pop-up models and 3 adapted models (AcrimSAT, Viking Lander, and Astronaut). |
 | `assets/fonts/` | Five Barlow and Liberation Serif font files and their licenses. |
@@ -91,6 +91,8 @@ To move the application, copy the entire `Biblioteca-Windows-x64` folder so the 
 The Windows executable loads fonts through FreeType and accesses OpenGL through GLEW. The application DLLs are bundled with the ZIP.
 
 ## Controls
+
+English is the initial interface language. Use F9 or the language control to switch to Spanish.
 
 | Control | Action |
 | --- | --- |
@@ -108,6 +110,7 @@ The Windows executable loads fonts through FreeType and accesses OpenGL through 
 | `M` | Pause or resume model animation. |
 | `Esc` | Release the mouse, cancel a walk, or close the reader. |
 | `F2` | Toggle the controls guide. |
+| `F9` | Switch between English and Spanish. |
 | `F11` | Toggle full screen. |
 
 Selecting a book from a distance moves the camera to the reading position before opening it. Room layout and movement boundaries are defined in `src/room_layout.cpp`.
@@ -141,7 +144,7 @@ Mission imagery and adapted models are credited in `ASSETS_OPEN.md`, which also 
 The build commands apply to Linux. The Windows instructions and asset counts describe the prior portable ZIP and must be rechecked for each release.
 ## Windows Native Verification
 
-The Windows port is developed on the separate `windows-build` branch. Do not merge or label Windows packages stable based solely on CI or Wine. A portable ZIP and a self-extracting EXE require independent testing.
+The Linux and Windows builds share the source code in the main branch. Do not label Windows packages stable based solely on CI or Wine. A portable ZIP and a self-extracting EXE require independent testing.
 
 1. Download the exact candidate artifact on a real Windows 11 x64 machine; record its SHA-256 checksum.
 2. Extract the portable ZIP completely, preserving DLLs, `assets/` and `etc/` relative to `biblioteca.exe`. For a standalone self-extracting EXE, launch that file directly.
