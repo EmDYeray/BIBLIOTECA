@@ -1,4 +1,4 @@
-# Biblioteca 3D
+# Starry Library
 
 An interactive desktop library built with C++20, SDL2, OpenGL 3.3 and Cairo.
 
