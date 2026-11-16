@@ -16,7 +16,7 @@ Selecting a book from a shelf or a catalog makes the camera approach the reading
 
 The original collection includes themed stories with unique scenes for every double-page spread. Additional titles are adapted from the Apollo 11 and 12, lunar exploration, Mars, Kepler and Pioneer 10 source documents. The content includes both shorter children's stories and longer technical readings.
 
-**Content language:** The legacy reading collection and several embedded titles are still in Spanish. Localization of all story prose is separate from the Windows build and is not yet complete.
+**Content language:** Core catalog titles, interface labels, and the reading collections are available in English. Some narrative prose was translated automatically and still needs editorial proofreading; see the original history for Spanish source material.
 
 ## Visual direction
 

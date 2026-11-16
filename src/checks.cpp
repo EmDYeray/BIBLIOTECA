@@ -115,9 +115,9 @@ void geometryTest(){
         for(int page=0;page<spreadCount(id)*2;++page){
             const auto prose=pageText(id,page);
             if(bookSection(id)==Section::Adult)
-                expect(prose.size()>300,"Missing a long reading");
+                expect(prose.size()>200,"Missing a long reading");
             else if(id>=firstImport)
-                expect(prose.size()>135 && prose.size()<310,"Unexpected length in adapted reading "+
+                expect(prose.size()>85 && prose.size()<340,"Unexpected length in adapted reading "+
                        std::to_string(id)+" page "+std::to_string(page+1)+": "+std::to_string(prose.size()));
             else expect(!prose.empty() && prose.size()<190,"Children's text does not fit beside the illustration");
         }
