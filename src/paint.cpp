@@ -2,59 +2,22 @@
 #include <cstdlib>
 #include <sstream>
 #include <vector>
-#ifdef BIBLIOTECA_IPAD
-#include "popup.hpp"
-#include <cairo-ft.h>
-#include <stdexcept>
-#endif
 
 namespace biblioteca {
-#ifdef BIBLIOTECA_IPAD
-namespace {
-struct BundleFont {
-    FT_Library library=nullptr;
-    FT_Face face=nullptr;
-    cairo_font_face_t* cairoFace=nullptr;
-    explicit BundleFont(const char* name){
-        const auto file=assetsPath()/"fonts"/name;
-        if(FT_Init_FreeType(&library) || FT_New_Face(library,file.c_str(),0,&face)){
-            if(library)FT_Done_FreeType(library);
-            throw std::runtime_error("No se pudo cargar "+file.string());
-        }
-        cairoFace=cairo_ft_font_face_create_for_ft_face(face,0);
-    }
-    ~BundleFont(){
-        cairo_font_face_destroy(cairoFace);
-        FT_Done_Face(face);
-        FT_Done_FreeType(library);
-    }
-};
-}
-#endif
 Color color(std::string_view hex,double alpha) {
     if(hex.starts_with('#'))hex.remove_prefix(1);
     const auto n=std::strtoul(std::string(hex).c_str(),nullptr,16);
     return {double(n>>16&255)/255,double(n>>8&255)/255,double(n&255)/255,alpha};
 }
 Paint::Paint(Size size):
-#ifdef BIBLIOTECA_IPAD
-    image(cairo_image_surface_create(CAIRO_FORMAT_ARGB32,size.w,size.h)),
-#else
     image(cairo_image_surface_create(0,size.w,size.h)),
-#endif
     ctx(cairo_create(image)),size(size){}
 Paint::~Paint(){cairo_destroy(ctx);cairo_surface_destroy(image);}
 unsigned char* Paint::pixels(){cairo_surface_flush(image);return cairo_image_surface_get_data(image);}
 const unsigned char* Paint::texturePixels() const {
     cairo_surface_flush(image);
     const auto* pixels=cairo_image_surface_get_data(image);
-#ifdef BIBLIOTECA_IPAD
-    rgba_.assign(pixels,pixels+size_t(size.w)*size.h*4);
-    for(size_t i=0;i<rgba_.size();i+=4)std::swap(rgba_[i],rgba_[i+2]);
-    return rgba_.data();
-#else
     return pixels;
-#endif
 }
 void Paint::ink(Color c){cairo_set_source_rgba(ctx,c.r,c.g,c.b,c.a);}
 void Paint::fill(Rect r,Color c){ink(c);cairo_rectangle(ctx,r.x,r.y,r.w,r.h);cairo_fill(ctx);}
@@ -82,22 +45,10 @@ void Paint::gradient(Rect r,double x1,double y1,double x2,double y2,Color a,Colo
     cairo_set_source(ctx,pat);cairo_rectangle(ctx,r.x,r.y,r.w,r.h);cairo_fill(ctx);cairo_pattern_destroy(pat);
 }
 void Paint::font(double px,bool serif,bool bold){
-#ifdef BIBLIOTECA_IPAD
-    static const BundleFont regular("Barlow-Regular.ttf"),strong("Barlow-Bold.ttf");
-    (void)serif;
-    cairo_set_font_face(ctx,(bold?strong:regular).cairoFace);
-    cairo_set_font_size(ctx,px);
-#else
     cairo_select_font_face(ctx,serif?"Liberation Serif":"Barlow",0,bold?1:0);cairo_set_font_size(ctx,px);
-#endif
 }
 void Paint::display(double px){
-#ifdef BIBLIOTECA_IPAD
-    static const BundleFont condensed("BarlowCondensed-Bold.ttf");
-    cairo_set_font_face(ctx,condensed.cairoFace);
-#else
     cairo_select_font_face(ctx,"Barlow Condensed",0,1);
-#endif
     cairo_set_font_size(ctx,px);
 }
 double Paint::width(std::string_view t) const {

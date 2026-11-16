@@ -64,62 +64,34 @@ void button(Paint& p,Rect r,std::string_view text,bool enabled,bool hot,bool onP
 Interface::Interface(Size size):size_(size){syncCatalog();}
 std::vector<Interface::Button> Interface::buttons() const {
     const double x=size_.w/2.,h=size_.h,w=size_.w;
-#ifdef BIBLIOTECA_IPAD
-    constexpr double topY=20,topH=48,topGap=12;
-#else
     constexpr double topY=25,topH=38,topGap=11;
-#endif
     if(catalog_){
         const auto d=dialog();
-        return {{{d.x+d.w-112,d.y+16,87,topH},Action::Close,"Cerrar",true},
+        return {{{d.x+d.w-112,d.y+16,87,topH},Action::Close,"Close",true},
                 {{d.x+d.w-194,d.y+76,169,topH},Action::Genre,genres_[filter_]+"  ▾",true}};
     }
     if(hideControls_)return {};
     if(lib.selected()<0){
         const bool child=lib.section()==Section::Children;
-        std::vector<Button> list{{{w-151,topY,119,topH},Action::Catalog,"Catálogo",true},
-                                 {{w-258-topGap,topY,96,topH},Action::Sources,"Atril",true},
+        std::vector<Button> list{{{w-151,topY,119,topH},Action::Catalog,"Catalog",true},
+                                 {{w-258-topGap,topY,96,topH},Action::Sources,"Lectern",true},
                                  {{31,topY,191,topH},Action::Section,
                                   std::string(sectionName(child?Section::Adult:Section::Children)),true}};
         if(child){
             list.push_back({{x-55,h-64,45,43},Action::Left,"‹",lib.wing()>0});
             list.push_back({{x+10,h-64,45,43},Action::Right,"›",lib.wing()<1});
         }
-#ifdef BIBLIOTECA_IPAD
-        // Held buttons keep walking continuous, just like WASD, without
-        // making a touch player repeatedly tap to cross the room.
-        constexpr double touch=56,edge=19,gap=5;
-        const double base=h-edge-touch;
-        list.push_back({{edge+touch+gap,base-touch-gap,touch,touch},Action::Forward,"↑",true});
-        list.push_back({{edge+touch+gap,base+touch+gap,touch,touch},Action::Back,"↓",true});
-        list.push_back({{edge,base,touch,touch},Action::StrafeLeft,"←",true});
-        list.push_back({{edge+2*(touch+gap),base,touch,touch},Action::StrafeRight,"→",true});
-#endif
         return list;
     }
     const auto stage=lib.stage();
     std::vector<Button> list{
-        {{w-151,topY,119,topH},Action::Close,"Cerrar",stage!=Stage::Closing && stage!=Stage::Returning}};
+        {{w-151,topY,119,topH},Action::Close,"Close",stage!=Stage::Closing && stage!=Stage::Returning}};
     if(stage==Stage::Reading){
         const bool settled=lib.turning()==1;
-#ifdef BIBLIOTECA_IPAD
-        constexpr double pager=56;
-        list.push_back({{x-pager-11,h-77,pager,pager},Action::Left,"‹",settled && lib.spread()>0});
-        list.push_back({{x+11,h-77,pager,pager},Action::Right,"›",settled && lib.spread()<spreadCount(lib.selected())-1});
-#else
         list.push_back({{x-93,h-64,43,43},Action::Left,"‹",settled && lib.spread()>0});
         list.push_back({{x+50,h-64,43,43},Action::Right,"›",settled && lib.spread()<spreadCount(lib.selected())-1});
-#endif
         if(lib.selected()!=referenceBookId)
-            list.push_back({{31,topY,103,topH},Action::Motion,motion_?"Pausar":"Reanudar",true});
-#ifdef BIBLIOTECA_IPAD
-        // SDL pinch delivery differs between iPadOS releases. These two
-        // reachable controls make the reader zoom dependable everywhere.
-        if(lib.selected()!=referenceBookId){
-            list.push_back({{w-151,h-77,55,56},Action::ZoomOut,"−",true});
-            list.push_back({{w-86,h-77,55,56},Action::ZoomIn,"+",true});
-        }
-#endif
+            list.push_back({{31,topY,103,topH},Action::Motion,motion_?"Pause":"Resume",true});
     }
     return list;
 }
@@ -341,33 +313,6 @@ void Interface::event(const SDL_Event& e,SDL_Window* window){
         break;
     case sdl::motion:{
         pos_={float(e.motion.x),float(e.motion.y)};
-#ifdef BIBLIOTECA_IPAD
-        if(e.motion.which==SDL_TOUCH_MOUSEID && (e.motion.state&SDL_BUTTON_LMASK)){
-            if(catalog_ && catalogDrag_){
-                const float dy=pos_.y-last_.y;
-                if(std::abs(dy)>14){
-                    const int moved=int(std::copysign(std::max(1.f,std::round(std::abs(dy)/27.f)),dy));
-                    scroll_=std::clamp(scroll_-moved,0,std::max(0,int(results_.size())-rows));
-                    cursor_=std::clamp(cursor_,scroll_,std::min(int(results_.size())-1,scroll_+rows-1));
-                    last_=pos_;moved_=true;dirty=true;
-                }
-                break;
-            }
-            if(!catalog_ && lib.selected()<0 && pressed_==Action::None){
-                if(moved_ || distance(pos_,start_)>5){
-                    lib.look(pos_.x-last_.x,pos_.y-last_.y);
-                    last_=pos_;moved_=true;dirty=true;
-                }
-                break;
-            }
-            if(drag_ && lib.stage()==Stage::Reading && lib.selected()!=referenceBookId){
-                const float dx=pos_.x-start_.x,dy=pos_.y-start_.y;
-                if(std::abs(dx)>48 && std::abs(dx)>std::abs(dy)*1.15f){
-                    touchSwipe_=true;moved_=true;last_=pos_;dirty=true;break;
-                }
-            }
-        }
-#endif
         if((lookDrag_ || mouseLook_) && !catalog_ && lib.selected()<0){
             const float dx=mouseLook_ || e.motion.xrel!=0?float(e.motion.xrel):pos_.x-last_.x;
             const float dy=mouseLook_ || e.motion.yrel!=0?float(e.motion.yrel):pos_.y-last_.y;
@@ -386,15 +331,6 @@ void Interface::event(const SDL_Event& e,SDL_Window* window){
             start_=last_=pos_={float(e.button.x),float(e.button.y)};
             pressed_=mouseLook_?Action::None:actionAt(pos_,true);
             moved_=false;
-#ifdef BIBLIOTECA_IPAD
-            touchSwipe_=false;
-            if(touchDriveAction(pressed_)){
-                touchDrive_=pressed_;setTouchDrive(touchDrive_,true);dirty=true;break;
-            }
-            const auto d=dialog();
-            catalogDrag_=catalog_ && pressed_==Action::None &&
-                Rect{d.x+25,d.y+132,d.w-50,rows*rowHeight}.has(pos_);
-#endif
             drag_=!catalog_ && pressed_==Action::None && lib.selected()!=referenceBookId && lib.onReader(pos_,size_);
             dirty=true;
         }
@@ -409,15 +345,6 @@ void Interface::event(const SDL_Event& e,SDL_Window* window){
             }
         }else if(e.button.button==1){
             pos_={float(e.button.x),float(e.button.y)};
-#ifdef BIBLIOTECA_IPAD
-            if(touchDrive_!=Action::None){
-                setTouchDrive(touchDrive_,false);touchDrive_=Action::None;pressed_=Action::None;dirty=true;break;
-            }
-            if(touchSwipe_){
-                if(lib.stage()==Stage::Reading)lib.turn(pos_.x<start_.x?1:-1);
-                drag_=catalogDrag_=touchSwipe_=false;pressed_=Action::None;dirty=true;break;
-            }
-#endif
             const auto a=actionAt(pos_);
             if(!moved_ && distance(pos_,start_)<=5){
                 if(a!=Action::None && pressed_==a)act(a);
@@ -492,13 +419,13 @@ void Interface::paint(Paint& p) const {
         p.fill({0,0,w,h},color("#0e2129",.70));
         const auto d=dialog();
         p.round(d,6,color("#f5ebd3"),catalogRule);
-        p.display(39);p.text(d.x+25,d.y+44,"Catálogo",catalogInk);
+        p.display(39);p.text(d.x+25,d.y+44,"Catalog",catalogInk);
         p.font(15,false,true);p.text(d.x+161,d.y+41,sectionName(catalogRoom_),catalogSubtle);
         const Rect field{d.x+25,d.y+76,d.w-222,39};
         p.round(field,3,color("#fff8e7"),catalogFocus_==0?color("#185e64"):catalogRule);
         if(catalogFocus_==0)p.round({field.x-3,field.y-3,field.w+6,field.h+6},5,color("#185e64",0),color("#185e64"));
         p.font(15);
-        if(search_.empty())p.text(d.x+37,d.y+101,"Buscar en esta sala",catalogSubtle);
+        if(search_.empty())p.text(d.x+37,d.y+101,"Search this room",catalogSubtle);
         else{
             std::string display=search_;
             while(display.size()>2 && p.width(display)>d.w-242){
@@ -509,7 +436,7 @@ void Interface::paint(Paint& p) const {
             p.text(d.x+37,d.y+101,display,catalogInk);
         }
         if(results_.empty()){
-            p.font(18);p.middle(cx,d.y+183,"Prueba otro título o cambia el género.",catalogSubtle);
+            p.font(18);p.middle(cx,d.y+183,"Try another title or change the genre.",catalogSubtle);
         }
         for(int i=0;i<rows && scroll_+i<int(results_.size());++i){
             const auto id=results_[scroll_+i];const auto& b=books()[id];const auto y=d.y+132+i*rowHeight;
@@ -524,7 +451,7 @@ void Interface::paint(Paint& p) const {
         }
         p.line(d.x+25,d.y+d.h-49,d.x+d.w-25,d.y+d.h-49,catalogRule);
         const int available=catalogRoom_==Section::Children?childrenCount:adultCount;
-        p.font(13);p.text(d.x+25,d.y+d.h-25,std::to_string(results_.size())+" de "+std::to_string(available)+" ejemplares",catalogSubtle);
+        p.font(13);p.text(d.x+25,d.y+d.h-25,std::to_string(results_.size())+" of "+std::to_string(available)+" books",catalogSubtle);
     }
     for(const auto& b:buttons()){
         if(!reading && !b.enabled)continue;

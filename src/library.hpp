@@ -47,7 +47,7 @@ struct Book {
 };
 enum class Section { Children,Adult };
 constexpr std::string_view sectionName(Section room){
-    return room==Section::Children?"Sala infantil":"Sala juvenil y adulta";
+    return room==Section::Children?"Children's room":"Teen and adult room";
 }
 constexpr int originalCount=42,originalAdultCount=4,importedChildren=8,importedAdults=5;
 constexpr int firstImport=originalCount+originalAdultCount,bookCount=firstImport+importedChildren+importedAdults;

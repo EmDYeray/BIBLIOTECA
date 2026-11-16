@@ -10,62 +10,62 @@ namespace biblioteca {
 
 const std::array<PopupAsset,popupCount>& popupAssets(){
     static constexpr std::array<PopupAsset,popupCount> assets{{
-        {"satelite.obj","Satélite de comunicaciones"},
-        {"observador.obj","Satélite de observación"},
-        {"cohete.obj","Vehículo de lanzamiento"},
-        {"estacion.obj","Estación orbital"},
-        {"antena.obj","Antena parabólica"},
-        {"vehiculo.obj","Vehículo de exploración"},
-        {"sonda.obj","Sonda espacial"},
-        {"telescopio.obj","Telescopio orbital"},
-        {"marte.obj","Marte · Rover de exploración"},
-        {"europa.obj","Europa · Sonda del hielo"},
-        {"luna.obj","La Luna · Módulo de descenso"},
-        {"saturno.obj","Saturno · Sonda entre los anillos"},
-        {"tierra.obj","Tierra · Observación orbital"},
-        {"sol.obj","El Sol · Observatorio solar"},
-        {"marte-cantera.obj","Marte · Cantera y taladro"},
-        {"europa-crevasse.obj","Europa · Paso sobre la grieta"},
-        {"luna-puesto.obj","La Luna · Puesto polar"},
-        {"saturno-travesia.obj","Saturno · Travesía de la sonda"},
-        {"tierra-nocturna.obj","Tierra · Relevo nocturno"},
-        {"sol-corona.obj","El Sol · Escudo de la sonda"},
-        {"orbita-ensamble.obj","Órbita · Banco de ensamble"},
-        {"tierra-incendio.obj","Tierra · Inspección del valle"},
-        {"europa-descenso.obj","Europa · Ensayo de descenso"},
-        {"orbita-atraque.obj","Órbita · Puerto de atraque"},
-        {"marte-tormenta.obj","Marte · Refugio de la tormenta"},
-        {"luna-capsula.obj","La Luna · Cápsula de relevo"},
-        {"saturno-lunas.obj","Saturno · Lunas y hielo disperso"},
-        {"sol-fulguracion.obj","El Sol · Fulguración solar"},
-        {"marte-cumbre.obj","Marte · Estación en la cresta"},
-        {"apolo-eagle.obj","Apolo 11 · Eagle"},
-        {"apolo-intrepid.obj","Apolo 12 · Intrepid"},
-        {"apolo-falcon.obj","Apolo 15 · Falcon y el coche lunar"},
-        {"kepler-telescopio.obj","Kepler · Telescopio espacial"},
-        {"kepler-transito.obj","Kepler · Tránsito de un planeta"},
-        {"pioneer-jupiter.obj","Pioneer 10 · Encuentro con Júpiter"},
-        {"insight-marte.obj","InSight · Estación sísmica marciana"},
-        {"rovers-gemelos.obj","Marte · Spirit y Opportunity"},
-        {"pioneer-salida.obj","Pioneer 10 · Salida de la Tierra"},
-        {"pioneer-asteroides.obj","Pioneer 10 · Cinturón de asteroides"},
-        {"pioneer-placa.obj","Pioneer 10 · La placa"},
-        {"pioneer-senal.obj","Pioneer 10 · Una señal lejana"},
-        {"kepler-equilibrio.obj","Kepler · El equilibrio de K2"},
-        {"kepler-campo.obj","Kepler · Un nuevo campo de estrellas"},
-        {"apolo-muestras.obj","Apolo 11 · Muestras lunares"},
-        {"apolo-red.obj","Apolo · Una estación científica"},
-        {"apolo-surveyor.obj","Apolo 12 · Surveyor 3"},
-        {"apolo-impacto.obj","Apolo 12 · Un impacto registrado"},
-        {"apolo-hadley.obj","Apolo 15 · Recorrido por Hadley"},
-        {"apolo-caida.obj","Apolo 15 · El martillo y la pluma"},
-        {"insight-ondas.obj","InSight · Ondas sísmicas"},
-        {"insight-taladro.obj","InSight · La sonda térmica"},
-        {"insight-polvo.obj","InSight · Polvo en los paneles"},
-        {"marte-travesia.obj","Marte · Ruedas en la ladera"},
-        {"orbita-sistemas.obj","Órbita · Sistemas del hábitat"},
-        {"apolo-easep.obj","Apolo 11 · Experimentos de superficie"},
-        {"insight-capas.obj","InSight · Capas de Marte"}
+        {"satelite.obj","Communications satellite"},
+        {"observador.obj","Observation satellite"},
+        {"cohete.obj","Launch vehicle"},
+        {"estacion.obj","Orbital station"},
+        {"antena.obj","Dish antenna"},
+        {"vehiculo.obj","Exploration vehicle"},
+        {"sonda.obj","Space probe"},
+        {"telescopio.obj","Orbital telescope"},
+        {"marte.obj","Mars · Exploration rover"},
+        {"europa.obj","Europa · Ice probe"},
+        {"luna.obj","Moon · Lander"},
+        {"saturno.obj","Saturn · Ring probe"},
+        {"tierra.obj","Earth · Orbital observation"},
+        {"sol.obj","Sun · Solar observatory"},
+        {"marte-cantera.obj","Mars · Quarry and drill"},
+        {"europa-crevasse.obj","Europa · Crevasse crossing"},
+        {"luna-puesto.obj","Moon · Polar outpost"},
+        {"saturno-travesia.obj","Saturn · Probe traverse"},
+        {"tierra-nocturna.obj","Earth · Night relay"},
+        {"sol-corona.obj","Sun · Probe shield"},
+        {"orbita-ensamble.obj","Orbit · Assembly platform"},
+        {"tierra-incendio.obj","Earth · Valley survey"},
+        {"europa-descenso.obj","Europa · Descent rehearsal"},
+        {"orbita-atraque.obj","Orbit · Docking port"},
+        {"marte-tormenta.obj","Mars · Storm shelter"},
+        {"luna-capsula.obj","Moon · Relay capsule"},
+        {"saturno-lunas.obj","Saturn · Moons and ice"},
+        {"sol-fulguracion.obj","Sun · Solar flare"},
+        {"marte-cumbre.obj","Mars · Ridge station"},
+        {"apolo-eagle.obj","Apollo 11 · Eagle"},
+        {"apolo-intrepid.obj","Apollo 12 · Intrepid"},
+        {"apolo-falcon.obj","Apollo 15 · Falcon and rover"},
+        {"kepler-telescopio.obj","Kepler · Space telescope"},
+        {"kepler-transito.obj","Kepler · Planet transit"},
+        {"pioneer-jupiter.obj","Pioneer 10 · Jupiter encounter"},
+        {"insight-marte.obj","InSight · Martian seismic station"},
+        {"rovers-gemelos.obj","Mars · Spirit and Opportunity"},
+        {"pioneer-salida.obj","Pioneer 10 · Earth departure"},
+        {"pioneer-asteroides.obj","Pioneer 10 · Asteroid belt"},
+        {"pioneer-placa.obj","Pioneer 10 · The plaque"},
+        {"pioneer-senal.obj","Pioneer 10 · A distant signal"},
+        {"kepler-equilibrio.obj","Kepler · K2 balancing"},
+        {"kepler-campo.obj","Kepler · New star field"},
+        {"apolo-muestras.obj","Apollo 11 · Lunar samples"},
+        {"apolo-red.obj","Apollo · Science station"},
+        {"apolo-surveyor.obj","Apollo 12 · Surveyor 3"},
+        {"apolo-impacto.obj","Apollo 12 · Recorded impact"},
+        {"apolo-hadley.obj","Apollo 15 · Hadley traverse"},
+        {"apolo-caida.obj","Apollo 15 · Hammer and feather"},
+        {"insight-ondas.obj","InSight · Seismic waves"},
+        {"insight-taladro.obj","InSight · Heat probe"},
+        {"insight-polvo.obj","InSight · Dust on panels"},
+        {"marte-travesia.obj","Mars · Hillside wheels"},
+        {"orbita-sistemas.obj","Orbit · Habitat systems"},
+        {"apolo-easep.obj","Apollo 11 · Surface experiments"},
+        {"insight-capas.obj","InSight · Layers of Mars"}
     }};
     return assets;
 }
@@ -111,7 +111,7 @@ int popupIndex(int book,int spread){
     return int(F::Earth);
 }
 std::filesystem::path assetsPath(){
-#ifdef BIBLIOTECA_IPAD
+#ifdef _WIN32
     char* base=SDL_GetBasePath();
     if(!base)throw std::runtime_error(SDL_GetError());
     const std::filesystem::path path(base);
@@ -126,7 +126,7 @@ std::filesystem::path assetsPath(){
 
 PopupScene loadPopup(const std::filesystem::path& path){
     std::ifstream file(path);
-    if(!file)throw std::runtime_error("Falta el modelo "+path.string());
+    if(!file)throw std::runtime_error("Missing model "+path.string());
     PopupScene scene;
     MeshData* vertices=&scene.resting;
     struct PointColor {Vec point,color;};
@@ -137,7 +137,7 @@ PopupScene loadPopup(const std::filesystem::path& path){
         size_t i=0;
         const auto result=std::from_chars(value.data(),value.data()+value.size(),i);
         if(result.ec!=std::errc{} || result.ptr!=value.data()+value.size() || i==0 || i>count)
-            throw std::runtime_error("Índice OBJ inválido");
+            throw std::runtime_error("Invalid OBJ index");
         return i-1;
     };
     Vec pigment=white;
@@ -157,27 +157,27 @@ PopupScene loadPopup(const std::filesystem::path& path){
                 "fly","launch","spin","ringed","drift","roll","beacon","scan","drop","pulse","slide"};
                 tokens>>mode>>pivot.x>>pivot.y>>pivot.z;
                 const auto kind=std::find(kinds.begin(),kinds.end(),mode);
-                if(!tokens || kind==kinds.end())throw std::runtime_error("Animación OBJ inválida");
+                if(!tokens || kind==kinds.end())throw std::runtime_error("Invalid OBJ animation");
                 scene.actors.push_back({PopupMotion(kind-kinds.begin()),pivot,{}});
                 vertices=&scene.actors.back().mesh;
             }
         }else if(key=="v"){
             Vec pos;
-            if(!(tokens>>pos.x>>pos.y>>pos.z))throw std::runtime_error("Vértice OBJ inválido");
+            if(!(tokens>>pos.x>>pos.y>>pos.z))throw std::runtime_error("Invalid OBJ vertex");
             Vec c;
             if(tokens>>c.x){
-                if(!(tokens>>c.y>>c.z))throw std::runtime_error("Color de vértice OBJ inválido");
+                if(!(tokens>>c.y>>c.z))throw std::runtime_error("Invalid OBJ vertex color");
                 positions.push_back({pos,c});
             }else positions.push_back({pos,white});
         }else if(key=="vn"){
             Vec normal;
             if(!(tokens>>normal.x>>normal.y>>normal.z) || dot(normal,normal)<.5f)
-                throw std::runtime_error("Normal OBJ inválida");
+                throw std::runtime_error("Invalid OBJ normal");
             normals.push_back(unit(normal));
         }else if(key=="usemtl"){
             std::string tag;
             if(!(tokens>>tag) || tag.size()<6 || tag.find_first_not_of("0123456789aAbBcCdDeEfF",0)<6)
-                throw std::runtime_error("Color OBJ inválido");
+                throw std::runtime_error("Invalid OBJ color");
             const auto key=std::string_view(tag).substr(6);
             if(key=="_metal")material=Metal;
             else if(key=="_solar")material=SolarCell;
@@ -185,24 +185,24 @@ PopupScene loadPopup(const std::filesystem::path& path){
             else if(key=="_rubber")material=Rubber;
             else if(key=="_planet")material=Planet;
             else if(key.empty())material=Card;
-            else throw std::runtime_error("Material OBJ desconocido");
+            else throw std::runtime_error("Unknown OBJ material");
             pigment=tint(color(std::string_view(tag).substr(0,6)));
         }else if(key=="f"){
             std::array<Index,3> indices;
             size_t n=0;
             std::string corner;
             while(tokens>>corner){
-                if(n==indices.size())throw std::runtime_error("Cara OBJ inválida");
+                if(n==indices.size())throw std::runtime_error("Invalid OBJ face");
                 const std::string_view v=corner;
                 const size_t slash=v.find('/');
                 Index index{objIndex(v.substr(0,slash),positions.size()),{}};
                 if(slash!=v.npos){
-                    if(v.substr(slash,2)!="//")throw std::runtime_error("Cara OBJ sin normal");
+                    if(v.substr(slash,2)!="//")throw std::runtime_error("OBJ face missing normal");
                     index.normal=objIndex(v.substr(slash+2),normals.size());
                 }
                 indices[n++]=index;
             }
-            if(n!=3)throw std::runtime_error("Cara OBJ sin triangular");
+            if(n!=3)throw std::runtime_error("OBJ face is not triangular");
             const Vec a=positions[indices[0].position].point,b=positions[indices[1].position].point,
                       c=positions[indices[2].position].point;
             const Vec normal=cross(b-a,c-a);
@@ -217,7 +217,7 @@ PopupScene loadPopup(const std::filesystem::path& path){
             }
         }
     }
-    if(scene.resting.empty() && scene.actors.empty())throw std::runtime_error("Modelo vacío "+path.string());
+    if(scene.resting.empty() && scene.actors.empty())throw std::runtime_error("Empty model "+path.string());
     return scene;
 }
 

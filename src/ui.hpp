@@ -25,7 +25,7 @@ class Interface {
     int catalogFocus_=0;
     std::string search_;
     std::vector<int> results_;
-    std::vector<std::string> genres_{"Todos los géneros"};
+    std::vector<std::string> genres_{"All genres"};
     Section catalogRoom_=Section::Children;
     std::vector<Button> buttons() const;
     Action actionAt(Point p,bool includeDisabled=false) const;

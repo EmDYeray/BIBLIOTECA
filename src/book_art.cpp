@@ -113,17 +113,17 @@ void diagram(Canvas& c,Illustration art,Color ink,Color accent,int page){
                 :96+(t>.30?std::sin(i*2.11)*37*std::exp(-4.3*(t-.30)):std::sin(i*.84)*2);
             c.line(oldX,oldY,x,v,accent,3);oldX=x;oldY=v;
         }
-        c.label(70,194,"Tiempo",ink);
-        c.label(83,49,transit?"Brillo relativo":art==Illustration::Insight?"Vibración":"Señal relativa",ink);
-        c.label(286,194,"Esquema",ink);
+        c.label(70,194,"Time",ink);
+        c.label(83,49,transit?"Relative brightness":art==Illustration::Insight?"Vibration":"Relative signal",ink);
+        c.label(286,194,"Diagram",ink);
     }else if(art==Illustration::Rovers || art==Illustration::Earth || art==Illustration::Europa){
         c.polygon({{70,99},{157,87},{226,104},{330,78},{395,92},{395,123},{329,109},{227,127},{70,130}},color("#d4a176"));
         c.polygon({{70,130},{227,127},{329,109},{395,123},{395,153},{330,143},{238,155},{70,159}},color("#9c675b"));
         c.rect(70,159,325,25,color("#716278"));
         const double marker=page%4<2?167:289;
         c.line(marker,66,marker,133,ink,3);c.disc(marker,132,5,ink);
-        c.label(75,62,art==Illustration::Earth?"Perfil del terreno":art==Illustration::Europa?"Superficie de hielo":"Capas expuestas",ink);
-        c.label(72,215,"Esquema de corte",ink);
+        c.label(75,62,art==Illustration::Earth?"Terrain profile":art==Illustration::Europa?"Ice surface":"Exposed layers",ink);
+        c.label(72,215,"Cross-section",ink);
     }else if(art==Illustration::Saturn || art==Illustration::Pioneer){
         c.disc(216,111,50,color(art==Illustration::Saturn?"#d4ab7c":"#db9368"));
         for(int i=0;i<36;++i){
@@ -131,7 +131,7 @@ void diagram(Canvas& c,Illustration art,Color ink,Color accent,int page){
             c.line(216+116*std::cos(a),111+54*std::sin(a),216+116*std::cos(b),111+54*std::sin(b),accent,2.5);
         }
         c.disc(327,94,7,ink);c.line(330,92,381,59,ink);
-        c.label(317,56,"Sonda",ink);c.label(83,194,"Trayectoria esquemática",ink);
+        c.label(317,56,"Probe",ink);c.label(83,194,"Schematic path",ink);
     }else{
         if(page==3 || page==5){
             c.polygon({{46,179},{88,153},{151,160},{226,137},{309,160},{390,141},{420,176}},color("#c5b39d"));
@@ -140,8 +140,8 @@ void diagram(Canvas& c,Illustration art,Color ink,Color accent,int page){
             c.line(143,144,198,161,accent,3);c.disc(200,162,5,ink);
             c.line(257,149,257,99,ink,3);c.line(257,105,282,105,ink,3);
             c.line(288,157,365,157,accent,3);c.disc(368,155,7,ink);
-            c.label(83,65,"Estación",ink);c.label(290,112,"Medición",ink);
-            c.label(111,208,"Trabajo en la superficie",ink);
+            c.label(83,65,"Station",ink);c.label(290,112,"Measurement",ink);
+            c.label(111,208,"Surface operations",ink);
             return;
         }
         c.polygon({{171,105},{177,70},{214,41},{244,41},{275,75},{279,105}},silver);
@@ -150,9 +150,9 @@ void diagram(Canvas& c,Illustration art,Color ink,Color accent,int page){
             c.line(230+side*40,139,230+side*79,179,accent,5);
             c.rect(230+side*79-13,176,26,6,accent);
         }
-        c.line(116,88,169,88,ink);c.label(51,76,"Ascenso",ink);
-        c.line(284,136,363,136,ink);c.label(311,126,"Descenso",ink);
-        c.label(158,211,"Módulo lunar · esquema",ink);
+        c.line(116,88,169,88,ink);c.label(51,76,"Ascent",ink);
+        c.line(284,136,363,136,ink);c.label(311,126,"Descent",ink);
+        c.label(158,211,"Lunar module · diagram",ink);
     }
 }
 
@@ -187,7 +187,7 @@ bool detail(Canvas& c,Illustration art,int page){
         c.disc(229,130,91,soil);c.disc(229,130,80,color("#a06355"));
         c.disc(229,130,54,color("#df9463"));c.disc(229,130,29,gold);
         c.line(111,77,168,98,silver,2);c.line(349,133,259,131,silver,2);
-        c.label(54,62,"Corteza",silver);c.label(352,130,"Núcleo",silver);
+        c.label(54,62,"Crust",silver);c.label(352,130,"Core",silver);
         return true;
     }
     if(art==V::Rovers && page>=3){

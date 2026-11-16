@@ -28,10 +28,6 @@ std::string readText(const std::filesystem::path& path){
 GLuint createProgram(){
     const auto dir=assetsPath()/"shaders";
     auto vertex=readText(dir/"scene.vert"),fragment=readText(dir/"scene.frag");
-#ifdef BIBLIOTECA_IPAD
-    for(auto* source:{&vertex,&fragment})
-        source->replace(0,source->find('\n'),"#version 300 es\nprecision highp float;\nprecision highp int;");
-#endif
     const auto vs=shader(gl::vertex,vertex.c_str()),fs=shader(gl::fragment,fragment.c_str());
     const GLuint p=glCreateProgram();
     glAttachShader(p,vs);glAttachShader(p,fs);glLinkProgram(p);glDeleteShader(vs);glDeleteShader(fs);
@@ -47,10 +43,10 @@ GLuint loadMaterialGrain(){
     int width=0,height=0,range=0;
     if(!(input>>format>>width>>height>>range) || format!="P6" ||
        width<1 || width>2048 || height<1 || height>2048 || range!=255 || input.get()!='\n')
-        throw std::runtime_error("Textura de materiales inválida: "+path.string());
+        throw std::runtime_error("Invalid material texture: "+path.string());
     std::vector<unsigned char> pixels(size_t(width)*height*3);
     if(!input.read(reinterpret_cast<char*>(pixels.data()),pixels.size()))
-        throw std::runtime_error("Textura de materiales incompleta: "+path.string());
+        throw std::runtime_error("Incomplete material texture: "+path.string());
     GLuint id=0;
     glGenTextures(1,&id);glActiveTexture(gl::texture0+3);glBindTexture(gl::texture,id);
     glTexParameteri(gl::texture,gl::wrapS,gl::repeat);glTexParameteri(gl::texture,gl::wrapT,gl::repeat);
