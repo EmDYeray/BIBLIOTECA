@@ -138,19 +138,5 @@ constexpr std::array<Story,7> stories{{
 }};
 }
 
-Destination destination(int book){return static_cast<Destination>(book%stories.size());}
-const DestinationArt& destinationArt(int book){
-    static constexpr DestinationArt art[]={
-        {"Earth","#148dbd","#5ddabe","#1c3487"},
-        {"Europa","#50d0ee","#dbf9ff","#333697"},
-        {"Ground orbit","#366edb","#a8e9ff","#40348d"},
-        {"Mars","#f05a2d","#ffc278","#78202e"},
-        {"The Moon","#a7b9ed","#f6edee","#555a98"},
-        {"Saturno","#efaa4b","#ffe4a0","#87407c"},
-        {"The Sun","#ff8b21","#ffed91","#a12642"},
-    };
-    return art[static_cast<int>(destination(book))];
-}
-const Chapter& chapter(int book,int spread){return stories[book%stories.size()][spread];}
-bool wordlessBinding(int book){return book%7==0 || book%7==4 || book%7==6;}
+const Chapter& chapterEnglish(int book,int spread){return stories[book%stories.size()][spread];}
 }
