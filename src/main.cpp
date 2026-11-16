@@ -3,6 +3,13 @@
 #include "popup.hpp"
 #include <fontconfig/fontconfig.h>
 #include <iostream>
+#ifdef _WIN32
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#include <windows.h>
+#include <fstream>
+#endif
 #include <stdexcept>
 #include <string_view>
 
@@ -34,6 +41,20 @@ int main(int argc,char** argv){
                "  biblioteca --render-check RUTA   Capture frames and test SDL events\n";
         return option=="--help"?0:2;
     }catch(const std::exception& error){
-        std::cerr<<"Biblioteca: "<<error.what()<<'\n';return 1;
+        std::cerr<<"Biblioteca: "<<error.what()<<'\n';
+#ifdef _WIN32
+        try {
+            const auto path=std::filesystem::temp_directory_path()/"Biblioteca3D-error.log";
+            std::ofstream log(path,std::ios::app);
+            log<<"Biblioteca 3D error: "<<error.what()<<'\n';
+            log.flush();
+            if(argc==1){
+                const std::string message=std::string(error.what())+
+                    "\n\nDetails were saved to the Windows temporary folder as Biblioteca3D-error.log.";
+                MessageBoxA(nullptr,message.c_str(),"Biblioteca 3D startup error",MB_OK|MB_ICONERROR);
+            }
+        } catch(...) {}
+#endif
+        return 1;
     }
 }
