@@ -88,6 +88,7 @@ jobs:
         run: |
           set "PATH=%SystemRoot%\System32;%SystemRoot%;%SystemRoot%\System32\Wbem"
           start "" /wait "%CD%\windows-stage\biblioteca.exe" --desktop-check windows-render
+          if exist "%TEMP%\Biblioteca3D-error.log" type "%TEMP%\Biblioteca3D-error.log"
           if errorlevel 1 exit /b 1
           if not exist windows-render\*.png exit /b 2
           echo Render succeeded and generated PNG proof frames
@@ -129,4 +130,18 @@ jobs:
         with:
           name: Biblioteca-Windows-render-diagnostics
           path: windows-render/*.png
+          if-no-files-found: warn
+
+      - name: Collect Windows error diagnostics
+        if: always()
+        shell: cmd
+        run: |
+          if exist "%TEMP%\Biblioteca3D-error.log" copy "%TEMP%\Biblioteca3D-error.log" "Biblioteca3D-error.log"
+
+      - name: Upload native startup diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Biblioteca-Windows-error-diagnostics
+          path: Biblioteca3D-error.log
           if-no-files-found: warn
