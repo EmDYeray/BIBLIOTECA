@@ -172,9 +172,22 @@ inline int relativeMouse(bool enabled){
 #endif
 }
 constexpr unsigned video=0x20,openGL=0x2,hidden=0x8,resizable=0x20,highDpi=0x2000,fullDesktop=0x1001;
-constexpr int centered=0x2fff0000, doubleBuffer=5,depthSize=6,msBuffers=13,msSamples=14,major=17,minor=18,profile=21;
+constexpr int centered=0x2fff0000;
+#ifdef _WIN32
+constexpr SDL_GLattr doubleBuffer=SDL_GL_DOUBLEBUFFER,depthSize=SDL_GL_DEPTH_SIZE,
+    msBuffers=SDL_GL_MULTISAMPLEBUFFERS,msSamples=SDL_GL_MULTISAMPLESAMPLES,
+    major=SDL_GL_CONTEXT_MAJOR_VERSION,minor=SDL_GL_CONTEXT_MINOR_VERSION,
+    profile=SDL_GL_CONTEXT_PROFILE_MASK;
+#else
+constexpr int doubleBuffer=5,depthSize=6,msBuffers=13,msSamples=14,major=17,minor=18,profile=21;
+#endif
 constexpr unsigned quit=0x100,window=0x200,keyDown=0x300,keyUp=0x301,text=0x303,motion=0x400,down=0x401,up=0x402,wheel=0x403;
 constexpr int right=0x4000004f,left=0x40000050,downKey=0x40000051,upKey=0x40000052,f2=0x4000003b,f11=0x40000044;
 constexpr int leftShift=0x400000e1,rightShift=0x400000e5;
+#ifdef _WIN32
+constexpr SDL_SystemCursor arrowCursor=SDL_SYSTEM_CURSOR_ARROW,
+    grabCursor=SDL_SYSTEM_CURSOR_SIZEALL,handCursor=SDL_SYSTEM_CURSOR_HAND;
+#else
 constexpr int arrowCursor=0,grabCursor=9,handCursor=11;
+#endif
 }

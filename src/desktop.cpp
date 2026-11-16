@@ -26,7 +26,7 @@ Desktop::Desktop(Size size,bool hidden){
         }
 #ifdef _WIN32
         glewExperimental=GL_TRUE;
-        if(glewInit()!=GLEW_OK)throw std::runtime_error("No se pudo inicializar OpenGL 3.3");
+        if(glewInit()!=GLEW_OK)throw std::runtime_error("Failed to initialize OpenGL 3.3");
         glGetError();
 #endif
         SDL_SetWindowMinimumSize(window,720,490);
