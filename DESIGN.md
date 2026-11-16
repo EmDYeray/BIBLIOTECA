@@ -1,31 +1,23 @@
-# Biblioteca de atlas desplegables
+# Pop-up atlas library — visual design
 
-La sala infantil es un taller de mapas del cielo. El arce, el azul petróleo y la cerámica turquesa dejan que el libro sea la pieza más colorida. La sala juvenil y adulta es un gabinete de campo con nogal, verde oliva y vidrio opalino. La puerta y los rótulos unen las dos salas.
+The children's room resembles a celestial mapping workshop. Maple wood, petrol blue and turquoise ceramics leave the books as the most colorful elements in the scene. The teen and adult room is a field research study with walnut, olive green and opal glass. Doorways and signs establish continuity between both spaces.
 
-- Los medallones y las cartas celestes se dibujan como instrumentos de observación. Sus líneas explican un recorrido o marcan una orientación.
-- Las vetas de madera, la trama de encuadernación y las fibras de papel tienen escalas distintas. La textura se aprecia de cerca y deja descansar la vista a distancia.
-- Barlow sirve a los mandos y a los cuentos. Barlow Condensed diferencia títulos, rótulos y capítulos. La prosa adulta conserva su tipografía de lectura.
-- El catálogo funciona como una ficha de préstamo. La búsqueda y el filtro quedan juntos, cada fila tiene su propio foco y el libro seleccionado se puede abrir con Enter.
-- Cada pieza se mueve según su función. Los rovers recorren una distancia corta
-  sobre el terreno. Los platos giran sobre su soporte y las grúas mueven su
-  carro. Las balizas y estaciones hacen pulsar sus luces. Al doblar la hoja
-  se pliegan las figuras. M pausa el movimiento.
+- Medallions and celestial charts are modeled after observation instruments. Their lines describe a route or indicate orientation.
+- Wood grain, bookbinding cloth and paper fibers are rendered at different scales. Materials remain legible up close without overwhelming the view from a distance.
+- Barlow is used for controls and children's books. Barlow Condensed identifies book titles, plaques and chapter headings; adult prose uses a more traditional reading typeface.
+- The catalog resembles a library lending card. Search and genre filters stay together, each row has a separate focus state, and the selected book can be opened with Enter.
+- Each animated object follows its purpose. Rovers traverse short distances, dish antennas rotate on mounts, cranes move their carriages, and beacons pulse. Pop-up pieces fold with the page. M pauses model motion.
 
-Energía 2, ritmo 2, movimiento 1.
-# Revisión de animación y modelos
+Visual energy: 2. Rhythm: 2. Motion: 1.
 
-Las bases y el terreno permanecen fijos. Los satélites en órbita derivan y los
-globos montados giran sobre su eje.
+## Animation and 3D model review
 
-El despegue empieza cuando se asienta la doble página. El cohete sube durante
-2.10 s y sale por el borde superior del encuadre. El escape incandescente deja
-una estela que tarda otros 2.10 s en disiparse.
+Bases and terrain remain stationary. Orbiting satellites drift while mounted globes turn around their axes.
 
-El botón M pausa también el reloj local del despegue.
+The rocket launches when its spread settles into place. It ascends for 2.10 seconds and leaves the top of the viewport. Its illuminated exhaust trail fades over the following 2.10 seconds.
 
-La escena lunar de muestras usa el modelo Astronaut de DigitalSpace
-Corporation, de la colección NASA 3D Resources. Los brazos tienen una postura
-relajada y el visor dorado, los guantes y las botas se distinguen en la hoja.
+The M key also pauses the launch animation's local clock.
 
-El libro de citas permanece abierto en el atril. La cámara va hasta el libro y
-retrocede al salir. El libro conserva la última doble página consultada.
+The lunar sample-collection scene uses the Astronaut model by DigitalSpace Corporation, supplied through NASA 3D Resources. The pose has relaxed arms; the golden visor, gloves and boots remain identifiable when the pop-up is unfolded.
+
+The reference book stays open on the lectern. The camera approaches it for reading and retreats upon exit; the last consulted spread is retained.

@@ -1,114 +1,103 @@
 # Biblioteca 3D
 
-Linux x86-64 is the primary platform. Windows is experimental.
+An interactive desktop library built with C++20, SDL2, OpenGL 3.3 and Cairo.
 
-La revisión actual suaviza el catálogo completo de pop-ups: carcasas y bases
-usan perfiles redondeados, tubos y esferas con mayor resolución, y el
-generador elimina triángulos degenerados antes de exportar. 
+**Platform status:** Linux x86-64 is the primary supported target. A native Windows x64 port is being developed and validated on the `windows-build` branch. Windows packages are experimental until they pass standalone tests on real Windows computers.
 
-Biblioteca de escritorio en C++20, OpenGL 3.3 y SDL2. Hay dos salas unidas por una puerta en el costado derecho de la sala infantil. El botón de arriba a la izquierda te lleva a la otra sala. También puedes cruzar a pie. El catálogo muestra automáticamente los libros de la sala en la que te encuentras.
+## Experience
 
-La sala infantil tiene 40 ejemplares interactivos distribuidos entre los estantes del frente, los laterales y el fondo. Los cuentos tienen texto de alto contraste y figuras 3D desplegables. Las ocho adaptaciones de los PDF aprovechan más detalles de cada relato.
+The library has two interconnected rooms. The children's room contains 40 interactive books arranged along the front, side and back shelves. The teen and adult room has 19 longer readings, each with eight pages, arranged around a reading space with four lanterns. Both rooms have their own searchable catalogs and are connected by a door.
 
-La sala juvenil y adulta tiene cuatro faroles y 19 lecturas de ocho páginas cada una. Sus libros están mezclados con los demás ejemplares en varias estanterías. Cada doble página combina prosa, un esquema y una escena 3D de formato compacto para dejar espacio al texto.
+Each story combines illustrated reading with animated, foldable 3D pop-up scenes. The subject matter includes Mars and Europa, the Moon, Saturn, Earth observation, orbital spacecraft, solar activity and NASA missions. A rocket launches over 2.10 seconds when its page opens, followed by a fading trail. Rovers, antennas, spacecraft and beacons move independently. Pop-up geometry folds onto the paper during page turns.
 
-Los pop-ups del catálogo original se basan en siete historias de ocho dobles páginas temáticas. Las páginas y sus cantos llevan colores propios de Marte, Europa, la Luna, Saturno, la Tierra, la órbita terrestre o el Sol.
+Selecting a book from a shelf or a catalog makes the camera approach the reading position before opening the book. An open reference book on a lectern, next to the door in the adult room, contains mission references and clickable links.
 
-## Lecturas adaptadas de PDFS.zip
+### Reading collections
 
-| Documento | Sala infantil | Sala juvenil y adulta |
-| --- | --- | --- |
-| Cuentos del Módulo Lunar Apolo 11 | El pequeño salto de una gran águila | 1969-059C: crónica del Águila |
-| Cuentos del Módulo Lunar Apolo 12 | La aventura del valiente Intrepid | 1969-099C: Océano de las Tormentas |
-| Cuentos infantiles (luna) | El secreto del Halcón Dorado | Falcon: travesía por Hadley |
-| MARTE | El robot que escuchó a Marte y Los gemelos del espacio | Latidos del planeta rojo y Gemelos de hierro |
-| Documento (5) | Kepler y K2: en busca de nuevos mundos | |
-| Documento (6) | Pioneer 10: el pequeño viajero | |
-| Pioneer 10 | Pioneer 10: el viajero que soñaba | |
+The original collection includes themed stories with unique scenes for every double-page spread. Additional titles are adapted from the Apollo 11 and 12, lunar exploration, Mars, Kepler and Pioneer 10 source documents. The content includes both shorter children's stories and longer technical readings.
 
-Cada doble página de un título tiene una escena propia. Apolo 11 pasa del módulo lunar a la recogida de muestras, los experimentos de superficie y el regreso. Pioneer 10 recorre el cinturón de asteroides y Júpiter antes de alejarse de la Tierra. InSight muestra el sismómetro y cómo se estudia el interior de Marte.
+**Content language:** The legacy reading collection and several embedded titles are still in Spanish. Localization of all story prose is separate from the Windows build and is not yet complete.
 
-Al elegir un título desde el estante o desde el catálogo, la cámara camina hasta el punto de lectura y lo abre al llegar. El libro abierto ocupa más superficie de la ventana, con el lomo centrado y el canto inferior más cerca del lector. Los rovers hacen recorridos cortos, las antenas se orientan y los indicadores pulsan. Las figuras se aplanan sobre las hojas y siguen el pliegue durante la vuelta.
+## Visual direction
 
-El libro del atril está junto a la puerta, del lado de la sala juvenil y adulta. El libro permanece abierto sobre la madera. Toca el atril, usa el botón **Atril** o presiona **F** para acercar la cámara. Lee las citas de Marte en la primera doble página y gira la hoja para consultar las de Luna. Toca una URL subrayada para abrirla.
+The children's room resembles a celestial cartography workshop, with turquoise ceramics, brass markings, carved wooden shelves and orbital diagrams around a central hearth. The adult room uses walnut, olive green, opal-glass lighting and restrained typography. Covers use credited NASA mission images. Pop-ups are modeled as physical paper structures with editable OBJ meshes, per-vertex colors and materials.
 
-El cohete despega cuando se asienta su doble página y sale por arriba de la pantalla
-en 2.10 segundos. La estela se disipa durante los 2.10 segundos siguientes.
-Volver a esa escena reinicia el despegue. M permite pausarlo y reanudarlo.
+Visual rules are documented in [DESIGN.md](DESIGN.md). Model and image sources are credited in [ASSETS_OPEN.md](ASSETS_OPEN.md).
 
-See [TECHNICAL_DOCUMENTATION.md](TECHNICAL_DOCUMENTATION.md) for Linux and Windows; Windows remains experimental.
+## Linux installation
 
-## Dirección visual
+Keep the `assets/` directory next to the executable. On Arch Linux or CachyOS, install the runtime equivalents of SDL2, Cairo, Fontconfig and OpenGL (for example `sdl2-compat`, `cairo`, `fontconfig`, `libglvnd` and `mesa`).
 
-La sala infantil toma elementos de un taller de cartografía celeste. Alrededor de la fogata hay un mosaico turquesa con divisiones de latón. Los estantes llevan frisos de madera y cartas orbitales en relieve. La sala juvenil y adulta usa verde oliva, nogal y lámparas de vidrio opalino.
-
-Las portadas se componen a partir de fotografías e imágenes de misión de la NASA, con créditos en [ASSETS_OPEN.md](ASSETS_OPEN.md). Los lomos y folios se componen por separado. Barlow Condensed distingue los títulos y Barlow acompaña el catálogo y las lecturas infantiles. Se incluyen las fuentes Barlow y su licencia OFL. Las escenas desplegables se construyen a partir de modelos OBJ editables con tintas y superficies de cartulina.
-
-La dirección visual y los criterios de lectura están en [DESIGN.md](DESIGN.md). La revisión de contraste, mandos y movimiento tomó como referencia [Anti Slop](https://github.com/miqdadbadjuber/anti-slop).
-
-## Abrir
-
-Extrae el ZIP completo y ejecuta desde la carpeta `Biblioteca-3D`:
+From the extracted project directory:
 
 ```bash
 ./ejecutable.sh
 ```
 
-Mantén `assets/` junto al ejecutable. En Arch y CachyOS se usan `sdl2-compat`, `cairo`, `fontconfig`, `libglvnd` y un controlador compatible con OpenGL 3.3, como `mesa` para la Radeon integrada.
-
-| Control | Acción |
-| --- | --- |
-| Mantener botón derecho y mover el mouse | Mirar alrededor |
-| Tab | Activar o soltar la cámara con el mouse |
-| W, A, S, D | Caminar hacia delante, a la izquierda, hacia atrás y a la derecha |
-| Mayús con W, A, S o D | Correr |
-| G o botón de la esquina superior izquierda | Caminar automáticamente a la otra sala |
-| Rueda del mouse | Avanzar o retroceder por la sala. Con un libro abierto, ajustar el zoom |
-| Clic en un lomo, o E mirando un lomo | Acercarse al estante y abrir el volumen |
-| Flechas izquierda y derecha | Caminar hacia otra ala o pasar página |
-| Arrastre con botón izquierdo sobre el libro abierto | Girar el libro |
-| M o el botón de movimiento del lector | Pausar o reanudar el movimiento de los modelos. Se puede seguir pasando página |
-| Esc | Soltar la cámara, cancelar un recorrido o cerrar el libro |
-| / o K | Abrir el catálogo de la sala actual. Al elegir un título, la cámara camina hasta el estante |
-| F, botón Atril o clic en el atril | Acercarse al libro de citas |
-| Tab dentro del catálogo | Cambiar entre búsqueda, filtro de género y cierre |
-| F2 | Mostrar u ocultar controles |
-| F11 | Pantalla completa |
-
-
-## Archivos
-
-| Ruta | Contenido |
-| --- | --- |
-| `biblioteca` | Ejecutable nativo para Linux x86_64 |
-| `ejecutable.sh` | Lanzador del ejecutable nativo |
-| `src/catalog.inc` | Catálogo y paleta de encuadernaciones |
-| `src/stories.cpp` y `src/child_text.cpp` | Historias originales, figuras y adaptaciones infantiles |
-| `src/imported_books.cpp` y `src/technical_notes.cpp` | Lecturas adaptadas de los PDF y notas técnicas por tema |
-| `src/adult_books.cpp` | Cuatro relatos de la colección juvenil y adulta anterior |
-| `src/book_art.cpp` | Ilustraciones de las misiones y esquemas de las páginas técnicas |
-| `src/room.cpp` | Geometría de estanterías, mobiliario y sala |
-| `src/room_layout.cpp` | Límites, colisiones de la cámara y rutas por la sala |
-| `src/observatory.cpp` | Mosaico orbital, anillos suspendidos y lámparas |
-| `src/hearth.cpp` | Aro, leños, brasas, campana y geometría de las llamas |
-| `src/library.cpp` | Selección, cámara y animaciones del libro |
-| `src/popup.cpp` | Carga de mallas, animación del pop-up, despliegue y unión a la hoja |
-| `src/printing.cpp` | Diseños de folios, cubiertas y lomos |
-| `src/render.cpp` y `assets/shaders/` | Render, luz y sombras |
-| `assets/materials/grain.ppm` | Textura de vetas de madera, fibra de papel y moteado mineral |
-| `assets/fonts/` | Barlow, Barlow Condensed y su licencia |
-| `assets/popups/` | 56 escenas y diez naves en OBJ con normales suavizadas, colores por vértice y materiales MTL |
-| `tools/popup_scenes.py` | Composición de cada doble página |
-| `tools/spacecraft.py` y `tools/celestial.py` | Naves, mobiliario de misión, planetas y terrenos |
-| `tools/mesh_builder.py` y `tools/generate_popups.py` | Construcción y exportación de mallas |
-| `src/checks.cpp` | Pruebas de geometría, controles y render |
-
-## Compilar y probar
+To compile from source, install GCC with C++20 support and the development dependencies, then run:
 
 ```bash
 make -j2
 make test
-./biblioteca --render-check ./cuadros
+./biblioteca
 ```
 
-El modo de prueba genera cuadros de ambas salas, las lecturas ilustradas, el giro de las hojas y las 56 escenas desplegadas de los pop-ups. Para regenerar los modelos editables, ejecuta `python3 tools/generate_popups.py`. Para reconstruir la textura de materiales, ejecuta `python3 tools/generate_materials.py`.
+For render regression frames:
+
+```bash
+./biblioteca --render-check ./frames
+```
+
+## Windows x64
+
+The `windows-build` branch contains an MSYS2 UCRT64 build of the same desktop application, plus a GitHub Actions workflow that builds and tests a portable ZIP on a real Windows runner. This is a native Win32 program, **not** a UWP application and not a Wine executable.
+
+When a build artifact is available, extract the entire portable ZIP and run `biblioteca.exe` from the extracted directory. Keep the DLL files and `assets/` directory beside the executable. An OpenGL 3.3-capable graphics driver is required.
+
+GitHub Actions compile and smoke tests do not prove that the full 3D interface renders correctly on arbitrary GPUs. Perform a manual native Windows acceptance test before publishing a stable release. See [TECHNICAL_DOCUMENTATION.md](TECHNICAL_DOCUMENTATION.md) for the validation procedure.
+
+## Controls
+
+| Input | Action |
+| --- | --- |
+| W, A, S, D | Walk |
+| Shift + movement | Move faster |
+| Hold right mouse button + move | Look around |
+| Tab | Capture or release mouse control |
+| Click a spine, or point at it and press E | Approach and open a book |
+| / or K | Open the current room catalog |
+| G | Walk toward the other room |
+| F | Approach the reference lectern |
+| Left / Right arrows | Turn pages when reading |
+| Mouse wheel | Navigate or zoom, depending on context |
+| Left-drag an open book | Rotate the book |
+| M | Pause or resume 3D model animations |
+| Esc | Release camera control, cancel an action or close the reader |
+| F2 | Show or hide the controls guide |
+| F11 | Toggle full screen |
+
+## Source layout
+
+| Directory or file | Purpose |
+| --- | --- |
+| `src/main.cpp`, `src/desktop.cpp` | Entry point, event loop and desktop window |
+| `src/ui.cpp`, `src/paint.cpp` | Interaction and interface drawing |
+| `src/library.cpp`, `src/printing.cpp` | Reader, book selection, page geometry and cover rendering |
+| `src/room.cpp`, `src/room_layout.cpp` | Room meshes, navigation and collision boundaries |
+| `src/render.cpp`, `assets/shaders/` | OpenGL renderer and shaders |
+| `src/catalog.inc`, `src/stories.cpp`, `src/child_text.cpp` | Core catalog and stories |
+| `src/imported_books.cpp`, `src/adult_books.cpp` | Adapted and adult readings |
+| `src/popup.cpp`, `assets/popups/` | Mesh loading, folded paper and animation |
+| `src/checks.cpp` | Geometry and interaction regression tests |
+| `tools/` | Editable pop-up and material generation scripts |
+
+Regenerate assets as needed:
+
+```bash
+python3 tools/generate_popups.py
+python3 tools/generate_materials.py
+```
+
+## Documentation and licenses
+
+Read [TECHNICAL_DOCUMENTATION.md](TECHNICAL_DOCUMENTATION.md) for detailed Linux and Windows instructions, test procedures and known limits. Credits and third-party licenses are kept in [ASSETS_OPEN.md](ASSETS_OPEN.md) and `assets/fonts/`. The project license is in [LICENSE](LICENSE).
