@@ -1,0 +1,50 @@
+name: Linux build and regression tests
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "assets/**"
+      - "Makefile"
+      - ".github/workflows/linux.yml"
+  pull_request:
+    paths:
+      - "src/**"
+      - "assets/**"
+      - "Makefile"
+      - ".github/workflows/linux.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  linux:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Install native Linux dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y g++ make libsdl2-dev libcairo2-dev libfontconfig1-dev libgl1-mesa-dev xvfb
+      - name: Compile
+        run: make -j2
+      - name: Run navigation and geometry regression tests
+        run: make test
+      - name: Verify CLI
+        run: ./biblioteca --help
+      - name: Render with Mesa software OpenGL under Xvfb
+        continue-on-error: true
+        run: |
+          mkdir -p render-frames
+          timeout 240s xvfb-run -a env LIBGL_ALWAYS_SOFTWARE=1 ./biblioteca --desktop-check ./render-frames
+      - name: Upload diagnostic render frames
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Biblioteca-Linux-render-frames
+          path: render-frames/*.png
+          if-no-files-found: warn
