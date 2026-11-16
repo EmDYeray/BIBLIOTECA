@@ -1,7 +1,9 @@
 #include "adult_books.hpp"
+#include "locale.hpp"
 
 namespace biblioteca {
 const std::array<AdultBook,originalAdultCount>& adultBooks(){
+    if(isEnglish())return adultBooksEnglish();
     static constexpr std::array<AdultBook,originalAdultCount> collection{{
         {"The Signal Shift","Fiction","An observer should decide if a sign deserves another listening night.","#62383b",{{
             {"The anomaly",

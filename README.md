@@ -56,6 +56,17 @@ When a build artifact is available, extract the entire portable ZIP and run `bib
 
 GitHub Actions compile and smoke tests do not prove that the full 3D interface renders correctly on arbitrary GPUs. Perform a manual native Windows acceptance test before publishing a stable release. See [TECHNICAL_DOCUMENTATION.md](TECHNICAL_DOCUMENTATION.md) for the validation procedure.
 
+## Languages
+
+The library supports **Spanish (Español)** and **English** in the same native executable. Spanish is the default.
+
+- Click the **ES / EN** language control at the top of the application to switch languages immediately.
+- Press **F9** to switch languages from the keyboard, including while reading or browsing the catalog.
+- Book titles, descriptions, narrative pages, technical notes and the primary interface controls follow the selected language. Switching rebuilds the catalog for the new language.
+- English narrative translations are a first-pass localization and should be proofread by a bilingual editor before a public educational release.
+
+The GitHub repository is named in English: **Starry Library** (*Biblioteca de Estrellas*).
+
 ## Controls
 
 | Input | Action |
@@ -74,6 +85,7 @@ GitHub Actions compile and smoke tests do not prove that the full 3D interface r
 | M | Pause or resume 3D model animations |
 | Esc | Release camera control, cancel an action or close the reader |
 | F2 | Show or hide the controls guide |
+| F9 | Switch between Spanish and English |
 | F11 | Toggle full screen |
 
 ## Source layout

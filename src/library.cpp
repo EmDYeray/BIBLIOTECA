@@ -1,4 +1,5 @@
 #include "library.hpp"
+#include "locale.hpp"
 #include "adult_books.hpp"
 #include "child_text.hpp"
 #include "imported_books.hpp"
@@ -11,6 +12,7 @@
 namespace biblioteca {
 namespace {
 #include "catalog.inc"
+#include "catalog_es.inc"
 float slope(Size s) {
     const float aspect=float(s.w)/std::max(1,s.h);
     return std::tan(std::min(64.f,48.f*std::max(1.f,1.55f/aspect))*pi/360);
@@ -61,10 +63,14 @@ std::string Book::number(int id) const {
     std::string num=std::to_string(id+1); return std::string(3-num.size(),'0')+num;
 }
 const std::array<Book,bookCount>& books() {
-    static const auto catalog=[] {
+    static std::array<Book,bookCount> catalog{};
+    static int lastLanguage=-1;
+    const int currentLanguage=isEnglish()?1:0;
+    if(lastLanguage!=currentLanguage){
+    const auto result=[] {
         std::array<Book,bookCount> result{};
         for(int i=0;i<originalCount;++i){
-            const auto& b=seeds[i];const auto& c=palette[(i%7)*3+(i/7)%3];
+            const auto& b=isEnglish()?seeds[i]:seedsEs[i];const auto& c=palette[(i%7)*3+(i/7)%3];
             result[i]={b[0],b[1],b[2],c[0],c[1],.245f+((i*17+11)%24)*.005f,
                        1.13f+((i*29+7)%27)*.004f,1998+((i*11+13)%28)};
         }
@@ -80,6 +86,9 @@ const std::array<Book,bookCount>& books() {
         }
         return result;
     }();
+    catalog=result;
+    lastLanguage=currentLanguage;
+    }
     return catalog;
 }
 std::string pageText(int id,int page) {
@@ -108,7 +117,7 @@ std::string pageText(int id,int page) {
         excerpt=excerpt.substr(0,excerptLimit);
         if(const auto cut=excerpt.rfind(' ');cut>36)excerpt=excerpt.substr(0,cut);
     }
-    return std::string(base)+"\n\nMission log: "+std::string(excerpt);
+    return std::string(base)+(isEnglish()?"\n\nMission log: ":"\n\nRegistro de misión: ")+std::string(excerpt);
 }
 float wingX(int wing) { return wing==0?-5.1f:5.1f; }
 float ease(float x) { x=std::clamp(x,0.f,1.f);return x*x*x*(10+x*(-15+6*x)); }

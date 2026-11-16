@@ -1,4 +1,5 @@
 #include "ui.hpp"
+#include "locale.hpp"
 #include "references.hpp"
 #include <cctype>
 #include <cstdint>
@@ -67,32 +68,35 @@ std::vector<Interface::Button> Interface::buttons() const {
     constexpr double topY=25,topH=38,topGap=11;
     if(catalog_){
         const auto d=dialog();
-        return {{{d.x+d.w-112,d.y+16,87,topH},Action::Close,"Close",true},
+        return {{{d.x+25,d.y+16,98,topH},Action::Language,isEnglish()?"EN / ES":"ES / EN",true},
+                {{d.x+d.w-112,d.y+16,87,topH},Action::Close,isEnglish()?"Close":"Cerrar",true},
                 {{d.x+d.w-194,d.y+76,169,topH},Action::Genre,genres_[filter_]+"  ▾",true}};
     }
     if(hideControls_)return {};
     if(lib.selected()<0){
         const bool child=lib.section()==Section::Children;
-        std::vector<Button> list{{{w-151,topY,119,topH},Action::Catalog,"Catalog",true},
-                                 {{w-258-topGap,topY,96,topH},Action::Sources,"Lectern",true},
+        std::vector<Button> list{{{w-151,topY,119,topH},Action::Catalog,isEnglish()?"Catalog":"Catálogo",true},
+                                 {{w-258-topGap,topY,96,topH},Action::Sources,isEnglish()?"Lectern":"Atril",true},
                                  {{31,topY,191,topH},Action::Section,
-                                  std::string(sectionName(child?Section::Adult:Section::Children)),true}};
+                                  std::string(isEnglish()?sectionName(child?Section::Adult:Section::Children):(child?"Sala juvenil y adulta":"Sala infantil")),true}};
         if(child){
             list.push_back({{x-55,h-64,45,43},Action::Left,"‹",lib.wing()>0});
             list.push_back({{x+10,h-64,45,43},Action::Right,"›",lib.wing()<1});
         }
+        list.push_back({{w/2-49,topY,98,topH},Action::Language,isEnglish()?"EN / ES":"ES / EN",true});
         return list;
     }
     const auto stage=lib.stage();
     std::vector<Button> list{
-        {{w-151,topY,119,topH},Action::Close,"Close",stage!=Stage::Closing && stage!=Stage::Returning}};
+        {{w-151,topY,119,topH},Action::Close,isEnglish()?"Close":"Cerrar",stage!=Stage::Closing && stage!=Stage::Returning}};
     if(stage==Stage::Reading){
         const bool settled=lib.turning()==1;
         list.push_back({{x-93,h-64,43,43},Action::Left,"‹",settled && lib.spread()>0});
         list.push_back({{x+50,h-64,43,43},Action::Right,"›",settled && lib.spread()<spreadCount(lib.selected())-1});
         if(lib.selected()!=referenceBookId)
-            list.push_back({{31,topY,103,topH},Action::Motion,motion_?"Pause":"Resume",true});
+            list.push_back({{31,topY,103,topH},Action::Motion,motion_?(isEnglish()?"Pause":"Pausar"):(isEnglish()?"Resume":"Reanudar"),true});
     }
+    list.push_back({{w/2-49,topY,98,topH},Action::Language,isEnglish()?"EN / ES":"ES / EN",true});
     return list;
 }
 Interface::Action Interface::actionAt(Point p,bool includeDisabled) const {
@@ -136,6 +140,7 @@ void Interface::refreshCatalog(){
 void Interface::syncCatalog(){
     catalogRoom_=lib.section();
     genres_.resize(1);
+    genres_[0]=isEnglish()?"All genres":"Todos los géneros";
     for(int i=0;i<bookCount;++i){
         if(bookSection(i)!=catalogRoom_)continue;
         const auto& genre=books()[i].genre;
@@ -189,6 +194,7 @@ void Interface::act(Action a){
     switch(a){
         case Action::None:return;
         case Action::Catalog:showCatalog(true);break;
+        case Action::Language:setEnglish(!isEnglish());syncCatalog();break;
         case Action::Close:
             if(catalog_)showCatalog(false);
             else lib.close();
@@ -271,6 +277,7 @@ void Interface::event(const SDL_Event& e,SDL_Window* window){
             if(!window || sdl::relativeMouse(request)==0)mouseLook_=request;
             lookDrag_=false;dirty=true;break;
         }
+        if(k==1073741890 && !e.key.repeat){act(Action::Language);break;} // F9
         if(k==sdl::f2){hideControls_=!hideControls_;dirty=true;break;}
         if(k==sdl::f11 && window){full_=!full_;SDL_SetWindowFullscreen(window,full_?sdl::fullDesktop:0);break;}
         if(catalog_){
@@ -419,13 +426,13 @@ void Interface::paint(Paint& p) const {
         p.fill({0,0,w,h},color("#0e2129",.70));
         const auto d=dialog();
         p.round(d,6,color("#f5ebd3"),catalogRule);
-        p.display(39);p.text(d.x+25,d.y+44,"Catalog",catalogInk);
-        p.font(15,false,true);p.text(d.x+161,d.y+41,sectionName(catalogRoom_),catalogSubtle);
+        p.display(39);p.text(d.x+25,d.y+44,isEnglish()?"Catalog":"Catálogo",catalogInk);
+        p.font(15,false,true);p.text(d.x+161,d.y+41,isEnglish()?sectionName(catalogRoom_):(catalogRoom_==Section::Children?"Sala infantil":"Sala juvenil y adulta"),catalogSubtle);
         const Rect field{d.x+25,d.y+76,d.w-222,39};
         p.round(field,3,color("#fff8e7"),catalogFocus_==0?color("#185e64"):catalogRule);
         if(catalogFocus_==0)p.round({field.x-3,field.y-3,field.w+6,field.h+6},5,color("#185e64",0),color("#185e64"));
         p.font(15);
-        if(search_.empty())p.text(d.x+37,d.y+101,"Search this room",catalogSubtle);
+        if(search_.empty())p.text(d.x+37,d.y+101,isEnglish()?"Search this room":"Buscar en esta sala",catalogSubtle);
         else{
             std::string display=search_;
             while(display.size()>2 && p.width(display)>d.w-242){
@@ -436,7 +443,7 @@ void Interface::paint(Paint& p) const {
             p.text(d.x+37,d.y+101,display,catalogInk);
         }
         if(results_.empty()){
-            p.font(18);p.middle(cx,d.y+183,"Try another title or change the genre.",catalogSubtle);
+            p.font(18);p.middle(cx,d.y+183,isEnglish()?"Try another title or change the genre.":"Prueba otro título o cambia el género.",catalogSubtle);
         }
         for(int i=0;i<rows && scroll_+i<int(results_.size());++i){
             const auto id=results_[scroll_+i];const auto& b=books()[id];const auto y=d.y+132+i*rowHeight;
@@ -451,7 +458,7 @@ void Interface::paint(Paint& p) const {
         }
         p.line(d.x+25,d.y+d.h-49,d.x+d.w-25,d.y+d.h-49,catalogRule);
         const int available=catalogRoom_==Section::Children?childrenCount:adultCount;
-        p.font(13);p.text(d.x+25,d.y+d.h-25,std::to_string(results_.size())+" of "+std::to_string(available)+" books",catalogSubtle);
+        p.font(13);p.text(d.x+25,d.y+d.h-25,std::to_string(results_.size())+(isEnglish()?" of ":" de ")+std::to_string(available)+(isEnglish()?" books":" libros"),catalogSubtle);
     }
     for(const auto& b:buttons()){
         if(!reading && !b.enabled)continue;

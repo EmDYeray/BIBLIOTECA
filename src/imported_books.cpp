@@ -1,7 +1,9 @@
 #include "imported_books.hpp"
+#include "locale.hpp"
 
 namespace biblioteca {
 const std::array<ImportedBook,importedChildren+importedAdults>& importedBooks(){
+    if(isEnglish())return importedBooksEnglish();
     using V=Illustration;
     static constexpr std::array<ImportedBook,importedChildren+importedAdults> books{{
         {{"The little leap of a great eagle","Moon","Eagle lands and two friends step on the Moon.","#615c8c",{{

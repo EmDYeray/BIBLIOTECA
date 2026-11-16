@@ -5,7 +5,7 @@
 
 namespace biblioteca {
 class Interface {
-    enum class Action { None, Catalog, Left, Right, Close, Genre, Section, Motion, Sources,
+    enum class Action { None, Catalog, Left, Right, Close, Genre, Section, Motion, Sources, Language,
                         Forward, Back, StrafeLeft, StrafeRight, ZoomOut, ZoomIn };
     struct Button { Rect rect; Action action; std::string text; bool enabled; };
     Size size_;

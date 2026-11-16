@@ -1,8 +1,10 @@
 #include "child_text.hpp"
+#include "locale.hpp"
 #include "stories.hpp"
 
 namespace biblioteca {
 const AdultSpread& childSpread(int book,int spread){
+    if(isEnglish())return childSpreadEnglish(book,spread);
     using Story=std::array<AdultSpread,spreads>;
     static constexpr std::array<Story,7> stories{{
         Story{{

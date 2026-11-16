@@ -1,0 +1,67 @@
+#define technicalNote technicalNoteEnglish
+#include "technical_notes.hpp"
+#include <array>
+
+namespace biblioteca {
+std::string_view technicalNote(Destination place,int page){
+    static constexpr std::array<std::array<std::string_view,8>,7> notes{{
+        {{"An image in the thermal infrared records radiation emitted from the surface. Glow depends on the temperature and properties of the material. That's why we should compare gangs and hours before we identify a hot light.",
+          "The resolution limits the size of the visible detail. A pixel can mix vegetation, rock and flame. A small focus can alter that value even if its shape gets blurred.",
+          "To put two shots into the same coordinate system allows to review actual movements. The crossing roads and river curves offer checkpoints that should preserve their position.",
+          "A layer of clouds can block observation. Fold the zones without data and record the time of each take. A stop to the measurement does not prove an area cold.",
+          "The apparent temperature of a slope changes with hour and light. To compare two days, we have to choose similar observations and to contrast with points known from ground.",
+          "The image describes the ground from above. The possibility of crossing a path also depends on the state of the ground, the visibility and information of those at the place.",
+          "An operational map should show when each tranche was checked. If two measurements are contradicted, keeping them both with their time allows them to review their decision after new data have been reached.",
+          "Following up, vegetable recovery is compared with close climate and relief locations. Comparison helps to separate a fire shift from a seasonal shift."}},
+        {{"Europe reflect much of the light it receives. A dark fringe can indicate a material change, a shadow or both. The images taken with different lights help to distinguish them.",
+          "A fracture separates surfaces on both sides from a miscontinuity. The visible width in an image depends on observation geometry and does not measure depth itself.",
+          "With two views taken from separate positions, a close feature appears to move more than a far one. That apparent difference of position is called a parage and allows to estimate relief.",
+          "A radar's sending out pulses and measures how long they're back. Some sign can get through the ice. Its depth depends on how the wave spreads into the material.",
+          "A drop model compares the ground with the path. It should set aside a distance to change the point of arrival if the ground is more inclined or irregular than intended.",
+          "To look at a crack from another angle can reveal hidden regions. If a spot appears where light changes, it's worth checking if it's a reflection before changing the map.",
+          "To combine the observations of several passing, it retains the effective resolution of each instrument and notes how each measure became at the same scale.",
+          "The presence of surface fractures provides information about the ice. Dedying what happens underneath requires serious coping with this evidence, radar and other independent models."}},
+        {{"A beacon's a reference sign. Your expected time serves to check the reception. To investigate a delay we have to compare watches and distinguish the issue from their ground registration.",
+          "If two stations get the same pattern, it's less likely to be caused by a single recipient. It remains necessary to check that both use the same time reference and the same detection criterion.",
+          "A star sensor estimates the direction by comparing stars with known positions. An obstruction can prevent them from identifying sufficient points without damaged satellite engine.",
+          "A ground replica allows to vary light and place of a piece in a controlled manner. Reparation with a single different condition can better isolate the cause.",
+          "The bending modifies the place of a piece with respect to the rest of the ship. Two visible camera brands serve to track that change without touching the component.",
+          "The vibration of launch and heat dilation are different tests. A piece that remained rigid in a piece can still change shape by passing from the Sun to the shade.",
+          "During an orbital eclipse, available solar energy is reduced. A battery can hold necessary equipment while the tasks they accept are postponed.",
+          "The closure of the test requires a comparison between prior and post-adjustment conduct. Keep both the order sent and the data that have been shown to have been run."}},
+        {{"The adhesion loss can be estimated by comparing the wheel turn with the movement seen by the camera. A great difference indicates that some of the turn did not have advanced.",
+          "An orbital image helps to plan the general path. The photos from the ground allow to evaluate minor challenges and estimate if their edges leave enough space to stop or turn around.",
+          "A vein and a cape represent different structures. To rebuild his origin, he takes images of his contact and records how his direction changes throughout his exposure.",
+          "First sending small copies allows you to choose which images require more resolution. The compression should preserve the details relevant to an immediate decision.",
+          "A drill removes material under an altered surface. The depth and place of the sample should be saved to be compared with other afloor.",
+          "The powder affects visibility and sunlight. The return plan should cover an energy reduction and an interval with no reliable visual reference.",
+          "A repeater can deliver data when the vehicle has no direct vision of the Earth. The useful time depends on the geometry and communication shift.",
+          "The reconstruction of the tour gathers orders, an estimated position and images of the environment. Maintaining that sequence helps to distinguish a radio delay from a mobility problem."}},
+        {{"The terminator's the border between day and night about a body. Near that line light arrives with a low angle, lengthening shadows and making some reliefs more visible.",
+          "A shimmering broken object can vary its brilliance in successive observations. The intertwine between lights provides a track about its rotation, though it depends on its shape and light.",
+          "The path of a fragment is estimated by combining positions and their hours. Two isolated images guide the search but more separate observations reduce uncertainty.",
+          "A zone of uncertainty indicates what trajectories are still compatible with measures. The maneuver is chosen to get separation even if the fragment is close to an edge of that area.",
+          "The docks depend on the position and relative velocity. A ship may be close to the right point and still require adjustments to avoid speeding up.",
+          "The instructions are sent with hour and version. Confirmation of the reception allows us to compare what path the vehicle is following with what you see on ground.",
+          "The observation geometry changes as the Moon advances into its orbit. A measurement from another angle can better estimate more than repeat many nearly identical shots.",
+          "A descend site is evaluated with relief, light, access to communications and room for manoeuvre. Those conditions may favor different locations and require prioritization."}},
+        {{"An orbital eclipse happens when a body blocks light that arrives at the ship. The duration depends on the path and apparent body size from the probe.",
+          "The temperature of an instrument does not change at once as it goes into shade. To record how long it's been without light helps to interpret the response and to anticipate consumption.",
+          "A photo can travel in numbered pieces. Comparison of numbers and hours allows you to recover the order and identify what fragments require retransmission.",
+          "A directional antenna concentrates the sign into a narrow beam. When the ship turns to observe, it may lose the direction necessary to transmit. The calendar sets time for both tasks.",
+          "A single flash conforms to several explanations. To repeat the observation and to compare it with the preset position helps to separate a reflection of a path shift.",
+          "When looking at a singing ring, a broad structure can be projected as a line. To estimate its shape images from several angles are compared.",
+          "To preserve time and place with each reading will be necessary if a segment from copies is rewarded. A continuous image can hide a real hole between two measurements.",
+          "The shade of the rings allows to compare reflected light and blocked light. The interpretation depends on the position of the Sun, ship and planet during the exposure."}},
+        {{"The crown is the outside atmosphere of the Sun. It's hard to see her next to the bright disc. A coronograph blocks some of that light to observe more tenuous structures around.",
+          "A pounding is recognised by an increased emission quickly. A coronal mass ejection removes plasma into space. The phenomena can coincide and it's best to figure out what each sensor measured.",
+          "Solar activity can damage the ionosphere and affect some communications. To investigate an interruption, compare signal time with solar and local conditions.",
+          "Two stations can get the same notice by different routes. To measure your hour of receipt and your hour of dispatch, a clockwise from a delay in transmission can be found.",
+          "Backup links are tested with the main channel disabled with a controlled form. It should be checked that they reach the same recipients and retain the contents of the notice.",
+          "A thermal shield protects instruments from direct heat. The ship's direction keeps these tools in the region protected during observation.",
+          "The incident documentation should include the frequencies and contact-free intervals. That allows us to check if the mistakes followed a pattern or were coincidences.",
+          "The images of the crown are interpreted with the moment of exposure and its field of vision. Two instruments can capture different regions from the same event."}}
+    }};
+    return notes[static_cast<int>(place)][page];
+}
+}

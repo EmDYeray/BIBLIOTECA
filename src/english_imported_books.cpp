@@ -1,0 +1,193 @@
+#define importedBooks importedBooksEnglish
+#include "imported_books.hpp"
+
+namespace biblioteca {
+const std::array<ImportedBook,importedChildren+importedAdults>& importedBooks(){
+    using V=Illustration;
+    static constexpr std::array<ImportedBook,importedChildren+importedAdults> books{{
+        {{"The little leap of a great eagle","Moon","Eagle lands and two friends step on the Moon.","#615c8c",{{
+            {"The Eagle",
+             "From Earth, a ship called Eagle was travelling to the Moon. Her name means eagle in English. He had four golden legs and looks like a spider. Inside were Neil Armstrong and Buzz Aldrin, who were hoping to come down.",
+             "While they were preparing, Michael Collins continued to turn around the Moon on his main ship. From above I was expecting the time to rejoin his partners. The eagle still had to put his legs on the ground."},
+            {"Polvo gris",
+             "On July 20, 1969, the Eagle turned the engine on to slow down. Below was a grey plain called Sea of Settle. That's where his legs touched his powder and his ship stood still.",
+             "Neil spoke on the radio to notify Earth. The journey had reached a place that nobody had come down to before. The window saw a grey ground, full of craters, and soon they could walk on it."},
+            {"The first step",
+             "Neil opened his hatch and went down the stairs. When she put a boot in the powder, she put a person's first print on the Moon. Buzz came down soon after. With a few steps, they both began to explore that quiet place.",
+             "Since they weighed less on the Moon, they could move into leaps. They have taken photos, they have been picking up stones in boxes and they have been moved by light from the Sun. The Earth would get news from those apparatus after the Eagle went."},
+            {"De vuelta a casa",
+             "After passing there about a day, Neil and Buzz returned by the stairs. They turned the car's engine on and they took off. Below were the four golden legs, firm upon the same powder where they had left their prints.",
+             "In space, Michael was expecting them at the main ship. The three of them returned to Earth with the boxes of stones. That's where they could open them and study a little bit of the place where the Eagle had landed."}
+        }}},V::Eagle},
+        {{"The adventure of the brave Intrepid","Moon","Pete and Alan are visiting a robot that's already been living on the Moon.","#715249",{{
+            {"Otra visita",
+             "In November 1969, Pete Conrad and Alan Bean travelled to the Moon on a ship called Intrepid. He had four long legs at the bottom and a cabin up. That's where the two astronauts went while they came down.",
+             "The Intrepid came down into the Torment Ocean. That ocean was a plain of dust and stones. The legs held the ship as a table. The top part would help them get back."},
+            {"The Science box",
+             "On the first ride, Pete and Alan opened the ALSEP experiment box. They put their apparatus out and put them into the grey powder. One of them could feel as the ground trembling and send the notice to Earth.",
+             "The light damaged the camera as the television camera pointed to the Sun. The astronauts followed his walk. They had other tasks and a second tour to visit a robot that had come before them."},
+            {"A asleep robot",
+             "On their second walk they walked to Surveyor 3, a robot that had been on the Moon for years. They came up to him and dismantled some pieces. They wanted to bring them to Earth to study how they had changed there.",
+             "They also picked up stones and used a plate to catch particles from the Sun. When they returned to Intrepid, they had materials from the lunar ground and small pieces that had been exposed at that place for years."},
+            {"A blow to the moon",
+             "To get out, Pete and Alan turned on their cabin engine. The legs stayed on the moon. When both of them were already at the ship's back, they let the empty cabin down again.",
+             "At his fall, his cabin tipped his ground. The first walk device recorded the blow and the Earth's team received the news. From a distance they could have known his science box was still at work."}
+        }}},V::Intrepid},
+        {{"The Secret of the Golden Falcon","Moon","A folding car, a hammer and a pen are travelling at Falcon.","#5c7086",{{
+            {"A hawk with no wings",
+             "Falcon means Falcon. That ship had no wings but had four golden legs and round shoes to get onto the mole powder. In July 1971, astronauts David Scott and James Irwin travelled to her.",
+             "Besides his tools, they had an electrical car that was bending to fit onto the ship. They also held a scientific station. When they get here, they have to get them both out and get them ready on the ground."},
+            {"Mountains of the Moon",
+             "Falcon went down at the foot of the Apennines of the Moon. At his opening, David and James deployed their folding car. With the wheels on the ground, they could finally go out and walk through the landscape.",
+             "They rode through craters and picked up rocks. Before they leave, they leave an apparatus to study tremors. The car allowed them to ride more ground and the station would continue to send news after their visit."},
+            {"The hammer and the pen",
+             "David put up a hammer with one hand and a pen with the other. In front of the camera, she opened both hands at once. Those who saw the tape could check what was first playing the powder.",
+             "On Earth, the air holds the pen high. The moon's barely air. The pen and hammer fell together and touched the ground at once."},
+            {"Farewell",
+             "At his farewell to the Moon, David and James turned on his car at Falcon's cabin. The car and the four legs and the station remained with the prints that the astronauts had made.",
+             "For years, the station continued to send news to Earth. Many later, other ships photographed the place from above. Even from space they could be seen marks of that visit."}
+        }}},V::Falcon},
+        {{"Kepler and K2: looking for new worlds","Estrellas","A telescope searches for planets looking at light from stars.","#424d86",{{
+            {"To look with patience",
+             "A telescope called Kepler was sent to space in 2009. His camera could look at thousands of stars at once. The scientists had charged him with searching for worlds that turned around far-off stars.",
+             "Kepler kept how much every star shines. Sometimes a little light was lost and then shines back as before. Of all the tipples of heaven, those small changes were what I was looking for."},
+            {"A hidden planet",
+             "Imagine someone passing by a lamp. For an instant you see a little less light. A similar thing happens as a planet crosses his star from where Kepler looks at him.",
+             "If light goes down at similar intervals, there may be a planet spinning. Kepler put those down so that the team could study them. That's how she found clues from worlds that were far too far to photo them directly."},
+            {"The second adventure",
+             "Two wheels that helped Kepler aim stopped functioning. Without them, she had a hard time looking at the same place. Scientists have been looking for a way to re-balance the telescope.",
+             "With the remaining wheels and the push of light from the Sun, Kepler could look at other parts of the sky. That second phase was called K2. It was his turn to aim at a new group of stars every while."},
+            {"What's left",
+             "Kepler and K2 brought together measures from many worlds. Some were big and some were small. They also saw that about some stars were spinning more than one planet, as happens in our solar system.",
+             "The fuel from Kepler was completed in 2018. His measures were put to care. They can still be useful to ask new questions, as with what worlds have an Earth-like size and what they deserve to look at again."}
+        }}},V::Kepler},
+        {{"Pioneer 10: The little traveler","Jupiter","A ship crosses the asteroid belt and sends images of Jupiter.","#8a553e",{{
+            {"A ship with an antenna",
+             "Pioneer 10 left Earth in 1972. He had wires and instruments and a great plate that was his antenna. That's why I could tell his team what I saw while travelling to the farthest planets.",
+             "The Earth was gradually reduced to a blue spot. A region filled with asteroids and far beyond, Jupiter. The ship would have to send his news from growing distances."},
+            {"Rocks on the way",
+             "Pioneer interned with his asteroid belt. There many rocks of different sizes turn around the Sun. The team wanted to figure out if the ship could cross that region with its good tools.",
+             "The ship passed through very separate rocks. He moved on and was able to send news to Earth. The other side of the belt was expected by a world far bigger than any of those stones."},
+            {"Jupiter close",
+             "In December 1973 Pioneer passed near Jupiter. He saw gangs of different colors and a huge red spot. From close by, she saw details that were lost while they were watching the planet from Earth.",
+             "Pioneer took images and assembled measures during the meeting. He sent them after his big antenna. While people studied the photos, the little traveler remained far from a darker part of space."},
+            {"The far-off voice",
+             "The years passed and the Earth's antenna became weaker and weaker to Pioneer. At last his messages stopped coming. The ship continued to travel after contact was complete.",
+             "A metal plate remained with her. Some drawings tell about where she came from and how people did. Although his voice went out, his plate remains a way to tell his story."}
+        }}},V::Pioneer},
+        {{"Pioneer 10: The Dreamed Traveller","Jupiter","A story about the plaque bearing a memory of Earth.","#7b6952",{{
+            {"A blue point",
+             "In this tale, Pioneer looks back while travelling. Oceans, mountains and forests become a single blue spot. His fate goes far beyond Mars.",
+             "The small traveler crosses a region filled with asteroids, rocks that turn around the Sun. When she gets out of there, she's still with her instruments and her antenna ready to meet with Jupiter."},
+            {"A window to Jupiter",
+             "Jupiter occupies more and more space before the ship. Coming by, Pioneer takes images of his fringes and his big red storm. It also brings together measures for those awaiting their news.",
+             "On Earth, each image opens a small window to the giant planet. Pioneer and his team can still communicate. Nevertheless, the ship is already preparing to continue with a path that will put it back for years."},
+            {"A metal letter",
+             "Before leaving, the team had put a golden plate at Pioneer. He left drawings of two people and clues about his place. It's designed to travel with her.",
+             "The signs have grown weaker and the last one has been received in 2003. The drawings are still there. In the tale, someone could meet with that letter some day and ask who sent it."},
+            {"A journey without end",
+             "Pioneer goes with his plate. If anyone found her, maybe she'd try to read his lines. To those who sent her, she carries a memory of the Earth, the planet that from afar seemed a little blue light.",
+             "While the ship moves away, other people keep looking at the sky. The images you sent have already shown them how Jupiter was closely. The journey left questions for those who wished to continue their exploration."}
+        }}},V::Pioneer},
+        {{"The robot that heard Mars","Mars","A robot hears the tremors to figure out how Mars looks inside.","#995143",{{
+            {"Robotito arrives at Mars",
+             "Mars was red as an apple and seemed to be quiet. To hear what was happening under his ground, they built a robot called InSight. We'll tell Robotito about that. He travelled months on a ship with legs.",
+             "In 2018 she came down as a butterfly. When she was firm, she opened her panels to get Sun and stretched an arm. He put a round device on his ground that I would use to listen to."},
+            {"Robotito's ear",
+             "The device's called seismic. It's like an ear to the ground. He can feel tremors so small that they'll get away from you if you put a hand on the ground.",
+             "Robotito stayed put. He spotted tremors, even as a space rock hit Mars. He sent his signals to Earth. That's where they saw them as lines with high and low, and they were similar to beat."},
+            {"Capas escondidas",
+             "The tremors travel inside Mars. His movement changes as they move from one cape to another. When we looked at the signs, the team could get an idea of what was under the ground.",
+             "It was like pounding his ear to a wall to figure out what's on the other side. Thanks to those clues they could figure out how the layers of Mars were stacked, as with a cake."},
+            {"A final message",
+             "The powder was put on Robotito as an orange blanket. His panels were getting less and less light and by 2022 he stopped texting. By that time, the scientists had been saving the signs they heard.",
+             "They re-opened their notebooks and found clues of large pieces of rock hidden inside Mars. Robotito was still under his dusts. His signs were still helping to ask new questions."}
+        }}},V::Insight},
+        {{"The space twins","Mars","Two robots with wheels are looking for stones that have water clues.","#805345",{{
+            {"Two equal robots",
+             "Spirit and Opportunity were as good as two twins. Each had 6 wheels, a long arm and camera eyes to get close to the stones. They were about the size of a grocery cart.",
+             "They came out on different ships to Mars. When they arrived, they both had the same question. Would she have run water once through that world filled with red powder? To answer them, they have to look at the ground very slowly."},
+            {"Two different locations",
+             "Spirit opened a parachute and bounced into air bags, as a ball. When she stood still, she opened her panels and looked at Gusev's crater. Maybe there had been a lake a long time ago.",
+             "Opportunity came down to the other side of Mars, on a plain. He found cranberry-like balls among the stones. From two different locations, twins began sending photos of the ground to Earth."},
+            {"Pistas de agua",
+             "Opportunity used his arm to look at the balls very closely. They were made from a mineral. Together with other stones, they leave clues that water had been there a long time ago.",
+             "Spirit found other clues to his crater's rocks. On Earth they put them both together. The stones, as an old notebook, told something about how Mars had been before."},
+            {"Fingerprints",
+             "Spirit got trapped in the sand. Opportunity continued to ride Mars for years, until a huge storm covered the sky. His panels could no longer collect the light they needed to send messages.",
+             "The two remained still on Mars, covered with red powder. Other robots, such as Perseverance, came later. His teams have been able to learn about photos and about everything that his twins had found about his stones."}
+        }}},V::Rovers},
+        {{"1969-059C: The Eagle Chronicle","History of mission","Two phases, contingency samples and the EASEP program.","#555c67",{{
+            {"A two-stage module",
+             "The Apollo 11 Eagle separated two functions. The lower stage was with the descending engine and the legs, which distributed the load while touching the ground. The superior protected Armstrong and Aldrin during his stay and had his own ascent engine. Collins remained in orbit at the command module.\nThat division had been preventing the re-establishment of the equipment that was only necessary to land.",
+             "On July 20, 1969, the Eagle stayed at the Sea of Settle. The final manoeuvre required an adjustment to the contact point to avoid irregular ground. The landing meant bringing the push and orientation to conditions consistent with the contact of the legs.\nThe communication between the ship, orbit and ground station allowed to fix the time and status of the vehicle."},
+            {"A sample first",
+             "Armstrong first picked up a contingency sample. The reason was operative: a premature exit could still leave the mission with a small amount of lunar material. Later with Aldrin, work was extended to photo, sampling and registration of the environment.\nA sample chosen urgently should be distinguished from a collection with time and context.",
+             "The expedition brought about 21.5 kg of rock and ground. The scientific value depended on being able to relate pieces, photographs and collection locations. A secluded stone can be studied at the lab but its position helps to rebuild how it reached the site.\nThe ground also had observation equipment and a reflector for remote experiments."},
+            {"A Day for EASEP",
+             "The EASEP put together earlier surface experiments. Among them was a passive seismic with vibrations. The instrument had to distinguish movements from ground from disturbances associated with the ship and its own environment. Solar panels conditioned when I could work.\nA time series that intersects at lunar night has gaps that count while interpreting the data.",
+             "The registration was limited by food and thermal conditions. When a equipment loses energy, the absence of measurements does not prove that the phenomena it measured stopped. The design of other expeditions sought to increase the continuity of the instruments.\nData collection is a part of the experiment. The schedule and faults are also documented."},
+            {"Rising and meeting",
+             "After nearly 22 hours above the surface, the cabin used the lower stage as a launch ground. The ascent engine brought her to an orbit from which she could meet with Collins. That was a second run independent of the landing. A vehicle that had been able to descend had yet to prove that it could leave and meet with the command module.",
+             "Armstrong and Aldrin moved the samples and registration material to the ship that would return to Earth. The empty Eagle was separated. The lower stage remained at the landing place.\nThe division of functions is clear at the end: one half remained on the ground, another did the journey back to orbit and the command module completed his return."}
+        }}},V::Eagle},
+        {{"1969-099C: Ocean of Torments","History of mission","Precision landing, Surveyor 3 and an impact recorded by ALSEP.","#715249",{{
+            {"A known destination",
+             "The Intrepid was posted on November 19, 1969 at Oceanus Procellarum. Conrad and Bean were to work near Surveyor 3, a robotic ship that had been with them since 1967. That closeness transformed the landing into a navigation and ground planning test: the crew had to be able to get to the vehicle and come back on foot.",
+             "Intrepid retained the two-stage design. The descending engine had to stop and direct the module to be held by four legs. The promenade cabin would be coupled while walking.\nThe closeness of Surveyor had an additional goal to take rocks: to recover pieces exposed to the lunar environment and to compare them with its earlier status."},
+            {"Tools and faults",
+             "The first walk included the installation of ALSEP, a scientific station with long-term power. His tools included a seismic and environmental meters. The equipment was distributed to the ground and connected to a central station to send its measurements.\nThe installation included a less visible task than deploying tools: choosing their location and preventing traffic from affecting reading.",
+             "The color television camera stopped functioning with its aim directly at the Sun. The observations followed with radio, photo and log. That difference matters when you check the mission: that you miss your live video doesn't mean that you miss your walk record.\nA system has more than one way to preserve evidence but each way keeps different information."},
+            {"The pieces of Surveyor",
+             "On the second walk, the astronauts reached the crater where Surveyor 3 was. They photographed the site and retrieved components to study its exposure. They also sampled the ground and collected particles from the solar wind with a plate.\nEach piece returned with its own story: where it was, how long it had been there and what surfaces had been found.",
+             "The set of rocks and moon ground returned by the mission was about 34 kg. The Surveyor pieces responded to another question: what had changed in materials built on Earth after years of exposure.\nBoth types of evidence were useful but only if artificial and geological samples kept a record that allowed them to be distinguished."},
+            {"A known hour impact",
+             "After meeting with the command module, the crew separated the empty ascent cabin. That was directed to the surface. The ALSEP recorded the vibrations of the impact. When about the place and time became known, the blow gave a reference that did not exist as an unknown tremor was measured.",
+             "The sign lasted far more than the initial blow. Some of the energy dispersed into the ground before reaching the detector. One way to read these data is to separate the source of the sign, the means by which it spreads and the instrument's response.\nWith that distinction, the descent of a discarded piece became a measure of the lunar ground."}
+        }}},V::Intrepid},
+        {{"Falcon: crossing by Hadley","Moon Geology","LRV, ALSEP instruments and an free fall experiment.","#55636f",{{
+            {"At the foot of the Apenines",
+             "Falcon descended on 30 July 1971 near Hadley, at the edge of the Rain Sea. David Scott and James Irwin had a geological goal: to conduct different fields, to observe their continuity and to give back samples whose provenance could be rebuilt. The cabin and the base of descent performed independent functions.\nThe previous map was useful for planning routes but low light and relief changed the perception of distances.",
+             "The mission brought the first LRV lunar vehicle. His four wheels and his electrical power have spread the range of his walks. The distance from each tour remained limited by the possibility of returning on foot if the vehicle failed.\nSpeed alone doesn't explain the value of LRV. To load tools and samples allowed to select more separate geological stations."},
+            {"Between craters and layers",
+             "During the three departures they went about 28 km and collected about 77 kg of samples. Near Hadley Rille they could compare surface rocks with flooring and materials projected by impact. Context photographs helped to link each sample with his station.\nA perforated core provided a vertical sequence, different from information from a loose rock.",
+             "On the Moon the dust behaved differently from a path on Earth. Without dense air, the particles that have been expelled from the wheels do not form a cloud suspended as well. The vehicle put up pits of powder that were falling again.\nThe form of the track served as an indication of movement but interpreting the ground required a combination with slope, velocity and slip."},
+            {"A ground observatory",
+             "The ALSEP included seismic tools and other environmental sensors. His generator became an electricity part of the heat of a radioactive source to maintain measurements for periods without Sun. The central station received and sent them to Earth.\nThe location of instruments and the resistance of connections affected the continuity of registration.",
+             "Scott let go of a hammer and a pen at the same time before the camera. At the lunar vacuum there's barely an air resistance and they both reached the ground together. The demonstration compares acceleration under the same gravity and with similar initial conditions.\nOn Earth, an open pen otherwise goes down because the air's resistance weighs greatly on its movement."},
+            {"From path to file",
+             "On August 2, Falcon's cabin was separated from his base. Scott and Irwin met with Alfred Worden and moved samples and searches to the ship back. The vehicle and the station of experiments remained on the Moon.\nThe separation between what came back and what remained functioning there prolonged the value of the expedition.",
+             "The photographs, positions and samples have been put back into interpretation by Hadley's geology from his lab. Years later, other orbital images have recorded traces of the expedition.\nFalcon's legacy can be read at three scales: the show at a table, the interstation path and the regional landscape to which all these data belong."}
+        }}},V::Falcon},
+        {{"Fairy Red planet","Geophysics","Seismic waves, internal layers and the boundaries of a station on Mars.","#98553d",{{
+            {"Unmobile station",
+             "InSight landed in November 2018. Unlike a Rover, his project depended on sitting still and measuring the same place for a long time. He put the SEIS seismic meter on the ground, protected by a cover against wind and thermal changes. That allowed to detect small movements without attributing them to an internal source at once.",
+             "A part of the job was to recognize environmental noise. The wind could move the ground or shake the ship itself. The temperature changes affected the instrument and its surroundings.\nTo read a record, the computer crossed the moment of vibration with information about the environment and sought a wave form that was compatible with a tremor or impact."},
+            {"Speed as a track",
+             "Compression waves, called P and cutting waves, called S, travel differently through materials. Your arrival time and path changes provide information about cross layers.\nWith a station, different combinations of origin and structure can give similar signs. That's why interpretation contrasts with more than one event.",
+             "An impact can produce, in addition to the seismic sign, a visible crater in orbit images. If that crater is identified, the location of the source remains better closed.\nTo know where the sign began makes it easier to interpret what part of its delay is due to the distance and what to the materials from inside."},
+            {"The experiment that did not penetrate",
+             "The thermal flow instrument intended to measure the temperature gradient under the surface. An penetration probe had to be built up by using contact with the ground. At InSight's place, friction and soil consistency did not behave as required. The depth reached did not allow intended measurement.",
+             "The operative and seismic result belong to different instruments. The difficulty of passing into his place was how his ground responded to his tool. The earthquakes, on the other hand, gave evidence of the internal structure.\nSeparate results as an instrument makes it possible to learn from an experiment even though another from the same mission does not achieve its goal."},
+            {"A model that can change",
+             "The records propose bark thickeners and models for mantle and profound regions. The interpretations are refined as they change the set of tremors and the model of spread. A wave-derived measure usually expressed with an interval or with its supporting hypotheses.",
+             "The powder reduced production of the panels and the station stopped passing. The records already received have been available for further analysis.\nOnce back at a sign, the time, direction and quality of the data should be preserved. They are the conditions for comparing an old and a new interpretation."}
+        }}},V::Insight},
+        {{"Gemelos de hierro","Martian Geology","Hematite, clays and operation of two vehicles with solar power.","#825344",{{
+            {"Two locations of measure",
+             "Spirit and Opportunity arrived at Mars in January 2004. They had similar designs but they looked for evidence in different environments: the Gusev crater and Meridiani Plum. One arm allowed to examine lights and remove the altered surface cape. Images of the environment and composition measurements gave context to the chosen sample.",
+             "A Rover works through limited shifts and links. The computer decides what to measure, checks that the maneuver is secure and sends a sequence of instructions. The robot returns images and data with contact.\nTo interpret a measurement you have to know if it corresponds to loose powder, to the surface of a rock or to the material that was exposed after scrape."},
+            {"The Meridiani cranberries",
+             "Opportunity found small spheres rich in hematite, known as \"cranberries,\" along with layers of rock containing salts. The form and composition of the tanks supported a passing with liquid water in that environment. A single mineral, with no location or comparison, would have been without itself supported by the same interpretation.",
+             "The origin of the spheres was related to how water could have been moved through the sediment. The salts suggested evaporation episodes. Other later comments have expanded the range of potential environments.\nThe finding responded if there had been water in some regions. The duration, acidity and conditions that supported these environments remained to be noted."},
+            {"Energy dictates the path",
+             "The solar panels of both robots lost performance with dusts. Some bursts cleaned up some of the surface and the available energy was back up. Instead, extended storms could reduce light that reached cells for many days. The orientation also mattered, especially in winter.",
+             "Spirit became trapped in sand and had difficulties guiding his panels. Opportunity could continue to study the edge of the endeavour crater. He found evidence of clay minerals useful to compare chemical conditions with those of Meridiani.\nThe geological goal and actual path were always dependent on the ground, the energy and the space to correct contingencies."},
+            {"The data survive",
+             "In 2018, a great storm darkened the sky of Mars and left Opportunity with insufficient energy to sustain communication. His years of work had already covered tens of miles. Spirit had also been far beyond his intended initial duration.\nThe actual duration of a mission depends on how its batteries and components age but also on the ground and light changes found during the run.",
+             "The wheels and systems of both vehicles were studied to prepare subsequent missions. Geological and engineering training have been united: good measurements cannot be chosen if they cannot be reached to the ground, with sufficient context and with energy to transmit.\nThe twins leave a set of observations that continue to be contrasted with new tours and new images."}
+        }}},V::Rovers}
+    }};
+    return books;
+}
+}
