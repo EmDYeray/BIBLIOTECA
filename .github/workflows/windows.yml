@@ -72,19 +72,25 @@ jobs:
             cp -R /ucrt64/etc/fonts windows-stage/etc/
           fi
 
-      - name: Test executable with native Windows command shell
+      - name: Run packaged executable with system-only Windows PATH
         shell: cmd
         run: |
-          windows-stage\biblioteca.exe --self-test
+          set "PATH=%SystemRoot%\System32;%SystemRoot%;%SystemRoot%\System32\Wbem"
+          start "" /wait "%CD%\windows-stage\biblioteca.exe" --self-test
           if errorlevel 1 exit /b 1
-          windows-stage\biblioteca.exe --help
+          start "" /wait "%CD%\windows-stage\biblioteca.exe" --help
           if errorlevel 1 exit /b 1
 
-      - name: Attempt native graphical render (depends on runner OpenGL support)
+      - name: Attempt native graphical rendering and require proof frames
         shell: cmd
+        timeout-minutes: 8
         continue-on-error: true
         run: |
-          windows-stage\\biblioteca.exe --desktop-check windows-render
+          set "PATH=%SystemRoot%\System32;%SystemRoot%;%SystemRoot%\System32\Wbem"
+          start "" /wait "%CD%\windows-stage\biblioteca.exe" --desktop-check windows-render
+          if errorlevel 1 exit /b 1
+          if not exist windows-render\*.png exit /b 2
+          echo Render succeeded and generated PNG proof frames
 
       - name: Create Windows portable ZIP
         shell: msys2 {0}
