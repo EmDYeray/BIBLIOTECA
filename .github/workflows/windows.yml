@@ -117,6 +117,42 @@ jobs:
           makensis packaging/windows-portable.nsi
           test -s dist/Biblioteca-Windows.exe
 
+      - name: Install Mesa software OpenGL for CI-only rendering
+        shell: msys2 {0}
+        timeout-minutes: 6
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          pacman --noconfirm --needed -S mingw-w64-ucrt-x86_64-mesa
+          mkdir -p render-stage
+          cp -R windows-stage/. render-stage/
+          cp /ucrt64/bin/opengl32.dll /ucrt64/bin/libgallium_wgl.dll render-stage/
+          ldd /ucrt64/bin/libgallium_wgl.dll | awk '$3 ~ /^\/ucrt64\/bin\// { print $3 }' | sort -u | while IFS= read -r dll; do
+            cp -n "$dll" render-stage/
+          done
+          test -s render-stage/opengl32.dll
+          test -s render-stage/libgallium_wgl.dll
+
+      - name: Render proof frames with Mesa llvmpipe on Windows
+        shell: cmd
+        timeout-minutes: 8
+        continue-on-error: true
+        run: |
+          set "GALLIUM_DRIVER=llvmpipe"
+          set "PATH=%SystemRoot%\System32;%SystemRoot%;%SystemRoot%\System32\Wbem"
+          if not exist "render-stage\opengl32.dll" exit /b 3
+          start "" /wait "%CD%\render-stage\biblioteca.exe" --desktop-check windows-render-mesa
+          if not exist windows-render-mesa\*.png exit /b 2
+          echo Verified actual OpenGL renderer with Windows Mesa llvmpipe
+
+      - name: Upload Mesa Windows render proof frames
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Biblioteca-Windows-Mesa-frames
+          path: windows-render-mesa/*.png
+          if-no-files-found: warn
+
       - name: Publish test artifacts
         if: always()
         uses: actions/upload-artifact@v4
@@ -158,7 +194,7 @@ jobs:
             echo "# Windows build verification"
             echo
             echo "Native Win32 C++ build, geometry self-tests, portable deployment and ZIP integrity are tested by the steps above."
-            if compgen -G "windows-render/*.png" > /dev/null; then
+            if compgen -G "windows-render/*.png" > /dev/null || compgen -G "windows-render-mesa/*.png" > /dev/null; then
               echo "OpenGL rendering: PNG proof frames generated on the runner."
             else
               echo "OpenGL rendering: **not verified on this runner** (no proof frames)."
