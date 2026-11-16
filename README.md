@@ -1,10 +1,10 @@
 # Biblioteca 3D
 
+Linux x86-64 is the primary platform. Windows is experimental.
+
 La revisión actual suaviza el catálogo completo de pop-ups: carcasas y bases
 usan perfiles redondeados, tubos y esferas con mayor resolución, y el
-generador elimina triángulos degenerados antes de exportar. La ruta de
-portabilidad a iPadOS y el orden de migración a Metal están documentados en
-`PORTING_IPAD.md`.
+generador elimina triángulos degenerados antes de exportar. 
 
 Biblioteca de escritorio en C++20, OpenGL 3.3 y SDL2. Hay dos salas unidas por una puerta en el costado derecho de la sala infantil. El botón de arriba a la izquierda te lleva a la otra sala. También puedes cruzar a pie. El catálogo muestra automáticamente los libros de la sala en la que te encuentras.
 
@@ -36,7 +36,7 @@ El cohete despega cuando se asienta su doble página y sale por arriba de la pan
 en 2.10 segundos. La estela se disipa durante los 2.10 segundos siguientes.
 Volver a esa escena reinicia el despegue. M permite pausarlo y reanudarlo.
 
-Para compilar en GitHub Actions desde Linux o Windows, consulta [iPadOS 27](PORTING_IPAD.md).
+See [TECHNICAL_DOCUMENTATION.md](TECHNICAL_DOCUMENTATION.md) for Linux and Windows; Windows remains experimental.
 
 ## Dirección visual
 
@@ -75,16 +75,6 @@ Mantén `assets/` junto al ejecutable. En Arch y CachyOS se usan `sdl2-compat`, 
 | F2 | Mostrar u ocultar controles |
 | F11 | Pantalla completa |
 
-### iPad (horizontal)
-
-La versión iPad no necesita teclado ni mouse. En la sala, mantén las flechas
-del control inferior izquierdo para caminar; arrastra sobre cualquier zona libre
-del lado derecho para mirar sin salir de los límites del cuarto. Toca un lomo o
-el atril para que la cámara se acerque sola. En el lector, desliza la página a
-la izquierda o derecha para cambiar de doble página, arrastra en vertical para
-girar el libro y usa `−` o `+` para ajustar el encuadre. Los botones superiores
-son objetivos táctiles de 48 puntos y el catálogo se desplaza con un arrastre
-vertical sobre su lista.
 
 ## Archivos
 
