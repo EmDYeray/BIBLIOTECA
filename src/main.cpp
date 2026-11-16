@@ -12,8 +12,14 @@ int main(int argc,char** argv){
         if(auto* config=FcConfigGetCurrent()){
             for(const auto* face:{"Barlow-Regular.ttf","Barlow-Bold.ttf","BarlowCondensed-Bold.ttf"}){
                 const auto file=fonts/face;
-                if(std::filesystem::is_regular_file(file))
+                if(std::filesystem::is_regular_file(file)){
+#ifdef _WIN32
+                    const auto utf8=file.u8string();
+                    FcConfigAppFontAddFile(config,reinterpret_cast<const FcChar8*>(utf8.c_str()));
+#else
                     FcConfigAppFontAddFile(config,reinterpret_cast<const FcChar8*>(file.c_str()));
+#endif
+                }
             }
         }
         if(argc==1)return biblioteca::interactive();

@@ -24,6 +24,11 @@ Desktop::Desktop(Size size,bool hidden){
             if(window)SDL_DestroyWindow(window);
             SDL_Quit();throw std::runtime_error(failure);
         }
+#ifdef _WIN32
+        glewExperimental=GL_TRUE;
+        if(glewInit()!=GLEW_OK)throw std::runtime_error("No se pudo inicializar OpenGL 3.3");
+        glGetError();
+#endif
         SDL_SetWindowMinimumSize(window,720,490);
         SDL_StopTextInput();
         SDL_GL_SetSwapInterval(hidden?0:1);

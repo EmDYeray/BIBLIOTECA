@@ -9,6 +9,10 @@
 #include <SDL.h>
 #include <OpenGLES/ES3/gl.h>
 #include <cairo.h>
+#elif defined(_WIN32)
+#include <GL/glew.h>
+#include <SDL.h>
+#include <cairo.h>
 #else
 extern "C" {
 struct SDL_Window;
@@ -161,7 +165,7 @@ constexpr GLenum colorBit=0x4000,depthBit=0x0100,renderer=0x1f01,multisample=0x8
 
 namespace sdl {
 inline int relativeMouse(bool enabled){
-#ifdef BIBLIOTECA_IPAD
+#if defined(BIBLIOTECA_IPAD) || defined(_WIN32)
     return SDL_SetRelativeMouseMode(enabled?SDL_TRUE:SDL_FALSE);
 #else
     return SDL_SetRelativeMouseMode(enabled?1:0);

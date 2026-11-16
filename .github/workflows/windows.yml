@@ -1,0 +1,60 @@
+name: Biblioteca para Windows
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [windows-build]
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          install: >-
+            mingw-w64-ucrt-x86_64-toolchain
+            mingw-w64-ucrt-x86_64-pkgconf
+            mingw-w64-ucrt-x86_64-SDL2
+            mingw-w64-ucrt-x86_64-cairo
+            mingw-w64-ucrt-x86_64-fontconfig
+            mingw-w64-ucrt-x86_64-glew
+            mingw-w64-ucrt-x86_64-nsis
+
+      - name: Compilar y probar
+        shell: msys2 {0}
+        run: |
+          make -f Makefile.windows -j2
+          make -f Makefile.windows test
+
+      - name: Preparar ejecutable y dependencias
+        shell: msys2 {0}
+        run: |
+          set -euo pipefail
+          mkdir -p windows-stage
+          cp biblioteca.exe windows-stage/
+          cp -R assets windows-stage/
+          ldd biblioteca.exe | awk '$3 ~ /^\/ucrt64\/bin\// {print $3}' | sort -u | while IFS= read -r dll; do cp "$dll" windows-stage/; done
+          test -s windows-stage/assets/shaders/scene.vert
+          test -s windows-stage/assets/fonts/Barlow-Regular.ttf
+          test -f windows-stage/SDL2.dll
+          test -f windows-stage/libcairo-2.dll
+
+      - name: Empaquetar en un solo EXE
+        shell: msys2 {0}
+        run: |
+          mkdir -p dist
+          makensis packaging/windows-portable.nsi
+          test -s dist/Biblioteca-Windows.exe
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Biblioteca-Windows
+          path: dist/Biblioteca-Windows.exe
+          if-no-files-found: error
