@@ -1,49 +1,28 @@
-name: English story localization draft
+name: English content regression
 
 on:
   push:
-    branches: [English, english-content]
+    branches: [English]
     paths:
-      - "tools/localize_cpp_prose.py"
       - "src/**"
       - ".github/workflows/english-content.yml"
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  translate:
+  validate-english:
     runs-on: ubuntu-24.04
-    timeout-minutes: 45
+    timeout-minutes: 30
     steps:
-      - name: Checkout English draft
+      - name: Checkout localized source
         uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-      - name: Install offline translation engine
-        run: python -m pip install "argostranslate>=1.11,<1.12"
-      - name: Translate story prose and chapter titles
-        run: python tools/localize_cpp_prose.py
-      - name: Validate source text
-        run: git diff --check
-      - name: Install native build prerequisites
+      - name: Install Linux dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y g++ make libsdl2-dev libcairo2-dev libfontconfig1-dev libgl1-mesa-dev
-      - name: Compile translated C++ sources
+      - name: Compile translated C++ source
         run: make -j2
-      - name: Run regression checks (diagnostic)
+      - name: Verify geometry, navigation and translated text limits
         run: make test
-      - name: Commit English draft to this branch
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add src/stories.cpp src/child_text.cpp src/adult_books.cpp src/imported_books.cpp src/technical_notes.cpp
-          if git diff --cached --quiet; then
-            echo "Nothing to translate"
-          else
-            git commit -m "Localize narrative content in English (draft)"
-            git push origin HEAD:English
-          fi
