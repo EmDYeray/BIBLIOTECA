@@ -142,8 +142,10 @@ jobs:
           set "PATH=%SystemRoot%\System32;%SystemRoot%;%SystemRoot%\System32\Wbem"
           if not exist "render-stage\opengl32.dll" exit /b 3
           start "" /wait "%CD%\render-stage\biblioteca.exe" --desktop-check windows-render-mesa
+          if errorlevel 1 exit /b 1
           if not exist windows-render-mesa\*.png exit /b 2
           echo Verified actual OpenGL renderer with Windows Mesa llvmpipe
+          echo SUCCESS > windows-render-mesa\VERIFIED.txt
 
       - name: Upload Mesa Windows render proof frames
         if: always()
@@ -194,7 +196,7 @@ jobs:
             echo "# Windows build verification"
             echo
             echo "Native Win32 C++ build, geometry self-tests, portable deployment and ZIP integrity are tested by the steps above."
-            if compgen -G "windows-render/*.png" > /dev/null || compgen -G "windows-render-mesa/*.png" > /dev/null; then
+            if test -s "windows-render-mesa/VERIFIED.txt"; then
               echo "OpenGL rendering: PNG proof frames generated on the runner."
             else
               echo "OpenGL rendering: **not verified on this runner** (no proof frames)."
