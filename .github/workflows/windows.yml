@@ -55,11 +55,15 @@ jobs:
           mkdir -p windows-stage
           cp biblioteca.exe windows-stage/
           cp -R assets windows-stage/
+          cp LICENSE ASSETS_OPEN.md WINDOWS.md windows-stage/
+          printf 'Git commit: %s\nTarget: Windows x86-64 (MSYS2 UCRT64)\n' "$GITHUB_SHA" > windows-stage/BUILD_INFO.txt
           # Copy the complete recursive UCRT64 dependency closure, not only direct DLL imports.
           ldd biblioteca.exe | awk '$3 ~ /^\/ucrt64\/bin\// { print $3 }' | sort -u | while IFS= read -r dll; do
             cp "$dll" windows-stage/
           done
           test -s windows-stage/biblioteca.exe
+          test -s windows-stage/LICENSE
+          test -s windows-stage/BUILD_INFO.txt
           test -s windows-stage/assets/shaders/scene.vert
           test -s windows-stage/assets/shaders/scene.frag
           test -s windows-stage/assets/fonts/Barlow-Regular.ttf
@@ -145,3 +149,21 @@ jobs:
           name: Biblioteca-Windows-error-diagnostics
           path: Biblioteca3D-error.log
           if-no-files-found: warn
+
+      - name: Report Windows verification evidence
+        if: always()
+        shell: msys2 {0}
+        run: |
+          {
+            echo "# Windows build verification"
+            echo
+            echo "Native Win32 C++ build, geometry self-tests, portable deployment and ZIP integrity are tested by the steps above."
+            if compgen -G "windows-render/*.png" > /dev/null; then
+              echo "OpenGL rendering: PNG proof frames generated on the runner."
+            else
+              echo "OpenGL rendering: **not verified on this runner** (no proof frames)."
+              echo "A physical Windows 11 PC with an OpenGL 3.3 graphics driver must complete the 3D acceptance checklist."
+            fi
+            echo
+            echo "Download the **Biblioteca-Windows-test-build** artifact and use the portable ZIP."
+          } >> "$GITHUB_STEP_SUMMARY"

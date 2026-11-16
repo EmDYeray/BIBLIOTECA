@@ -35,10 +35,10 @@ int main(int argc,char** argv){
         if((option=="--render-check" || option=="--desktop-check") && argc==3)
             return biblioteca::renderTest(argv[2],option=="--desktop-check");
         std::ostream& out=option=="--help"?std::cout:std::cerr;
-        out << "Biblioteca\n"
+        out << "Biblioteca 3D\n"
                "  biblioteca                       Open the library\n"
                "  biblioteca --self-test           Test geometry and navigation\n"
-               "  biblioteca --render-check RUTA   Capture frames and test SDL events\n";
+               "  biblioteca --render-check DIR   Capture frames and test SDL events\n";
         return option=="--help"?0:2;
     }catch(const std::exception& error){
         std::cerr<<"Biblioteca: "<<error.what()<<'\n';
