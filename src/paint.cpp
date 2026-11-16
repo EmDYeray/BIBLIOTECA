@@ -10,6 +10,9 @@ Color color(std::string_view hex,double alpha) {
     return {double(n>>16&255)/255,double(n>>8&255)/255,double(n&255)/255,alpha};
 }
 Paint::Paint(Size size):
+    #ifdef _WIN32
+    image(cairo_image_surface_create(CAIRO_FORMAT_ARGB32,size.w,size.h)),
+#else
     image(cairo_image_surface_create(0,size.w,size.h)),
 #endif
     ctx(cairo_create(image)),size(size){}
@@ -46,11 +49,18 @@ void Paint::gradient(Rect r,double x1,double y1,double x2,double y2,Color a,Colo
     cairo_set_source(ctx,pat);cairo_rectangle(ctx,r.x,r.y,r.w,r.h);cairo_fill(ctx);cairo_pattern_destroy(pat);
 }
 void Paint::font(double px,bool serif,bool bold){
+    #ifdef _WIN32
+    cairo_select_font_face(ctx,serif?"Liberation Serif":"Barlow",CAIRO_FONT_SLANT_NORMAL,
+                           bold?CAIRO_FONT_WEIGHT_BOLD:CAIRO_FONT_WEIGHT_NORMAL);
+#else
     cairo_select_font_face(ctx,serif?"Liberation Serif":"Barlow",0,bold?1:0);
-    cairo_set_font_size(ctx,px);
 #endif
+    cairo_set_font_size(ctx,px);
 }
 void Paint::display(double px){
+    #ifdef _WIN32
+    cairo_select_font_face(ctx,"Barlow Condensed",CAIRO_FONT_SLANT_NORMAL,CAIRO_FONT_WEIGHT_BOLD);
+#else
     cairo_select_font_face(ctx,"Barlow Condensed",0,1);
 #endif
     cairo_set_font_size(ctx,px);
