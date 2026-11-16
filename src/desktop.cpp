@@ -11,7 +11,7 @@ Desktop::Desktop(Size size,bool hidden){
         SDL_GL_SetAttribute(sdl::depthSize,24);SDL_GL_SetAttribute(sdl::doubleBuffer,1);
         SDL_GL_SetAttribute(sdl::msBuffers,1);SDL_GL_SetAttribute(sdl::msSamples,2);
         const unsigned flags=sdl::openGL|(hidden?sdl::hidden:sdl::resizable|sdl::highDpi);
-        auto create=[&](){return SDL_CreateWindow("Biblioteca",sdl::centered,sdl::centered,size.w,size.h,flags);};
+        auto create=[&](){return SDL_CreateWindow("Starry Library",sdl::centered,sdl::centered,size.w,size.h,flags);};
         window=create();
         if(window)context=SDL_GL_CreateContext(window);
         if(!context){
