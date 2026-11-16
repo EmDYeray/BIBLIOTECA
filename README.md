@@ -1,4 +1,4 @@
-# Biblioteca 3D
+# Starry Library
 
 An interactive desktop library built with C++20, SDL2, OpenGL 3.3 and Cairo.
 
@@ -54,7 +54,11 @@ The repository contains an MSYS2 UCRT64 build of the same desktop application, p
 
 When a build artifact is available, extract the entire portable ZIP and run `biblioteca.exe` from the extracted directory. Keep the DLL files and `assets/` directory beside the executable. An OpenGL 3.3-capable graphics driver is required.
 
-GitHub Actions compile and smoke tests do not prove that the full 3D interface renders correctly on arbitrary GPUs. Perform a manual native Windows acceptance test before publishing a stable release. See [TECHNICAL_DOCUMENTATION.md](TECHNICAL_DOCUMENTATION.md) for the validation procedure.
+GitHub Actions compile and smoke tests do not prove that the full 3D interface renders correctly on arbitrary GPUs. Perform a manual native Windows acceptance test before publishing a stable release. See [DOCUMENTATION.md](DOCUMENTATION.md) for the validation procedure.
+
+## Android and iOS — coming soon
+
+Android and iOS versions of **Starry Library** are planned for publication in this repository **in the next few days**. Mobile downloads are not available yet; their release remains subject to testing and platform compatibility.
 
 ## Languages
 
@@ -65,7 +69,7 @@ The library supports **Spanish (Español)** and **English** in the same native e
 - Book titles, descriptions, narrative pages, technical notes and the primary interface controls follow the selected language. Switching rebuilds the catalog for the new language.
 - English narrative translations are a first-pass localization and should be proofread by a bilingual editor before a public educational release.
 
-The GitHub repository is named in English: **Starry Library** (*Biblioteca de Estrellas*).
+The application is named **Starry Library** (*Biblioteca de Estrellas*).
 
 ## Controls
 
@@ -112,4 +116,4 @@ python3 tools/generate_materials.py
 
 ## Documentation and licenses
 
-Read [TECHNICAL_DOCUMENTATION.md](TECHNICAL_DOCUMENTATION.md) for detailed Linux and Windows instructions, test procedures and known limits. Credits and third-party licenses are kept in [ASSETS_OPEN.md](ASSETS_OPEN.md) and `assets/fonts/`. The project license is in [LICENSE](LICENSE).
+Read [DOCUMENTATION.md](DOCUMENTATION.md) for detailed Linux and Windows instructions, test procedures and known limits. Credits and third-party licenses are kept in [ASSETS_OPEN.md](ASSETS_OPEN.md) and `assets/fonts/`. The project license is in [LICENSE](LICENSE).

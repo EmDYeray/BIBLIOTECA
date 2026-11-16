@@ -1,6 +1,6 @@
 # Windows x64 — native desktop build
 
-Biblioteca 3D runs as a native C++20 Windows desktop application built with SDL2, OpenGL 3.3, Cairo, Fontconfig and GLEW. It is not a UWP or Wine application.
+Starry Library runs as a native C++20 Windows desktop application built with SDL2, OpenGL 3.3, Cairo, Fontconfig and GLEW. It is not a UWP or Wine application.
 
 ## Build using GitHub Actions
 
@@ -48,4 +48,4 @@ The Windows CI workflow:
 
 Do not label the Windows package stable until it passes this manual acceptance test. In particular, a program that runs under Wine but not native Windows must be diagnosed on Windows itself.
 
-See [TECHNICAL_DOCUMENTATION.md](TECHNICAL_DOCUMENTATION.md) for the full cross-platform reference.
+See [DOCUMENTATION.md](DOCUMENTATION.md) for the full cross-platform reference.

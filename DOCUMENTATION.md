@@ -1,10 +1,16 @@
-# Biblioteca 3D — Technical Documentation for Linux and Windows
+# Starry Library — Documentation
 
 ## Overview
 
-Biblioteca 3D is a desktop application for exploring a virtual library and reading illustrated stories. Two connected rooms serve different audiences. One is for children, and the other is for teens and adults. Each room has its own catalog and reading layout. Select a book from a shelf or the current room's catalog to open it in a reader with animated 3D pop-ups.
+Starry Library is currently a desktop application for exploring a virtual library and reading illustrated stories. Two connected rooms serve different audiences. One is for children, and the other is for teens and adults. Each room has its own catalog and reading layout. Select a book from a shelf or the current room's catalog to open it in a reader with animated 3D pop-ups.
 
 The stories cover space missions, planets, satellites, rockets, and exploration of the Moon and Mars.
+
+## Upcoming mobile versions
+
+Android and iOS editions of **Starry Library** are planned to be added to this GitHub repository **in the next few days**. These mobile editions are not published yet. Release timing may change while platform-specific builds and device testing are completed.
+
+The current build and installation instructions below apply to Linux and Windows desktop versions only.
 
 ## Technologies
 
