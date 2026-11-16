@@ -2,9 +2,10 @@ name: English story localization draft
 
 on:
   push:
-    branches: [english-content]
+    branches: [English, english-content]
     paths:
       - "tools/localize_cpp_prose.py"
+      - "src/**"
       - ".github/workflows/english-content.yml"
   workflow_dispatch:
 
@@ -34,7 +35,6 @@ jobs:
       - name: Compile translated C++ sources
         run: make -j2
       - name: Run regression checks (diagnostic)
-        continue-on-error: true
         run: make test
       - name: Commit English draft to this branch
         run: |
@@ -45,5 +45,5 @@ jobs:
             echo "Nothing to translate"
           else
             git commit -m "Localize narrative content in English (draft)"
-            git push origin HEAD:english-content
+            git push origin HEAD:English
           fi
