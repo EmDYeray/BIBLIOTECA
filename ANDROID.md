@@ -37,6 +37,14 @@ RGBA for GLES textures. The first launch may take longer while assets are
 copied. Any change to bundled assets requires raising `versionCode` in
 `android/app/build.gradle` and the corresponding marker in `LibraryActivity`.
 
+## Touch controls
+
+The four direction buttons at the lower left move within the room. Drag a
+finger across the right half of the scene to rotate the camera. Tap a book to
+walk up and read it; tap the catalog, lectern or room switch at the top to use
+those sections. When reading, use the bottom arrows to turn pages and the top
+button to close. SDL2 maps a finger tap to a mouse click for those buttons.
+
 ## Waydroid test
 
 After the container is running, install the debug APK with Waydroid's local

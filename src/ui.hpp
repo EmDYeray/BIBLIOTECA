@@ -21,6 +21,11 @@ class Interface {
     float sceneSeconds_=0;
     Action pressed_=Action::None;
     Action touchDrive_=Action::None;
+#ifdef __ANDROID__
+    SDL_FingerID touchDriveFinger_=-1,touchLookFinger_=-1;
+    Point touchLookLast_{};
+    bool touchLookMoved_=false;
+#endif
     int cursor_=0,filter_=0,scroll_=0;
     int catalogFocus_=0;
     std::string search_;

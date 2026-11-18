@@ -83,6 +83,12 @@ std::vector<Interface::Button> Interface::buttons() const {
             list.push_back({{x-55,h-64,45,43},Action::Left,"‹",lib.wing()>0});
             list.push_back({{x+10,h-64,45,43},Action::Right,"›",lib.wing()<1});
         }
+#ifdef __ANDROID__
+        list.push_back({{85,h-194,56,56},Action::Forward,"↑",true});
+        list.push_back({{85,h-74,56,56},Action::Back,"↓",true});
+        list.push_back({{25,h-134,56,56},Action::StrafeLeft,"←",true});
+        list.push_back({{145,h-134,56,56},Action::StrafeRight,"→",true});
+#endif
         list.push_back({{w/2-49,topY,98,topH},Action::Language,isEnglish()?"EN / ES":"ES / EN",true});
         return list;
     }
@@ -262,9 +268,66 @@ void Interface::event(const SDL_Event& e,SDL_Window* window){
         if(e.window.event==11)pos_={-100,-100};
         if(e.window.event==13){
             drag_=lookDrag_=catalogDrag_=touchSwipe_=false;pressed_=Action::None;stopWalking();
+#ifdef __ANDROID__
+            touchDriveFinger_=touchLookFinger_=-1;
+            touchLookMoved_=false;
+#endif
             if(mouseLook_){mouseLook_=false;sdl::relativeMouse(false);}
         }
         dirty=true;break;
+#ifdef __ANDROID__
+    case SDL_FINGERDOWN:{
+        const Point p{e.tfinger.x*size_.w,e.tfinger.y*size_.h};
+        const auto action=actionAt(p);
+        if(touchDriveFinger_==-1 && touchDriveAction(action)){
+            touchDriveFinger_=e.tfinger.fingerId;
+            touchDrive_=action;
+            setTouchDrive(action,true);
+            dirty=true;
+        }else if(touchLookFinger_==-1 && !catalog_ && lib.selected()<0 &&
+                 p.x>size_.w*.45f && action==Action::None){
+            touchLookFinger_=e.tfinger.fingerId;
+            touchLookLast_=p;
+            touchLookMoved_=false;
+        }
+        break;
+    }
+    case SDL_FINGERMOTION:{
+        const Point p{e.tfinger.x*size_.w,e.tfinger.y*size_.h};
+        if(e.tfinger.fingerId==touchDriveFinger_){
+            const auto next=actionAt(p);
+            if(next!=touchDrive_){
+                setTouchDrive(touchDrive_,false);
+                touchDrive_=touchDriveAction(next)?next:Action::None;
+                setTouchDrive(touchDrive_,true);
+                dirty=true;
+            }
+        }else if(e.tfinger.fingerId==touchLookFinger_){
+            const float dx=p.x-touchLookLast_.x,dy=p.y-touchLookLast_.y;
+            if(std::abs(dx)+std::abs(dy)>2.f){
+                touchLookMoved_=true;
+                moved_=true;
+                lib.look(dx,dy);
+                dirty=true;
+            }
+            touchLookLast_=p;
+        }
+        break;
+    }
+    case SDL_FINGERUP:
+        if(e.tfinger.fingerId==touchDriveFinger_){
+            setTouchDrive(touchDrive_,false);
+            touchDrive_=Action::None;
+            touchDriveFinger_=-1;
+            dirty=true;
+        }
+        if(e.tfinger.fingerId==touchLookFinger_){
+            if(touchLookMoved_)moved_=true;
+            touchLookFinger_=-1;
+            touchLookMoved_=false;
+        }
+        break;
+#endif
     case sdl::keyUp:
         if(const int key=movementKey(e.key.keysym.sym);key>=0)motionKeys_[key]=false;
         if(e.key.keysym.sym==sdl::leftShift)sprintKeys_[0]=false;
