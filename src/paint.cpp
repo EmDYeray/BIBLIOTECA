@@ -10,7 +10,7 @@ Color color(std::string_view hex,double alpha) {
     return {double(n>>16&255)/255,double(n>>8&255)/255,double(n&255)/255,alpha};
 }
 Paint::Paint(Size size):
-    #ifdef _WIN32
+    #if defined(_WIN32) || defined(__ANDROID__)
     image(cairo_image_surface_create(CAIRO_FORMAT_ARGB32,size.w,size.h)),
 #else
     image(cairo_image_surface_create(0,size.w,size.h)),
@@ -21,6 +21,16 @@ unsigned char* Paint::pixels(){cairo_surface_flush(image);return cairo_image_sur
 const unsigned char* Paint::texturePixels() const {
     cairo_surface_flush(image);
     const auto* pixels=cairo_image_surface_get_data(image);
+#ifdef __ANDROID__
+    rgbaPixels.resize(size_t(size.w)*size.h*4);
+    const int stride=cairo_image_surface_get_stride(image);
+    for(int y=0;y<size.h;++y)for(int x=0;x<size.w;++x){
+        const auto* p=pixels+size_t(y)*stride+x*4;
+        auto* q=rgbaPixels.data()+(size_t(y)*size.w+x)*4;
+        q[0]=p[2];q[1]=p[1];q[2]=p[0];q[3]=p[3];
+    }
+    return rgbaPixels.data();
+#endif
     return pixels;
 }
 void Paint::ink(Color c){cairo_set_source_rgba(ctx,c.r,c.g,c.b,c.a);}
@@ -49,7 +59,7 @@ void Paint::gradient(Rect r,double x1,double y1,double x2,double y2,Color a,Colo
     cairo_set_source(ctx,pat);cairo_rectangle(ctx,r.x,r.y,r.w,r.h);cairo_fill(ctx);cairo_pattern_destroy(pat);
 }
 void Paint::font(double px,bool serif,bool bold){
-    #ifdef _WIN32
+    #if defined(_WIN32) || defined(__ANDROID__)
     cairo_select_font_face(ctx,serif?"Liberation Serif":"Barlow",CAIRO_FONT_SLANT_NORMAL,
                            bold?CAIRO_FONT_WEIGHT_BOLD:CAIRO_FONT_WEIGHT_NORMAL);
 #else
@@ -58,7 +68,7 @@ void Paint::font(double px,bool serif,bool bold){
     cairo_set_font_size(ctx,px);
 }
 void Paint::display(double px){
-    #ifdef _WIN32
+    #if defined(_WIN32) || defined(__ANDROID__)
     cairo_select_font_face(ctx,"Barlow Condensed",CAIRO_FONT_SLANT_NORMAL,CAIRO_FONT_WEIGHT_BOLD);
 #else
     cairo_select_font_face(ctx,"Barlow Condensed",0,1);

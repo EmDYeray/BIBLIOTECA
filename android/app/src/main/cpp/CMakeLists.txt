@@ -1,0 +1,25 @@
+cmake_minimum_required(VERSION 3.18)
+project(StarryLibraryAndroid LANGUAGES C CXX)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
+
+if(NOT IS_DIRECTORY "${STAR_ANDROID_SDL2}" OR NOT IS_DIRECTORY "${STAR_ANDROID_DEPS}")
+    message(FATAL_ERROR "SDL2 and Android dependencies must be prepared by tools/build-android.fish")
+endif()
+
+set(SDL_SHARED ON CACHE BOOL "" FORCE)
+set(SDL_STATIC OFF CACHE BOOL "" FORCE)
+set(SDL_TEST OFF CACHE BOOL "" FORCE)
+add_subdirectory("${STAR_ANDROID_SDL2}" "${CMAKE_CURRENT_BINARY_DIR}/sdl2")
+
+set(PKG_CONFIG_ARGN "--static")
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(RENDER_DEPS REQUIRED IMPORTED_TARGET cairo fontconfig)
+
+get_filename_component(PROJECT_ROOT "${CMAKE_CURRENT_LIST_DIR}/../../../../.." ABSOLUTE)
+file(GLOB LIBRARY_SOURCES CONFIGURE_DEPENDS "${PROJECT_ROOT}/src/*.cpp")
+add_library(main SHARED ${LIBRARY_SOURCES})
+target_include_directories(main PRIVATE "${PROJECT_ROOT}/src")
+target_link_directories(main PRIVATE "${STAR_ANDROID_DEPS}/lib")
+target_link_libraries(main PRIVATE SDL2 PkgConfig::RENDER_DEPS GLESv3 log android)

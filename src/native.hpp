@@ -5,7 +5,11 @@
 #include <cstddef>
 #include <cstdint>
 
-#ifdef _WIN32
+#ifdef __ANDROID__
+#include <GLES3/gl3.h>
+#include <SDL.h>
+#include <cairo.h>
+#elif defined(_WIN32)
 #include <GL/glew.h>
 #include <SDL.h>
 #include <cairo.h>
@@ -146,8 +150,13 @@ constexpr GLenum texture=0x0de1,texture0=0x84c0,rgba8=0x8058,rgb8=0x8051,rgb=0x1
 constexpr GLenum wrapS=0x2802,wrapT=0x2803,clampEdge=0x812f,repeat=0x2901,minFilter=0x2801,magFilter=0x2800;
 constexpr GLenum framebuffer=0x8d40,colorAttachment=0x8ce0,complete=0x8cd5;
 constexpr GLenum framebufferBinding=0x8ca6,rgba=0x1908;
+#ifdef __ANDROID__
+constexpr GLenum paintFormat=rgba;
+inline void depthRange(float low,float high){glDepthRangef(low,high);}
+#else
 constexpr GLenum paintFormat=bgra;
 inline void depthRange(float low,float high){glDepthRange(low,high);}
+#endif
 constexpr GLenum linear=0x2601,mipLinear=0x2703,unpack=0x0cf5;
 constexpr GLenum cullFace=0x0b44;
 constexpr GLenum blend=0x0be2,depth=0x0b71,lequal=0x0203,one=1,srcAlpha=0x0302,oneMinusAlpha=0x0303;
@@ -156,7 +165,7 @@ constexpr GLenum colorBit=0x4000,depthBit=0x0100,renderer=0x1f01,multisample=0x8
 
 namespace sdl {
 inline int relativeMouse(bool enabled){
-#ifdef _WIN32
+#if defined(_WIN32) || defined(__ANDROID__)
     return SDL_SetRelativeMouseMode(enabled?SDL_TRUE:SDL_FALSE);
 #else
     return SDL_SetRelativeMouseMode(enabled?1:0);
@@ -164,7 +173,7 @@ inline int relativeMouse(bool enabled){
 }
 constexpr unsigned video=0x20,openGL=0x2,hidden=0x8,resizable=0x20,highDpi=0x2000,fullDesktop=0x1001;
 constexpr int centered=0x2fff0000;
-#ifdef _WIN32
+#if defined(_WIN32) || defined(__ANDROID__)
 constexpr SDL_GLattr doubleBuffer=SDL_GL_DOUBLEBUFFER,depthSize=SDL_GL_DEPTH_SIZE,
     msBuffers=SDL_GL_MULTISAMPLEBUFFERS,msSamples=SDL_GL_MULTISAMPLESAMPLES,
     major=SDL_GL_CONTEXT_MAJOR_VERSION,minor=SDL_GL_CONTEXT_MINOR_VERSION,
@@ -175,7 +184,7 @@ constexpr int doubleBuffer=5,depthSize=6,msBuffers=13,msSamples=14,major=17,mino
 constexpr unsigned quit=0x100,window=0x200,keyDown=0x300,keyUp=0x301,text=0x303,motion=0x400,down=0x401,up=0x402,wheel=0x403;
 constexpr int right=0x4000004f,left=0x40000050,downKey=0x40000051,upKey=0x40000052,f2=0x4000003b,f11=0x40000044;
 constexpr int leftShift=0x400000e1,rightShift=0x400000e5;
-#ifdef _WIN32
+#if defined(_WIN32) || defined(__ANDROID__)
 constexpr SDL_SystemCursor arrowCursor=SDL_SYSTEM_CURSOR_ARROW,
     grabCursor=SDL_SYSTEM_CURSOR_SIZEALL,handCursor=SDL_SYSTEM_CURSOR_HAND;
 #else

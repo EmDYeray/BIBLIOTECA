@@ -16,6 +16,10 @@
 int main(int argc,char** argv){
     try{
         const auto fonts=biblioteca::assetsPath()/"fonts";
+#ifdef __ANDROID__
+        FcConfig* fontConfig=FcConfigCreate();
+        if(fontConfig)FcConfigSetCurrent(fontConfig);
+#endif
         if(auto* config=FcConfigGetCurrent()){
             for(const auto* face:{"Barlow-Regular.ttf","Barlow-Bold.ttf","BarlowCondensed-Bold.ttf"}){
                 const auto file=fonts/face;

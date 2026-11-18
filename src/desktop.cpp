@@ -7,7 +7,12 @@
 namespace biblioteca {
 Desktop::Desktop(Size size,bool hidden){
         if(SDL_Init(sdl::video)!=0)throw std::runtime_error(SDL_GetError());
+#ifdef __ANDROID__
+        SDL_GL_SetAttribute(sdl::major,3);SDL_GL_SetAttribute(sdl::minor,0);
+        SDL_GL_SetAttribute(sdl::profile,SDL_GL_CONTEXT_PROFILE_ES);
+#else
         SDL_GL_SetAttribute(sdl::major,3);SDL_GL_SetAttribute(sdl::minor,3);SDL_GL_SetAttribute(sdl::profile,1);
+#endif
         SDL_GL_SetAttribute(sdl::depthSize,24);SDL_GL_SetAttribute(sdl::doubleBuffer,1);
         SDL_GL_SetAttribute(sdl::msBuffers,1);SDL_GL_SetAttribute(sdl::msSamples,2);
         const unsigned flags=sdl::openGL|(hidden?sdl::hidden:sdl::resizable|sdl::highDpi);
@@ -29,10 +34,14 @@ Desktop::Desktop(Size size,bool hidden){
         if(glewInit()!=GLEW_OK)throw std::runtime_error("Failed to initialize OpenGL 3.3");
         glGetError();
 #endif
+#ifndef __ANDROID__
         SDL_SetWindowMinimumSize(window,720,490);
+#endif
         SDL_StopTextInput();
         SDL_GL_SetSwapInterval(hidden?0:1);
+#ifndef __ANDROID__
         glEnable(gl::multisample);
+#endif
     }
 Desktop::~Desktop(){SDL_GL_DeleteContext(context);SDL_DestroyWindow(window);SDL_Quit();}
 

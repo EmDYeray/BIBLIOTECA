@@ -111,7 +111,11 @@ int popupIndex(int book,int spread){
     return int(F::Earth);
 }
 std::filesystem::path assetsPath(){
-#ifdef _WIN32
+#ifdef __ANDROID__
+    const char* path=SDL_AndroidGetInternalStoragePath();
+    if(!path)throw std::runtime_error(SDL_GetError());
+    return std::filesystem::path(path)/"assets";
+#elif defined(_WIN32)
     char* base=SDL_GetBasePath();
     if(!base)throw std::runtime_error(SDL_GetError());
     const std::filesystem::path path(base);

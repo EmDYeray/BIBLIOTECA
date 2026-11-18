@@ -344,11 +344,14 @@ void geometryTest(){
 namespace {
 void saveFrame(Size s,const std::filesystem::path& path){
     std::vector<unsigned char> data(size_t(s.w)*s.h*4);
-    glReadPixels(0,0,s.w,s.h,gl::bgra,gl::byte,data.data());
+    glReadPixels(0,0,s.w,s.h,gl::paintFormat,gl::byte,data.data());
+#ifdef __ANDROID__
+    for(size_t i=0;i<data.size();i+=4)std::swap(data[i],data[i+2]);
+#endif
     const size_t stride=size_t(s.w)*4;
     for(int i=0;i<s.h/2;++i)
         std::swap_ranges(data.begin()+i*stride,data.begin()+(i+1)*stride,data.begin()+(s.h-1-i)*stride);
-    #ifdef _WIN32
+    #if defined(_WIN32) || defined(__ANDROID__)
     auto* image=cairo_image_surface_create_for_data(data.data(),CAIRO_FORMAT_RGB24,s.w,s.h,int(stride));
 #else
     auto* image=cairo_image_surface_create_for_data(data.data(),1,s.w,s.h,int(stride));

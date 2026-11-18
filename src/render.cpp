@@ -28,6 +28,14 @@ std::string readText(const std::filesystem::path& path){
 GLuint createProgram(){
     const auto dir=assetsPath()/"shaders";
     auto vertex=readText(dir/"scene.vert"),fragment=readText(dir/"scene.frag");
+#ifdef __ANDROID__
+    const auto forEs=[](std::string& source){
+        constexpr std::string_view desktop="#version 330 core";
+        if(!source.starts_with(desktop))throw std::runtime_error("Unsupported shader version");
+        source.replace(0,desktop.size(),"#version 300 es\nprecision highp float;\nprecision highp int;");
+    };
+    forEs(vertex);forEs(fragment);
+#endif
     const auto vs=shader(gl::vertex,vertex.c_str()),fs=shader(gl::fragment,fragment.c_str());
     const GLuint p=glCreateProgram();
     glAttachShader(p,vs);glAttachShader(p,fs);glLinkProgram(p);glDeleteShader(vs);glDeleteShader(fs);

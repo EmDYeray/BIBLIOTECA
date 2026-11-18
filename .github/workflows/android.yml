@@ -1,0 +1,49 @@
+name: Android x86_64 debug
+
+on:
+  push:
+    branches: [android-ci]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  android:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Native build tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y fish cmake ninja-build pkg-config autoconf autoconf-archive automake libtool
+      - name: Android SDK and NDK
+        run: |
+          sdkmanager 'platforms;android-35' 'build-tools;35.0.0' 'ndk;30.0.16248370'
+          echo "ANDROID_NDK_HOME=$ANDROID_SDK_ROOT/ndk/30.0.16248370" >> "$GITHUB_ENV"
+      - name: SDL2 and Cairo for Android
+        run: |
+          mkdir -p "$HOME/.cache/starry-android/vcpkg"
+          git clone --depth 1 --branch release-2.32.10 https://github.com/libsdl-org/SDL.git "$HOME/.cache/starry-android/SDL2"
+          git -C "$HOME/.cache/starry-android/vcpkg" init
+          git -C "$HOME/.cache/starry-android/vcpkg" fetch --depth=1 https://github.com/microsoft/vcpkg.git de36db04550a8625e3154b1a758c60035901f244
+          git -C "$HOME/.cache/starry-android/vcpkg" checkout --detach FETCH_HEAD
+          "$HOME/.cache/starry-android/vcpkg/bootstrap-vcpkg.sh" -disableMetrics
+          "$HOME/.cache/starry-android/vcpkg/vcpkg" install cairo:x64-android fontconfig:x64-android --x-install-root="$HOME/.cache/starry-android/deps"
+      - name: Build debug APK
+        run: fish tools/build-android.fish
+      - name: Verify APK
+        run: |
+          test -s dist/Starry-Library-Android-x86_64-debug.apk
+          unzip -tq dist/Starry-Library-Android-x86_64-debug.apk
+          unzip -l dist/Starry-Library-Android-x86_64-debug.apk | grep -E 'lib/x86_64/(libmain|libSDL2).so|assets/(shaders/scene.vert|popups/cohete.obj)'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Starry-Library-Android-x86_64-debug
+          path: dist/Starry-Library-Android-x86_64-debug.apk
+          if-no-files-found: error

@@ -1,0 +1,28 @@
+plugins { id 'com.android.application' }
+
+android {
+    namespace 'org.starrylibrary.app'
+    compileSdk 35
+    ndkVersion '30.0.16248370'
+
+    defaultConfig {
+        applicationId 'org.starrylibrary.app'
+        minSdk 29
+        targetSdk 33
+        versionCode 1
+        versionName '0.1-local'
+        externalNativeBuild {
+            cmake {
+                abiFilters 'x86_64'
+                arguments '-DANDROID_STL=c++_shared',
+                    "-DSTAR_ANDROID_SDL2=${System.getenv('STAR_ANDROID_SDL2')}",
+                    "-DSTAR_ANDROID_DEPS=${System.getenv('STAR_ANDROID_DEPS')}",
+                    '-DCMAKE_POLICY_VERSION_MINIMUM=3.5'
+            }
+        }
+    }
+
+    externalNativeBuild { cmake { path 'src/main/cpp/CMakeLists.txt' } }
+    sourceSets { main { assets.srcDirs = ['../../assets'] } }
+    packaging { jniLibs { useLegacyPackaging = true } }
+}

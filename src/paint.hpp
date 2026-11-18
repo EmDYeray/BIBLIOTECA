@@ -2,6 +2,7 @@
 #include "library.hpp"
 #include "native.hpp"
 #include <string_view>
+#include <vector>
 
 namespace biblioteca {
 struct Color { double r=0,g=0,b=0,a=1; };
@@ -12,6 +13,9 @@ struct Rect {
 };
 class Paint {
     cairo_surface_t* image;
+#ifdef __ANDROID__
+    mutable std::vector<unsigned char> rgbaPixels;
+#endif
 public:
     cairo_t* ctx;
     const Size size;
