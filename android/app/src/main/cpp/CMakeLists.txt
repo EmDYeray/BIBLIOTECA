@@ -8,12 +8,26 @@ if(NOT IS_DIRECTORY "${STAR_ANDROID_SDL2}" OR NOT IS_DIRECTORY "${STAR_ANDROID_D
     message(FATAL_ERROR "SDL2 and Android dependencies must be prepared by tools/build-android.fish")
 endif()
 
+if(ANDROID_ABI STREQUAL "x86_64")
+    set(VCPKG_TRIPLET "x64-android")
+elseif(ANDROID_ABI STREQUAL "arm64-v8a")
+    set(VCPKG_TRIPLET "arm64-android")
+else()
+    message(FATAL_ERROR "Unsupported Android ABI: ${ANDROID_ABI}")
+endif()
+set(STAR_ANDROID_DEPS_ABI "${STAR_ANDROID_DEPS}/${VCPKG_TRIPLET}")
+if(NOT EXISTS "${STAR_ANDROID_DEPS_ABI}/lib/pkgconfig/cairo.pc")
+    message(FATAL_ERROR "Missing Cairo for Android ABI ${ANDROID_ABI}: ${STAR_ANDROID_DEPS_ABI}")
+endif()
+
 set(SDL_SHARED ON CACHE BOOL "" FORCE)
 set(SDL_STATIC OFF CACHE BOOL "" FORCE)
 set(SDL_TEST OFF CACHE BOOL "" FORCE)
 add_subdirectory("${STAR_ANDROID_SDL2}" "${CMAKE_CURRENT_BINARY_DIR}/sdl2")
 
 set(PKG_CONFIG_ARGN "--static")
+set(ENV{PKG_CONFIG_LIBDIR} "${STAR_ANDROID_DEPS_ABI}/lib/pkgconfig:${STAR_ANDROID_DEPS_ABI}/share/pkgconfig")
+set(ENV{PKG_CONFIG_SYSROOT_DIR} "")
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(RENDER_DEPS REQUIRED IMPORTED_TARGET cairo fontconfig)
 
@@ -21,5 +35,5 @@ get_filename_component(PROJECT_ROOT "${CMAKE_CURRENT_LIST_DIR}/../../../../.." A
 file(GLOB LIBRARY_SOURCES CONFIGURE_DEPENDS "${PROJECT_ROOT}/src/*.cpp")
 add_library(main SHARED ${LIBRARY_SOURCES})
 target_include_directories(main PRIVATE "${PROJECT_ROOT}/src")
-target_link_directories(main PRIVATE "${STAR_ANDROID_DEPS}/lib")
+target_link_directories(main PRIVATE "${STAR_ANDROID_DEPS_ABI}/lib")
 target_link_libraries(main PRIVATE SDL2 PkgConfig::RENDER_DEPS GLESv3 log android)

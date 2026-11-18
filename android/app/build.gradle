@@ -13,7 +13,7 @@ android {
         versionName '0.1-local'
         externalNativeBuild {
             cmake {
-                abiFilters 'x86_64'
+                abiFilters 'x86_64', 'arm64-v8a'
                 arguments '-DANDROID_STL=c++_shared',
                     "-DSTAR_ANDROID_SDL2=${System.getenv('STAR_ANDROID_SDL2')}",
                     "-DSTAR_ANDROID_DEPS=${System.getenv('STAR_ANDROID_DEPS')}",
