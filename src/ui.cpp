@@ -57,6 +57,18 @@ void button(Paint& p,Rect r,std::string_view text,bool enabled,bool hot,bool onP
         p.line(x+sign*3,y,x-sign*3,y+5,ink,1.65);
         return;
     }
+    if(text=="↑" || text=="↓" || text=="←" || text=="→"){
+        const double dx=text=="→"?1.:text=="←"?-1.:0.;
+        const double dy=text=="↓"?1.:text=="↑"?-1.:0.;
+        const double reach=std::min(r.w,r.h)*.2;
+        const double tipX=x+dx*reach,tipY=y+dy*reach;
+        const double headX=tipX-dx*reach*.8,headY=tipY-dy*reach*.8;
+        const double wing=reach*.55,weight=std::max(3.,reach*.18);
+        p.line(x-dx*reach,y-dy*reach,tipX,tipY,ink,weight);
+        p.line(tipX,tipY,headX-dy*wing,headY+dx*wing,ink,weight);
+        p.line(tipX,tipY,headX+dy*wing,headY-dx*wing,ink,weight);
+        return;
+    }
     p.font(15,false,true);
     p.middle(x,y+5,fitLabel(p,text,r.w-21),ink);
 }
@@ -84,10 +96,11 @@ std::vector<Interface::Button> Interface::buttons() const {
             list.push_back({{x+10,h-64,45,43},Action::Right,"›",lib.wing()<1});
         }
 #ifdef __ANDROID__
-        list.push_back({{85,h-194,56,56},Action::Forward,"↑",true});
-        list.push_back({{85,h-74,56,56},Action::Back,"↓",true});
-        list.push_back({{25,h-134,56,56},Action::StrafeLeft,"←",true});
-        list.push_back({{145,h-134,56,56},Action::StrafeRight,"→",true});
+        constexpr double tile=112,gap=8,left=24,bottom=20;
+        list.push_back({{left+tile+gap,h-bottom-3*tile-2*gap,tile,tile},Action::Forward,"↑",true});
+        list.push_back({{left+tile+gap,h-bottom-tile,tile,tile},Action::Back,"↓",true});
+        list.push_back({{left,h-bottom-2*tile-gap,tile,tile},Action::StrafeLeft,"←",true});
+        list.push_back({{left+2*(tile+gap),h-bottom-2*tile-gap,tile,tile},Action::StrafeRight,"→",true});
 #endif
         list.push_back({{w/2-49,topY,98,topH},Action::Language,isEnglish()?"EN / ES":"ES / EN",true});
         return list;
@@ -234,7 +247,11 @@ void Interface::step(float dt){
     if(walking()){
         const float f=float(motionKeys_[0])-float(motionKeys_[1]),s=float(motionKeys_[3])-float(motionKeys_[2]);
         const float dtUsed=std::min(dt,.1f);
-        const float speed=sprintKeys_[0] || sprintKeys_[1]?7.7f:4.55f;
+        const float speed=(sprintKeys_[0] || sprintKeys_[1]?7.7f:4.55f)
+#ifdef __ANDROID__
+            *(touchDrive_!=Action::None?2.f:1.f)
+#endif
+            ;
         const Vec target=Vec{s,0,f}*(speed/std::max(1.f,std::hypot(s,f)));
         const float blend=1-std::exp(-dtUsed*(s!=0 || f!=0?13.f:19.f));
         stride_=stride_+(target-stride_)*blend;
