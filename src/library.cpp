@@ -6,6 +6,9 @@
 #include "technical_notes.hpp"
 #include "stories.hpp"
 #include "room_layout.hpp"
+#include "popup.hpp"
+#include "content_scene.hpp"
+#include <fstream>
 #include <cstdio>
 #include <limits>
 
@@ -87,11 +90,21 @@ const std::array<Book,bookCount>& books() {
         return result;
     }();
     catalog=result;
+    for(int id=0;id<bookCount;++id){
+        const auto path=assetsPath()/"content"/"books"/std::to_string(id)/(currentLanguage?"en":"es")/"title.txt";
+        std::ifstream input(path,std::ios::binary);
+        if(input){std::string title((std::istreambuf_iterator<char>(input)),{});if(!title.empty() && title.size()<512)catalog[id].title=std::move(title);}
+    }
     lastLanguage=currentLanguage;
     }
     return catalog;
 }
 std::string pageText(int id,int page) {
+    if(id>=0 && id<bookCount && page>=0 && page<16){
+        const auto path=assetsPath()/"content"/"books"/std::to_string(id)/(isEnglish()?"en":"es")/(std::to_string(page)+".txt");
+        std::ifstream input(path,std::ios::binary);
+        if(input){std::string content((std::istreambuf_iterator<char>(input)),{});if(!content.empty() && content.size()<16384)return content;}
+    }
     if(id>=originalCount){
         const auto& volume=id>=firstImport?importedBooks()[id-firstImport].text:adultBooks()[id-originalCount];
         const auto& passage=volume.chapters[page/2];
@@ -167,6 +180,11 @@ const std::array<Slot,bookCount>& positions() {
                 }
                 first+=count;
             }
+        }
+        for(const auto& item:contentScene().objects)if(item.kind==ContentKind::Book){
+            auto& slot=result[item.book];
+            slot.id=item.book;slot.wing=0;slot.row=0;slot.cabinet=-2;
+            slot.at=item.position+Vec{0,books()[item.book].height*.5f,0};slot.heading=item.rotation.y*pi/180.f;
         }
         return result;
     }();
@@ -267,12 +285,12 @@ bool Library::wingTo(int w){
     return travel({wingX(w),walkingEye,6.65f},{wingX(w),.68f,.5f});
 }
 bool Library::visit(int id){
-    if(id<0 || id>=bookCount || bookSection(id)!=section())return false;
+    if(id<0 || id>=bookCount || (bookSection(id)!=section() && positions()[id].cabinet!=-2))return false;
     const auto& slot=positions()[id];
     return travel(slot.approachPoint(),slot.spine(),id);
 }
 bool Library::open(int id){
-    if(selected_>=0 || id<0 || id>=bookCount || bookSection(id)!=section())return false;
+    if(selected_>=0 || id<0 || id>=bookCount || (bookSection(id)!=section() && positions()[id].cabinet!=-2))return false;
     const auto& slot=positions()[id];
     const Vec goal=slot.approachPoint(),offset=eye_-goal;
     const Vec aim=unit(slot.spine()-eye_);
@@ -448,12 +466,13 @@ int Library::pick(Point p,Size size) const {
     const Ray r=ray(p,size);
     float distance=std::numeric_limits<float>::infinity();int id=-1;
     for(const auto& b:roomOccluders())if(auto t=b.hit(r))distance=std::min(distance,*t);
+    for(const auto& b:contentSceneColliders())if(auto t=b.hit(r))distance=std::min(distance,*t);
     if(auto t=Bounds::box(hearthAt+Vec{0,.20f,0},{hearthRadius*2,.40f,hearthRadius*2}).hit(r))
         distance=std::min(distance,*t);
     for(float x:{wingX(0),wingX(1),adultShelfX})
         for(const auto& b:Shelf{x}.solids())if(auto t=b.hit(r))distance=std::min(distance,*t);
     for(const auto& slot:positions()){
-        if(bookSection(slot.id)!=section())continue;
+        if(bookSection(slot.id)!=section() && slot.cabinet!=-2)continue;
         if(auto t=slot.bounds(offsets_[slot.id]).hit(r);t && *t<distance){distance=*t;id=slot.id;}
     }
     return id;

@@ -101,7 +101,8 @@ CoverPhoto coverPhoto(int id){
 }
 
 bool paintPhoto(Paint& p,Rect area,CoverPhoto photo){
-    const auto path=assetsPath()/"covers"/(std::string(photo.file)+".png");
+    const auto path=std::filesystem::path(photo.file).is_absolute()?std::filesystem::path(photo.file)
+        :assetsPath()/"covers"/(std::string(photo.file)+".png");
     const std::unique_ptr<cairo_surface_t,decltype(&cairo_surface_destroy)> image(
         cairo_image_surface_create_from_png(path.string().c_str()),cairo_surface_destroy);
     if(cairo_surface_status(image.get())!=0)return false;
@@ -169,7 +170,9 @@ GLuint printCover(int id,bool shelf){
     cairo_scale(p.ctx,p.size.w/500.,p.size.h/710.);
     p.fill({0,0,500,710},binding);
     constexpr Rect artwork{28,15,458,680};
-    if(!paintPhoto(p,artwork,coverPhoto(id)))illustrate(p,artwork,illustrationFor(id),id%7,false);
+    const auto custom=assetsPath()/"content"/"covers"/(std::to_string(id)+".png");
+    if(!paintPhoto(p,artwork,{custom.string().c_str(),.5,.5}) && !paintPhoto(p,artwork,coverPhoto(id)))
+        illustrate(p,artwork,illustrationFor(id),id%7,false);
     const Color night{binding.r*.20,binding.g*.20,binding.b*.25,1};
     p.gradient({28,335,458,360},28,335,28,691,{night.r,night.g,night.b,0},night);
     p.fill({0,0,24,710},binding);

@@ -8,6 +8,8 @@
 #include <sstream>
 #include "native.hpp"
 #include "paint.hpp"
+#include "locale.hpp"
+#include "content_scene.hpp"
 #include <array>
 #include <stdexcept>
 
@@ -154,6 +156,9 @@ struct Renderer::Data {
     std::array<InteriorMesh,roomSectionCount> interior;
     Mesh cube,boardMesh,spineMesh,folioMesh,interfacePlane,paper,attached,flames,exhaust;
     Mesh referenceLectern;
+    Mesh contentGeometry;
+    Bounds contentBounds{};
+    bool hasContentGeometry=false;
     MeshData exhaustVertices;
     Mat view;
     Vec cameraUp,cameraRight;
@@ -173,6 +178,7 @@ struct Renderer::Data {
     std::array<GLuint,spreads*2> folios{};
     std::array<GLuint,4> referenceFolios{};
     int cached=-1;
+    bool lastLanguage=isEnglish();
     RenderStats stats;
     const GLint vp=loc("vp"),model=loc("model"),tintLoc=loc("tint"),eye=loc("eye"),
         hearth=loc("hearth"),fireTime=loc("fireTime"),readerLight=loc("readerLight"),
@@ -206,6 +212,12 @@ struct Renderer::Data {
         for(size_t i=0;i<sections.size();++i){
             interior[i].bounds=meshBounds(sections[i].mesh);
             interior[i].geometry.set(sections[i].mesh);
+        }
+        const auto content=contentSceneMesh();
+        if(!content.empty()){
+            contentBounds=meshBounds(content);
+            contentGeometry.set(content);
+            hasContentGeometry=true;
         }
         flames.set(hearthFlames());
         MeshData lectern;
@@ -282,6 +294,13 @@ struct Renderer::Data {
         glDeleteTextures(referenceFolios.size(),referenceFolios.data());
         glDeleteTextures(1,&maskTexture);glDeleteTextures(1,&grainTexture);glDeleteFramebuffers(1,&maskFbo);
         glDeleteProgram(program);
+    }
+    void refreshLanguage(){
+        if(lastLanguage==isEnglish())return;
+        lastLanguage=isEnglish();
+        clearPages();
+        glDeleteTextures(spines.size(),spines.data());spines.fill(0);
+        glDeleteTextures(shelfCovers.size(),shelfCovers.data());shelfCovers.fill(0);
     }
     void clearPages(){
         glDeleteTextures(folios.size(),folios.data());folios.fill(0);
@@ -485,7 +504,7 @@ struct Renderer::Data {
 Renderer::Renderer():data(std::make_unique<Data>()){}
 Renderer::~Renderer()=default;
 void Renderer::draw(const Library& lib,Size size,float seconds){
-    auto& d=*data;d.stats={};d.viewport=size;
+    auto& d=*data;d.refreshLanguage();d.stats={};d.viewport=size;
     d.exhaustVertices.clear();
     glViewport(0,0,size.w,size.h);glDisable(gl::blend);glEnable(gl::depth);glDepthFunc(gl::lequal);
     glClearColor(.075f,.071f,.067f,1);glClear(gl::colorBit|gl::depthBit);
@@ -525,6 +544,8 @@ void Renderer::draw(const Library& lib,Size size,float seconds){
             d.mesh(section.geometry,Mat{},white,-1);
     }
     d.mesh(d.interior[0].geometry,Mat{},white,-1);
+    if(d.hasContentGeometry && inView(view,d.contentBounds))
+        d.mesh(d.contentGeometry,Mat{},white,-1);
     if(inView(view,Bounds::box({roomHalfWidth,1.955f,doorZ},{.3f,.4f,2.5f}))){
         const int side=currentRoom==Section::Adult?1:0;
         d.mesh(d.doorSigns[side],Mat{},white,LightStrip,d.doorLabels[side]);
@@ -540,7 +561,7 @@ void Renderer::draw(const Library& lib,Size size,float seconds){
         glUniform1f(d.readerLight,0.f);
     }
     for(const auto& slot:positions()){
-        if(slot.id==id || (!seesOtherRoom && bookSection(slot.id)!=currentRoom) ||
+        if(slot.id==id || (!seesOtherRoom && bookSection(slot.id)!=currentRoom && slot.cabinet!=-2) ||
            !inView(view,slot.bounds(lib.push(slot.id))))continue;
         d.book(slot.id,onShelf(slot.id,lib.push(slot.id)),false);
     }

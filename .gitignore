@@ -15,3 +15,6 @@ __pycache__/
 /android/build/
 /android/app/build/
 /android/.cxx/
+/editor/covers/
+/editor/__pycache__/
+/assets/content/
