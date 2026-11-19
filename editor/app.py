@@ -189,6 +189,22 @@ class Editor:
                 shutil.copyfile(path, COVERS / name)
                 book["cover"] = name
         ttk.Button(dialog, text="Importar portada PNG", command=cover).pack()
+        def import_pdf():
+            path = filedialog.askopenfilename(parent=dialog, filetypes=[("PDF original", "*.pdf")])
+            if not path:
+                return
+            try:
+                result = subprocess.run(["pdftotext", "-layout", path, "-"], capture_output=True,
+                                        text=True, check=True, timeout=25)
+                original = [p.strip() for p in result.stdout.split("\f") if p.strip()]
+                if len(original) > 16:
+                    messagebox.showwarning("PDF", "El PDF tiene más de 16 páginas; revisa y reparte el texto manualmente.")
+                text = fields["es"][1]
+                text.delete("1.0", "end")
+                text.insert("1.0", "\n===\n".join(original[:16]))
+            except (FileNotFoundError, subprocess.SubprocessError) as error:
+                messagebox.showerror("PDF", f"Instala poppler-utils (pdftotext): {error}")
+        ttk.Button(dialog, text="Importar texto del PDF original (ES)", command=import_pdf).pack()
         def apply():
             for locale, (title, pages) in fields.items():
                 value = pages.get("1.0", "end-1c")
