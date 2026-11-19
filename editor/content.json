@@ -1,0 +1,8 @@
+{
+  "schema": 1,
+  "rooms": [
+    {"id": "children", "name": "Niños", "objects": [{"kind": "fire", "x": 50, "y": 52}, {"kind": "shelf", "x": 50, "y": 5}]},
+    {"id": "adult", "name": "Grandes", "objects": [{"kind": "lantern", "x": 26, "y": 30}, {"kind": "lantern", "x": 74, "y": 30}, {"kind": "shelf", "x": 50, "y": 5}]}
+  ],
+  "books": []
+}

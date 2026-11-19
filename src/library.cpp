@@ -6,6 +6,8 @@
 #include "technical_notes.hpp"
 #include "stories.hpp"
 #include "room_layout.hpp"
+#include "popup.hpp"
+#include <fstream>
 #include <cstdio>
 #include <limits>
 
@@ -87,11 +89,21 @@ const std::array<Book,bookCount>& books() {
         return result;
     }();
     catalog=result;
+    for(int id=0;id<bookCount;++id){
+        const auto path=assetsPath()/"content"/"books"/std::to_string(id)/(currentLanguage?"en":"es")/"title.txt";
+        std::ifstream input(path,std::ios::binary);
+        if(input){std::string title((std::istreambuf_iterator<char>(input)),{});if(!title.empty() && title.size()<512)catalog[id].title=std::move(title);}
+    }
     lastLanguage=currentLanguage;
     }
     return catalog;
 }
 std::string pageText(int id,int page) {
+    if(id>=0 && id<bookCount && page>=0 && page<16){
+        const auto path=assetsPath()/"content"/"books"/std::to_string(id)/(isEnglish()?"en":"es")/(std::to_string(page)+".txt");
+        std::ifstream input(path,std::ios::binary);
+        if(input){std::string content((std::istreambuf_iterator<char>(input)),{});if(!content.empty() && content.size()<16384)return content;}
+    }
     if(id>=originalCount){
         const auto& volume=id>=firstImport?importedBooks()[id-firstImport].text:adultBooks()[id-originalCount];
         const auto& passage=volume.chapters[page/2];

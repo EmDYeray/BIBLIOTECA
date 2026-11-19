@@ -8,6 +8,7 @@
 #include <sstream>
 #include "native.hpp"
 #include "paint.hpp"
+#include "locale.hpp"
 #include <array>
 #include <stdexcept>
 
@@ -173,6 +174,7 @@ struct Renderer::Data {
     std::array<GLuint,spreads*2> folios{};
     std::array<GLuint,4> referenceFolios{};
     int cached=-1;
+    bool lastLanguage=isEnglish();
     RenderStats stats;
     const GLint vp=loc("vp"),model=loc("model"),tintLoc=loc("tint"),eye=loc("eye"),
         hearth=loc("hearth"),fireTime=loc("fireTime"),readerLight=loc("readerLight"),
@@ -282,6 +284,13 @@ struct Renderer::Data {
         glDeleteTextures(referenceFolios.size(),referenceFolios.data());
         glDeleteTextures(1,&maskTexture);glDeleteTextures(1,&grainTexture);glDeleteFramebuffers(1,&maskFbo);
         glDeleteProgram(program);
+    }
+    void refreshLanguage(){
+        if(lastLanguage==isEnglish())return;
+        lastLanguage=isEnglish();
+        clearPages();
+        glDeleteTextures(spines.size(),spines.data());spines.fill(0);
+        glDeleteTextures(shelfCovers.size(),shelfCovers.data());shelfCovers.fill(0);
     }
     void clearPages(){
         glDeleteTextures(folios.size(),folios.data());folios.fill(0);
@@ -485,7 +494,7 @@ struct Renderer::Data {
 Renderer::Renderer():data(std::make_unique<Data>()){}
 Renderer::~Renderer()=default;
 void Renderer::draw(const Library& lib,Size size,float seconds){
-    auto& d=*data;d.stats={};d.viewport=size;
+    auto& d=*data;d.refreshLanguage();d.stats={};d.viewport=size;
     d.exhaustVertices.clear();
     glViewport(0,0,size.w,size.h);glDisable(gl::blend);glEnable(gl::depth);glDepthFunc(gl::lequal);
     glClearColor(.075f,.071f,.067f,1);glClear(gl::colorBit|gl::depthBit);
