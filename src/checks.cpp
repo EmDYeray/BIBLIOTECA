@@ -6,6 +6,7 @@
 #include "render.hpp"
 #include "references.hpp"
 #include "ui.hpp"
+#include "content_scene.hpp"
 #include <chrono>
 #include <cstdlib>
 #include <cstring>
@@ -35,6 +36,18 @@ void until(Interface& ui,Stage target){
 } // namespace
 
 void geometryTest(){
+    const auto loadedScene=loadContentScene(assetsPath()/"scene.json");
+    expect(loadedScene.schema==2 && loadedScene.rooms.size()>=2,"Versioned content scene did not load");
+    ContentScene generated;
+    generated.rooms.push_back({"test-room","Test room",{80,roomFloor,8},{8,5,7},5,false});
+    generated.objects.push_back({"test-table","Test table",ContentKind::Table,
+                                 {80,roomFloor,8},{0,37,0},{1,1,1},"#92745f","wood",true});
+    expect(!buildContentSceneMesh(generated).empty(),"Dynamic content did not generate geometry");
+    const auto generatedColliders=buildContentSceneColliders(generated);
+    expect(generatedColliders.size()==1 && generatedColliders[0].max.y>roomFloor+.9f,
+           "Dynamic content did not generate collision geometry");
+    expect(contentSceneContains(generated,{80,walkingEye,8}) && !contentSceneContains(generated,{90,walkingEye,8}),
+           "Dynamic room boundary is invalid");
     Library walking;
     const Vec initial=walking.eye(),oldDirection=walking.forward();
     expect(walkable(initial),"Camera starts inside furniture");

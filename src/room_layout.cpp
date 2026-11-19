@@ -1,4 +1,5 @@
 #include "room_layout.hpp"
+#include "content_scene.hpp"
 #include <queue>
 
 namespace biblioteca {
@@ -139,8 +140,9 @@ const std::vector<Bounds>& roomOccluders(){
 }
 
 bool walkable(Vec p){
-    if(p.x < -roomHalfWidth+personRadius || p.x > adultRight-personRadius ||
-       p.z < roomBack+personRadius || p.z > roomFront-personRadius)return false;
+    const bool legacy=p.x >= -roomHalfWidth+personRadius && p.x <= adultRight-personRadius &&
+                      p.z >= roomBack+personRadius && p.z <= roomFront-personRadius;
+    if(!legacy && !contentSceneContains(p))return false;
     const float dx=p.x-hearthAt.x,dz=p.z-hearthAt.z;
     if(dx*dx+dz*dz<(hearthRadius+personRadius)*(hearthRadius+personRadius))return false;
     static const auto solids=[]{
@@ -152,6 +154,9 @@ bool walkable(Vec p){
         return result;
     }();
     for(const auto& b:solids)
+        if(b.min.y<=walkingEye+.2f && p.x>b.min.x-personRadius && p.x<b.max.x+personRadius &&
+           p.z>b.min.z-personRadius && p.z<b.max.z+personRadius)return false;
+    for(const auto& b:contentSceneColliders())
         if(b.min.y<=walkingEye+.2f && p.x>b.min.x-personRadius && p.x<b.max.x+personRadius &&
            p.z>b.min.z-personRadius && p.z<b.max.z+personRadius)return false;
     return true;

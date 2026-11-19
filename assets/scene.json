@@ -1,0 +1,9 @@
+{
+  "schema": 2,
+  "rooms": [
+    {"id":"children","name":"Niños","builtin":true,"origin":[0.0,-2.26,6.4],"size":[34.1,8.9,17.6],"height":8.9,"floor":"wood","walls":"plaster","ceiling":"plaster"},
+    {"id":"adult","name":"Grandes","builtin":true,"origin":[26.925,-2.26,6.4],"size":[19.75,8.9,17.6],"height":8.9,"floor":"wood","walls":"plaster","ceiling":"plaster"}
+  ],
+  "connections": [{"id":"children-adult","from":"children","to":"adult","kind":"door"}],
+  "objects": []
+}

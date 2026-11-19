@@ -20,7 +20,7 @@ public final class LibraryActivity extends SDLActivity {
     @Override protected void onCreate(Bundle savedInstanceState) {
         try {
             File dir = new File(getFilesDir(), "assets");
-            File marker = new File(dir, ".assets-1");
+            File marker = new File(dir, ".assets-2");
             if (!marker.exists()) {
                 copyAssets(getAssets(), "", dir);
                 if (!marker.createNewFile()) throw new IOException("Cannot mark installed assets");
@@ -69,7 +69,8 @@ public final class LibraryActivity extends SDLActivity {
     }
     private static void refreshContent(File assets) throws Exception {
         JSONObject manifest = new JSONObject(new String(get("manifest.json", 8192), java.nio.charset.StandardCharsets.UTF_8));
-        if (manifest.getInt("schema") != 1) throw new IOException("Unknown content schema");
+        int schema = manifest.getInt("schema");
+        if (schema != 1 && schema != 2) throw new IOException("Unknown content schema");
         String digest = manifest.getString("sha256");
         if (!digest.matches("[0-9a-f]{64}")) throw new IOException("Invalid content digest");
         File current = new File(assets, "content");

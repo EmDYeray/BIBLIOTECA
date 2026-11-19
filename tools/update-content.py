@@ -25,7 +25,7 @@ def download(path, limit):
 def update(assets):
     manifest = json.loads(download("manifest.json", 8192))
     digest = manifest["sha256"]
-    if (manifest.get("schema") != 1 or not re.fullmatch(r"[0-9a-f]{64}", digest)
+    if (manifest.get("schema") not in (1, 2) or not re.fullmatch(r"[0-9a-f]{64}", digest)
             or manifest.get("file") != f"packs/{digest}.zip"):
         raise ValueError("Invalid manifest")
     content = assets / "content"
