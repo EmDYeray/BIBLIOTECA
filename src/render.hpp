@@ -10,7 +10,7 @@ class Renderer {
 public:
     Renderer();
     ~Renderer();
-    void draw(const Library& lib,Size size,float seconds=0);
+    void draw(const Library& lib,Size size,float seconds=0,float sceneScale=1.f);
     void hud(const Paint* image);
     RenderStats stats() const;
 };

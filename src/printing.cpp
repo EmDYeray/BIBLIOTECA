@@ -39,7 +39,12 @@ Color bindingColor(int id){
     return {.090+.72*base.r,.10+.74*base.g,.13+.76*base.b,1};
 }
 GLuint printSpine(int id){
+#ifdef __ANDROID__
+    Paint p({132,285});
+    cairo_scale(p.ctx,.75,.75);
+#else
     Paint p({176,380});
+#endif
     const auto& book=books()[id];
     const auto wrap=bindingColor(id),ink=color("#eae1bf");
     p.fill({0,0,176,380},wrap);
@@ -166,7 +171,11 @@ GLuint printCover(int id,bool shelf){
     const auto& book=books()[id];
     const auto foil=color(book.foil),ink=color("#fff4dc");
     const auto binding=bindingColor(id);
+#ifdef __ANDROID__
+    Paint p(shelf?Size{204,290}:Size{500,710});
+#else
     Paint p(shelf?Size{272,386}:Size{500,710});
+#endif
     cairo_scale(p.ctx,p.size.w/500.,p.size.h/710.);
     p.fill({0,0,500,710},binding);
     constexpr Rect artwork{28,15,458,680};

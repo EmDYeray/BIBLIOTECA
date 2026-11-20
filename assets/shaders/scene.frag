@@ -67,6 +67,20 @@ void main(){
         base=clamp(mix(vec3(luma),base,1.+.19*popColor)*1.035,0.,1.);
     }
 
+#ifdef BIBLIOTECA_MOBILE
+    // A small lighting budget for tile GPUs. Preserve paper and material colors
+    // without the per-fragment exponentials and loops used on desktop.
+    float adult=step(17.05,world.x);
+    vec3 toFire=hearth+vec3(0.,.80,0.)-world;
+    float fireLight=(1.-adult)*2.0/(1.+.8*dot(toFire,toFire));
+    float overhead=max(0.,normal.y);
+    vec3 light=mix(vec3(.66,.72,.77),vec3(.76,.68,.58),adult)
+        +vec3(.12,.12,.10)*overhead+fireLight*vec3(.66,.32,.15);
+    float readerDiffuse=max(0.,dot(normal,normalize(vec3(-.42,.81,.39))));
+    light=mix(light,vec3(.76,.74,.70)+readerDiffuse*vec3(.28,.22,.16),readerLight*.92);
+    vec3 outColor=base*light;
+    if(kind==17 && readerLight>0.)outColor=base*(.48+.48*readerDiffuse);
+#else
     // Broad gradients approximate bounced light from the perimeter coves.
     float adult=smoothstep(16.96,17.14,world.x);
     float sideDepth=adult>.5?min(world.x-17.05,36.80-world.x):17.05-abs(world.x);
@@ -141,6 +155,7 @@ void main(){
         float face=max(0.,dot(normal,view));
         outColor=base*(.42+.65*readerDiffuse+.23*face)+.042*pow(1.-face,3.1)*vec3(.52,.70,1.);
     }
+#endif
     if(ink)outColor=mix(outColor,base,.56*readerLight+.07);
     if(shaded!=0 && ink){
         float pageX=shaded==1 ? .5+.5*uv.x : .5*uv.x;

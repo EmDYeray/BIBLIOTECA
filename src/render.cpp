@@ -37,6 +37,7 @@ GLuint createProgram(){
         source.replace(0,desktop.size(),"#version 300 es\nprecision highp float;\nprecision highp int;");
     };
     forEs(vertex);forEs(fragment);
+    fragment.insert(fragment.find('\n')+1,"#define BIBLIOTECA_MOBILE 1\n");
 #endif
     const auto vs=shader(gl::vertex,vertex.c_str()),fs=shader(gl::fragment,fragment.c_str());
     const GLuint p=glCreateProgram();
@@ -147,6 +148,53 @@ struct Renderer::Data {
     GLuint program=createProgram(),cover=0,hudTexture=0,grainTexture=0;
     Size hudSize{},viewport{};
     GLuint maskFbo=0,maskTexture=0;
+#ifdef __ANDROID__
+    GLuint sceneFbo=0,sceneColor=0,sceneDepth=0;
+    Size sceneSize{};
+    bool sceneAvailable=true;
+    GLint displayFbo=0;
+    bool beginScene(Size requested,Size& target){
+        glGetIntegerv(gl::framebufferBinding,&displayFbo);
+        if(!sceneAvailable || requested.w<1 || requested.h<1)return false;
+        if(!sceneFbo){
+            glGenFramebuffers(1,&sceneFbo);
+            glGenTextures(1,&sceneColor);
+            glGenRenderbuffers(1,&sceneDepth);
+            glActiveTexture(gl::texture0+4);
+            glBindTexture(gl::texture,sceneColor);
+            glTexParameteri(gl::texture,gl::minFilter,gl::linear);
+            glTexParameteri(gl::texture,gl::magFilter,gl::linear);
+            glTexParameteri(gl::texture,gl::wrapS,gl::clampEdge);
+            glTexParameteri(gl::texture,gl::wrapT,gl::clampEdge);
+        }
+        if(requested.w!=sceneSize.w || requested.h!=sceneSize.h){
+            glActiveTexture(gl::texture0+4);
+            glBindTexture(gl::texture,sceneColor);
+            glTexImage2D(gl::texture,0,gl::rgba8,requested.w,requested.h,0,gl::rgba,gl::byte,nullptr);
+            glBindRenderbuffer(GL_RENDERBUFFER,sceneDepth);
+            glRenderbufferStorage(GL_RENDERBUFFER,GL_DEPTH_COMPONENT16,requested.w,requested.h);
+            glBindFramebuffer(gl::framebuffer,sceneFbo);
+            glFramebufferTexture2D(gl::framebuffer,gl::colorAttachment,gl::texture,sceneColor,0);
+            glFramebufferRenderbuffer(gl::framebuffer,GL_DEPTH_ATTACHMENT,GL_RENDERBUFFER,sceneDepth);
+            if(glCheckFramebufferStatus(gl::framebuffer)!=gl::complete){
+                sceneAvailable=false;
+                glBindFramebuffer(gl::framebuffer,GLuint(displayFbo));
+                return false;
+            }
+            sceneSize=requested;
+        }else glBindFramebuffer(gl::framebuffer,sceneFbo);
+        glViewport(0,0,requested.w,requested.h);
+        target=requested;
+        return true;
+    }
+    void presentScene(Size screen){
+        glBindFramebuffer(GL_READ_FRAMEBUFFER,sceneFbo);
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER,GLuint(displayFbo));
+        glBlitFramebuffer(0,0,sceneSize.w,sceneSize.h,0,0,screen.w,screen.h,GL_COLOR_BUFFER_BIT,GL_LINEAR);
+        glBindFramebuffer(gl::framebuffer,GLuint(displayFbo));
+        glViewport(0,0,screen.w,screen.h);
+    }
+#endif
     int maskAsset=-1;
     bool maskCompact=false;
     float maskDeploy=-1;
@@ -258,7 +306,7 @@ struct Renderer::Data {
         auto vertex=[](float x,float y){return Vertex{{x,y,0},{0,0,1},white,x+.5f,.5f-y,Paper};};
         quad(v,{vertex(-.5f,-.5f),vertex(.5f,-.5f),vertex(.5f,.5f),vertex(-.5f,.5f)});
         interfacePlane.set(v);
-        for(int i=0;i<bookCount;++i)spines[i]=printSpine(i);
+        // Generate text textures on demand as shelves enter the camera view.
         const auto meshes=assetsPath()/"popups";
         for(int i=0;i<popupCount;++i){
             auto scene=loadPopup(meshes/popupAssets()[i].file);
@@ -293,6 +341,9 @@ struct Renderer::Data {
         glDeleteTextures(doorLabels.size(),doorLabels.data());
         glDeleteTextures(referenceFolios.size(),referenceFolios.data());
         glDeleteTextures(1,&maskTexture);glDeleteTextures(1,&grainTexture);glDeleteFramebuffers(1,&maskFbo);
+#ifdef __ANDROID__
+        glDeleteRenderbuffers(1,&sceneDepth);glDeleteTextures(1,&sceneColor);glDeleteFramebuffers(1,&sceneFbo);
+#endif
         glDeleteProgram(program);
     }
     void refreshLanguage(){
@@ -450,8 +501,13 @@ struct Renderer::Data {
         }
         solid(boardMesh,front,{.5f,0,board/2},{1,coverHeight,board},cloth,Leather,jacket);
         const float spineHeight=coverHeight*(.996f-.07f*pose.open),width=hinge.pivotZ+2*board;
+        GLuint spineInk=0;
+        if(!sources && pose.open<.52f){
+            if(!spines[id]){glActiveTexture(gl::texture0);spines[id]=printSpine(id);}
+            spineInk=spines[id];
+        }
         solid(spineMesh,root,{hinge.xOffset-.009f,0,-.029f*pose.open},{.052f,spineHeight,width},
-            cloth*.96f,Leather,!sources && pose.open<.52f?spines[id]:0);
+            cloth*.96f,Leather,spineInk);
 
         const auto state=readingState(spread,target,progress,pose.open);
         const bool printed=sources || (active && pose.open>.002f);
@@ -460,7 +516,11 @@ struct Renderer::Data {
         const float visibleLaunchTime=state.restingBookSpread==spread?launchSeconds:0.f;
         const float motion=active && !state.turning
             ?motionStrength(pose.open,progress,spread!=target):0.f;
+#ifdef __ANDROID__
+        const bool shading=false;
+#else
         const bool shading=printed && !sources && !state.turning && shadowMask(figure,state.deploy,compact,motion,seconds,visibleLaunchTime);
+#endif
         glUniform1i(shaded,shading?1:0);
         solid(printed?folioMesh:cube,rear,{c,0,pageBlock/2},{w,pageHeight,pageBlock},block,Paper,
               printed?folio(id,state.right):0);
@@ -503,10 +563,18 @@ struct Renderer::Data {
 
 Renderer::Renderer():data(std::make_unique<Data>()){}
 Renderer::~Renderer()=default;
-void Renderer::draw(const Library& lib,Size size,float seconds){
-    auto& d=*data;d.refreshLanguage();d.stats={};d.viewport=size;
+void Renderer::draw(const Library& lib,Size size,float seconds,float sceneScale){
+    auto& d=*data;d.refreshLanguage();d.stats={};
+    Size target=size;
+#ifdef __ANDROID__
+    const bool reduced=sceneScale<.995f && d.beginScene({std::max(1,int(size.w*sceneScale)),
+        std::max(1,int(size.h*sceneScale))},target);
+#else
+    (void)sceneScale;
+#endif
+    d.viewport=target;
     d.exhaustVertices.clear();
-    glViewport(0,0,size.w,size.h);glDisable(gl::blend);glEnable(gl::depth);glDepthFunc(gl::lequal);
+    glViewport(0,0,target.w,target.h);glDisable(gl::blend);glEnable(gl::depth);glDepthFunc(gl::lequal);
     glClearColor(.075f,.071f,.067f,1);glClear(gl::colorBit|gl::depthBit);
     glUseProgram(d.program);
     const auto view=lib.viewProjection(size);
@@ -580,6 +648,9 @@ void Renderer::draw(const Library& lib,Size size,float seconds){
         glDepthMask(1);glDisable(gl::blend);
     }
     gl::depthRange(0,1);
+#ifdef __ANDROID__
+    if(reduced)d.presentScene(size);
+#endif
 }
 void Renderer::hud(const Paint* image){
     auto& d=*data;
