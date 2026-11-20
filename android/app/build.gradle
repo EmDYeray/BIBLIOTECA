@@ -10,10 +10,10 @@ android {
         minSdk 29
         targetSdk 33
         versionCode 1
-        versionName '0.1-local'
+        versionName '0.1-arm32'
         externalNativeBuild {
             cmake {
-                abiFilters 'x86_64', 'arm64-v8a'
+                abiFilters 'armeabi-v7a'
                 arguments '-DANDROID_STL=c++_shared',
                     "-DSTAR_ANDROID_SDL2=${System.getenv('STAR_ANDROID_SDL2')}",
                     "-DSTAR_ANDROID_DEPS=${System.getenv('STAR_ANDROID_DEPS')}",

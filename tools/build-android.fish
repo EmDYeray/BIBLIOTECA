@@ -8,7 +8,7 @@ set -l sdl "$HOME/.cache/starry-android/SDL2"
 set -l deps "$HOME/.cache/starry-android/deps"
 set -l project "$root/android"
 
-for needed in "$sdl/android-project/gradlew" "$sdl/android-project/gradle/wrapper/gradle-wrapper.jar" "$deps/x64-android/lib/pkgconfig/cairo.pc" "$deps/arm64-android/lib/pkgconfig/cairo.pc" "$sdk/ndk/30.0.16248370/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++"
+for needed in "$sdl/android-project/gradlew" "$sdl/android-project/gradle/wrapper/gradle-wrapper.jar" "$deps/arm-neon-android/lib/pkgconfig/cairo.pc" "$sdk/ndk/30.0.16248370/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++"
     if not test -e "$needed"
         echo "Missing Android dependency: $needed" >&2
         exit 1
@@ -33,5 +33,5 @@ set -gx STAR_ANDROID_DEPS "$deps"
 or exit $status
 
 set -l apk "$project/app/build/outputs/apk/debug/app-debug.apk"
-cp "$apk" "$root/dist/Starry-Library-Android-universal-debug.apk"
-echo "APK: $root/dist/Starry-Library-Android-universal-debug.apk"
+cp "$apk" "$root/dist/Starry-Library-Android-armeabi-v7a-debug.apk"
+echo "APK: $root/dist/Starry-Library-Android-armeabi-v7a-debug.apk"
