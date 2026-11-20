@@ -68,18 +68,26 @@ void main(){
     }
 
 #ifdef BIBLIOTECA_MOBILE
-    // A small lighting budget for tile GPUs. Preserve paper and material colors
-    // without the per-fragment exponentials and loops used on desktop.
-    float adult=step(17.05,world.x);
+    // Broad, warm lighting with a small tile-GPU budget: no per-pixel lamp
+    // or furniture loops and no exponential falloff.
+    float adult=smoothstep(16.96,17.14,world.x);
     vec3 toFire=hearth+vec3(0.,.80,0.)-world;
-    float fireLight=(1.-adult)*2.0/(1.+.8*dot(toFire,toFire));
+    float fireLight=(1.-adult)*2.35/(1.+.72*dot(toFire,toFire));
     float overhead=max(0.,normal.y);
-    vec3 light=mix(vec3(.66,.72,.77),vec3(.76,.68,.58),adult)
-        +vec3(.12,.12,.10)*overhead+fireLight*vec3(.66,.32,.15);
+    float shelfWash=max(0.,1.-abs(world.y-5.13)*.38-max(0.,world.z+.06)*.18);
+    float cove=max(0.,1.-abs(world.y-6.)*.30-max(0.,world.z)*.09);
+    vec3 light=mix(vec3(.77,.82,.85),vec3(.86,.79,.69),adult)*(.77+.13*overhead)
+        +shelfWash*vec3(.15,.16,.13)+cove*vec3(.16,.14,.10)
+        +fireLight*vec3(.70,.33,.14);
     float readerDiffuse=max(0.,dot(normal,normalize(vec3(-.42,.81,.39))));
-    light=mix(light,vec3(.76,.74,.70)+readerDiffuse*vec3(.28,.22,.16),readerLight*.92);
+    light=mix(light,vec3(.83,.79,.72)+readerDiffuse*vec3(.31,.27,.21),readerLight*.90);
     vec3 outColor=base*light;
-    if(kind==17 && readerLight>0.)outColor=base*(.48+.48*readerDiffuse);
+    if(cutout || kind==12 || kind==13 || kind==17){
+        float face=max(0.,dot(normal,view));
+        float rim=1.-face;
+        outColor+=vec3(.13,.17,.19)*rim*rim*(.35+.65*readerLight);
+        outColor+=base*readerDiffuse*.14*readerLight;
+    }
 #else
     // Broad gradients approximate bounced light from the perimeter coves.
     float adult=smoothstep(16.96,17.14,world.x);
@@ -156,7 +164,11 @@ void main(){
         outColor=base*(.42+.65*readerDiffuse+.23*face)+.042*pow(1.-face,3.1)*vec3(.52,.70,1.);
     }
 #endif
+#ifdef BIBLIOTECA_MOBILE
+    if(ink)outColor=mix(outColor,base,.78*readerLight+.13);
+#else
     if(ink)outColor=mix(outColor,base,.56*readerLight+.07);
+#endif
     if(shaded!=0 && ink){
         float pageX=shaded==1 ? .5+.5*uv.x : .5*uv.x;
         vec2 q=vec2(pageX,1.0-uv.y),d=vec2(.005,.0065);

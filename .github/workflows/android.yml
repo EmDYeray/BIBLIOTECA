@@ -2,7 +2,7 @@ name: Android universal debug
 
 on:
   push:
-    branches: [android-ci, content-editor, android-perf]
+    branches: [android-ci, content-editor, android-perf, android-quality]
   workflow_dispatch:
 
 permissions:

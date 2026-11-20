@@ -587,6 +587,11 @@ void Renderer::draw(const Library& lib,Size size,float seconds,float sceneScale)
     float environmentDim=1.f;
     const bool readingStory=id>=0 && id!=referenceBookId;
     const bool readingLayer=readingStory && (lib.stage()==Stage::Reading || lib.stage()==Stage::Closing);
+#ifdef __ANDROID__
+    const bool crispBook=reduced && readingLayer;
+#else
+    const bool crispBook=false;
+#endif
     if(readingStory){
         // Once the book is at the reader, keep its depth separate from room geometry.
         if(readingLayer)gl::depthRange(0,.36f);
@@ -594,7 +599,7 @@ void Renderer::draw(const Library& lib,Size size,float seconds,float sceneScale)
         glDisable(gl::cullFace);
         glUniform1f(d.dim,1.f);glUniform1f(d.readerLight,1.f);
         glUniform1f(d.popColor,bookSection(id)==Section::Children?1.f:.45f);
-        d.book(id,pose,true,lib.spread(),lib.target(),lib.turning(),seconds,lib.popupClock());
+        if(!crispBook)d.book(id,pose,true,lib.spread(),lib.target(),lib.turning(),seconds,lib.popupClock());
         environmentDim-=.32f*pose.open;
         if(readingLayer)gl::depthRange(.38f,1);
     }else if(d.cached>=0)d.clearPages();
@@ -640,16 +645,30 @@ void Renderer::draw(const Library& lib,Size size,float seconds,float sceneScale)
         d.mesh(d.flames,Mat::move(hearthAt),white,Ember,0,0,5);
         glDepthMask(1);glDisable(gl::blend);glDisable(gl::cullFace);
     }
-    if(!d.exhaustVertices.empty()){
+    const auto drawExhaust=[&]{
+        if(d.exhaustVertices.empty())return;
         if(readingLayer)gl::depthRange(0,.36f);
         d.exhaust.set(d.exhaustVertices,gl::streamDraw);
         glEnable(gl::blend);glDepthMask(0);glBlendFunc(gl::srcAlpha,gl::oneMinusAlpha);
         d.mesh(d.exhaust,Mat{},white,Ember,0,0,6);
         glDepthMask(1);glDisable(gl::blend);
-    }
+    };
+    if(!crispBook)drawExhaust();
     gl::depthRange(0,1);
 #ifdef __ANDROID__
     if(reduced)d.presentScene(size);
+    if(crispBook){
+        // Only the room is upscaled. Render printed pages and pop-up geometry
+        // at native resolution so the reading experience remains sharp.
+        glClear(gl::depthBit);glEnable(gl::depth);glDepthFunc(gl::lequal);
+        glDisable(gl::cullFace);
+        glUniform1f(d.dim,1.f);glUniform1f(d.readerLight,1.f);
+        glUniform1f(d.popColor,bookSection(id)==Section::Children?1.f:.45f);
+        gl::depthRange(0,.36f);
+        d.book(id,lib.pose(),true,lib.spread(),lib.target(),lib.turning(),seconds,lib.popupClock());
+        drawExhaust();
+        gl::depthRange(0,1);
+    }
 #endif
 }
 void Renderer::hud(const Paint* image){
